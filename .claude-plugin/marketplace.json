@@ -1,0 +1,20 @@
+{
+  "name": "cc-gtd",
+  "version": "0.1.0",
+  "description": "Getting Things Done system for Claude Code with GitHub workflow automation and Obsidian integration",
+  "author": "Nikhil Maddirala",
+  "plugins": [
+    {
+      "id": "github-code",
+      "name": "GitHub Workflow Plugin",
+      "description": "Autonomous GitHub workflow automation with issue planning, code building, review coordination, and merge management",
+      "path": "plugins/github-code"
+    },
+    {
+      "id": "obsidian-workflow",
+      "name": "Obsidian Workflow Plugin",
+      "description": "Obsidian integration for task management and knowledge capture",
+      "path": "plugins/obsidian-workflow"
+    }
+  ]
+}
