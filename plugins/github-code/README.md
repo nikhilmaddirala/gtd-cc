@@ -1,133 +1,192 @@
----
-type: resource
-tags:
-  - workflow
-  - ai-agents
-  - github
-  - development
-created: 2025-10-29
----
+# GitHub Code Workflow Plugin
 
-## Overview
+Streamline your development process with AI-powered automation and human oversight. This workflow transforms GitHub Issues into a structured development pipeline, ensuring quality code through systematic planning, implementation, and review stages.
 
-This workflow uses GitHub Issues as the primary unit of work, with AI agents handling execution and humans providing strategic oversight. This is a general workflow applicable across github repos.
 
-**Architecture:**
-- Issues progress through 7 distinct stages with clear inputs, outputs, and status labels
-- AI agents execute work autonomously between human approval gates
+## Architecture Overview
+
+**Core Principles:**
+- Issues serve as the single source of truth for all development work
+- AI agents handle execution between human approval checkpoints
 - Git worktrees provide isolated development environments
-- Conventional commits maintain clear change history
-- Continuous maintenance monitoring ensures repository health
+- Conventional commits ensure clear change history
+- Continuous monitoring maintains repository health
 
-**Key Stages:**
-1. Issue creation → 2. Planning → 3. Plan approval → 4. Implementation → 5. AI review → 6. Human review → 7. Merge & cleanup
+**Workflow Stages:**
+0. Repo initialization → 1. Issue creation → 2. Planning → 3. Plan approval → 4. Implementation → 5. AI review → 6. Human review → 7. Merge & cleanup
 
 **Human Approval Gates:**
-- After planning (approve implementation approach)
-- After AI review (approve code changes before merge)
+- After planning (strategic oversight of implementation approach)
+- After AI review (final approval before merging changes)
 
-## GitHub Issues as State Machines
+## Workflow Stages
 
-Issues serve as the central coordination point, with labels tracking workflow stage and driving agent automation.
+Issues and pull requests serve as the central coordination points, with labels tracking workflow stage and driving multiple components (commands, agents, skills).
 
-**Issue states:**
-- Open: Issue is active and being worked on
-- Closed: Issue is complete and merged, or abandoned
+| Stage | Issue/PR Label | Entity | Implementation | Inputs | Outputs | Next Steps |
+|-------|--------------|--------|----------------|---------|----------|------------|
+| 0. Initialize Repo | **repo: needs initialization** | Repository | ✅ `commands/gh-repo`<br>📋 Repo initialization agent | New repository | Repository with labels, templates, issue templates, branch protection | Create Issue → **issue: needs planning** |
+| 1. Create Issue | **issue: needs planning** | Issue | ✅ `commands/gh-issue`<br>📋 Issue creation agent | User has a task in mind / in task list | Issue following template with "needs planning" label | Creates implementation plan → **issue: needs plan approval** |
+| 3. Plan Implementation | **issue: needs planning** | Issue | ✅ `commands/gh-plan`<br>📋 AI agent (non-interactive) | Issue with "needs planning" label | Implementation plan with options analysis; label "issue: needs plan approval" | Do internal/external research to develop detailed plan; add options and tradeoffs analysis |
+| | **issue: needs plan approval** | Issue | 🔄 Human only | Issue with plan + "issue: needs plan approval" label | Label → "issue: needs implementation" or back to "issue: needs planning" with feedback | Approve → **issue: needs implementation**<br>Request changes → **issue: needs planning** |
+| 4. Build Code | **issue: needs implementation** | Issue | ✅ `commands/gh-build`<br>📋 AI agent (non-interactive) | Approved plan + "issue: needs implementation" label | Branch + worktree with commits; draft PR with "pr: needs review" label; passing tests | Creates branch/PR → **pr: in progress** |
+| | **pr: in progress** | PR | 🔄 ✅ `commands/gh-build`<br>📋 Build agent | Branch + worktree with commits; draft PR | Implementation active, PR in draft | Completes work → **pr: needs review** |
+| 5. Review Changes | **pr: needs review** | PR | 📋 `commands/gh-review`<br>📋 AI agent (non-interactive) | PR ready with "pr: needs review" label; CI checks complete | Label → "pr: ready for approval" or "issue: needs implementation"; detailed review comment | Passes review → **pr: ready for approval**<br>Needs changes → **issue: needs implementation** |
+| | **pr: ready for approval** | PR | 📋 `commands/gh-approve`<br>🔄 Human + AI (interactive) | PR with "pr: ready for approval" label; AI review complete | Label → "pr: approved for merge" or "issue: needs implementation" or "issue: needs planning"; detailed feedback | Approve → **pr: approved for merge**<br>Request changes → **issue: needs implementation**<br>Major revisions → **issue: needs planning** |
+| 6. Merge & Cleanup | **pr: approved for merge** | PR | 📋 `commands/gh-merge`<br>📋 AI agent | PR labeled "pr: approved for merge"; approved by human; CI passing; no conflicts | Changes merged to main; issue closed; clean repository state | Auto-merge & cleanup → **Closed** |
+| 7. Maintenance | **issue/pr: blocked** | Issue/PR | 📋 `commands/gh-maintenance`<br>🔄 Human intervention<br>📋 maintenance agent | Work stopped due to blocker | Resolve blocker → appropriate state | Monitor health continuously: verify issue status, branches/worktrees, identify stale work (>7 days), flag waiting PRs; sync labels with actual state; generate reports |
+| | **needs cleanup** | Issue/PR | 📋 `commands/gh-cleanup`<br>📋 Cleanup agent, maintenance skills | Issue/PR closed but branches remain | Clean up branches/worktrees | Updated labels; project board sync; daily reports; automated cleanup |
 
-**Status labels (track workflow stage):**
-- "needs planning" - Issue created, awaiting planning agent
-- "needs plan approval" - Plan exists, awaiting human review
-- "needs implementation" - Plan approved, ready for implementation agent
-- "in progress" - Implementation active, PR in draft or changes being made
-- "needs review" - PR ready, awaiting AI preliminary review
-- "ready for approval" - AI preliminary review passed, awaiting human review
-- "approved for merge" - Human approved, ready for merge
-- "blocked" - Work stopped due to blocker (specifics in comments: tests failing, needs clarification, etc.)
-- "needs cleanup" - Issue closed but branches/worktrees remain
+**Implementation Status:**
+- ✅ Completed: Implementation exists and is functional
+- 🔄 In Progress: Stage represents ongoing work or waiting states
+- 📋 Planned: Implementation planned but not yet developed
 
-**Type labels:**
-- "feature" - New functionality
-- "bug" - Defect or unexpected behavior
-- "docs" - Documentation changes
-- "refactor" - Code improvements without behavior change
+**Issue States:**
+- **Open**: Issue is active and being worked on
+- **Closed**: Issue is complete and merged, or abandoned
 
-**Workflow integration:**
+**Type Labels:**
+- `feature` - New functionality
+- `bug` - Defect or unexpected behavior
+- `docs` - Documentation changes
+- `refactor` - Code improvements without behavior change
+
+**Workflow State Labels:**
+- `repo: needs initialization` - Repository requires setup (labels, templates, branch protection)
+- `issue: needs planning` - Issue requires implementation planning
+- `issue: needs plan approval` - Implementation plan ready for human review
+- `issue: needs implementation` - Plan approved, ready for code implementation
+- `pr: in progress` - Pull request actively being developed
+- `pr: needs review` - Pull request ready for AI code review
+- `pr: ready for approval` - AI review complete, ready for human approval
+- `pr: approved for merge` - Human approved, ready for automated merge
+- `issue/pr: blocked` - Work stopped due to blocker (applies to issues or PRs)
+
+**Workflow Integration:**
 - Labels drive automation: agents query for issues with specific labels
 - Maintenance agent ensures labels stay synchronized with actual state
 - Project board columns mirror label states for visualization
-- Transitions between labels follow strict workflow stages (see diagram and table below)
 
-## State Transition Diagram
+## Example Workflow Walkthrough
 
-> This diagram shows how issues flow through the workflow stages via status label changes.
+Here's how a typical feature request flows through the complete workflow:
 
+### Scenario: Add Dark Mode Toggle
+
+**1. Repo Initialization**
 ```
-[New task]
-    ↓
-[Issue Created] ─────────→ needs planning
-    ↓
-[Planning Agent] ────────→ needs plan approval
-    ↓
-[Human Review] ──┬───────→ needs implementation (approved)
-                 │
-                 └───────→ needs planning (changes requested)
-    ↓
-[Implementation] ────────→ in progress
-    ↓
-[PR Created] ────────────→ needs review
-    ↓
-[AI Review] ──┬──────────→ ready for approval (passed)
-              │
-              └──────────→ needs implementation (changes needed)
-    ↓
-[Human Review] ──┬───────→ approved for merge
-                 │
-                 ├───────→ needs implementation (changes requested)
-                 │
-                 └───────→ needs planning (major changes)
-    ↓
-[Merge] ─────────────────→ Closed
-    ↓
-[Cleanup] ───────────────→ Complete
+/gh-repo
+```
+*AI sets up repository with labels, templates, and branch protection*
 
-[Maintenance Agent] - monitors all stages continuously
+**2. Issue Creation**
+```
+/gh-issue "Add dark mode toggle to user settings"
+```
+*AI creates Issue #123 with "issue: needs planning" label*
+
+**3. Planning Phase**
+- AI agent analyzes codebase for theming patterns
+- Researches dark mode implementation approaches
+- Creates detailed plan with options and trade-offs
+- Updates label to "issue: needs plan approval"
+
+**4. Plan Review**
+*Human reviews plan, adds feedback: "Use CSS custom properties for theming"*
+- Updates label to "issue: needs implementation"
+
+**5. Implementation**
+- AI creates branch `issue-123-add-dark-mode-toggle`
+- Sets up worktree in `worktrees/issue-123-add-dark-mode-toggle`
+- Implements toggle component with CSS variables
+- Adds conventional commits:
+  ```
+  feat(ui): add dark mode toggle component
+  feat(theming): implement CSS custom properties for theme switching
+  test(ui): add dark mode toggle tests
+  ```
+- Creates draft PR with description and screenshots
+
+**6. AI Review**
+- AI reviews code for style, security, and completeness
+- Updates label to "pr: ready for approval"
+
+**7. Human Review**
+```
+/gh-review #123
+```
+*Human tests locally, approves implementation*
+- Updates label to "pr: approved for merge"
+
+**8. Merge & Cleanup**
+- AI squash-merges PR to main
+- Closes Issue #123
+- Deletes branch and worktree
+- Maintenance agent verifies cleanup
+
+**Result**: Feature is live with clean commit history and no leftover branches.
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue stuck in wrong state:**
+- Check issue labels match the current workflow stage
+- Use `/gh-plan` to manually trigger planning if needed
+- Contact repository maintainers if labels are incorrect
+
+**Worktree conflicts:**
+```bash
+# List all worktrees
+git worktree list
+
+# Remove conflicting worktree
+git worktree remove worktrees/issue-<number>-<slug>
+
+# Prune stale references
+git worktree prune
 ```
 
-## Workflow Stages (Detailed)
+**Failed CI checks:**
+- Review CI logs for specific errors
+- Address linting, test, or build failures
+- Re-run CI after fixes are committed
 
-| Stage                  | **Implementation**                                                    | Inputs                                                                                              | Outputs                                                                                                                                                        | Process                                                                                                                                                                                                                |
-| ---------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1. Issue creation**  | ✅  `commands/gh-issue`<br><br>Slash command: Human + AI (interactive) | User has a task in mind / in task list                                                              | Issue following issue template with "needs planning" label                                                                                                     | - Understand user request and clarify details interactively<br>- Create GH issue following template                                                                                                                    |
-| **2. Planning**        | AI agent (non-interactive)                                            | Issue has "needs planning" label                                                                    | Implementation plan with options analysis (if applicable); label "needs plan approval"                                                                         | - Do internal and external research to develop detailed plan<br>- Add options and tradeoffs if needed                                                                                                                  |
-| **3. Plan feedback**   | Human only                                                            | Issue has plan with "needs plan approval" label                                                     | Label changed to "needs implementation" or "needs planning"<br><br>If it goes back to "needs planning" - feedback in comments                                  | - Human adds comment and updates label                                                                                                                                                                                 |
-| **4. Implementation**  | AI agent (non-interactive)                                            | Issue has detailed plan with "needs implementation"                                                 | Branch + worktree with commits; draft PR linked to issue; PR description with implementation details; passing test results                                     | - Create branch and worktree <br>- rebase on main <br>- implement changes with conventional commits <br>- creates draft PR with description and label "needs review"                                                   |
-| **5. AI review**       | AI agent (non-interactive)                                            | Issue has "needs review" label and associated PR; all CI checks completed; no merge conflicts       | Label changes to "needs implementation" or "ready for approval"<br><br>Detailed PR review comment                                                              | - Review code (style, tests, docs, security, commits) <br>- Post review comment with label change                                                                                                                      |
-| **6. Human review**    | Slash command: Human + AI (interactive)                               | Issue has "ready for approval" label; AI preliminary review complete                                | Label changes to "approved for merge" or "needs implementation" or "needs planning"<br><br>If "needs implementation" or "needs planning", detailed comment<br> | - Human reviews PR and AI comments; may test locally <br>- AI will help with testing                                                                                                                                   |
-| **7. Merge & cleanup** | AI agent                                                              | Issue labeled "approved for merge"; PR approved by human; all CI checks passing; no merge conflicts | Changes merged to main branch; closed issue; clean repository state (no orphaned branches/worktrees)                                                           | - Squash-merge performed → GitHub auto-deletes feature branch → issue auto-closed via PR ("Closes #123") → local worktree removed → maintenance agent verifies cleanup → moved to "Done" column → clean state achieved |
+**Branch naming conflicts:**
+- Ensure branch follows `issue-<number>-<slug>` format
+- Check for existing branches with similar names
+- Use descriptive slugs that avoid conflicts
 
-## Continuous Monitoring: Maintenance Agent
+**Stale work detection:**
+- Issues inactive >7 days get flagged for review
+- Check maintenance agent reports for stale work
+- Re-engage or close abandoned issues
 
-Running in parallel with all stages, the maintenance agent continuously monitors repository health:
+### Getting Help
 
-**Monitoring activities:**
-- Check all open issues for current status and next action
-- Ensure issues have required branches/worktrees if in implementation
-- Verify closed issues have cleaned up branches/worktrees
-- Identify stale work (issues idle >7 days)
-- Flag PRs waiting for review
-- Detect orphaned branches or worktrees
+- Check issue comments for specific error messages
+- Review the project board for workflow status
+- Contact team members with workflow expertise
+- Check repository documentation for project-specific guidelines
 
-**Responsibilities:**
-- Keep issue labels synchronized with actual workflow state (see status labels above)
-- Detect and flag issues in "needs cleanup" state (closed but branches/worktrees remain)
-- Update project board to mirror current issue labels
-- Generate daily reports on items needing attention
+## Glossary
 
-**Outputs:**
-- Updated issue/PR labels reflecting current state
-- Project board with accurate status
-- Daily report summarizing: items needing attention, blocked items, stale items
-- Automated cleanup of stale branches/worktrees where safe
+**Worktree**: Isolated git working directory that shares history with the main repository, allowing parallel development without branch conflicts.
+
+**Conventional Commits**: Standardized commit message format (`type(scope): description`) that enables automated changelog generation and semantic versioning.
+
+**Slash Commands**: Special commands prefixed with `/` (like `/gh-issue`) that trigger workflow actions and AI agent behaviors.
+
+**Draft PR**: GitHub pull request in draft state, indicating work in progress that is not yet ready for formal review.
+
+**Squash Merge**: Git merge strategy that combines multiple commits into a single commit when merging a feature branch.
+
+**CI/CD**: Continuous Integration/Continuous Deployment - automated testing and deployment pipelines that run on code changes.
+
+**Label**: GitHub issue/PR tags that track workflow state and drive automation (e.g., "issue: needs planning", "pr: ready for approval").
+
+**Maintenance Agent**: Background AI process that continuously monitors repository health, syncs labels, and performs cleanup tasks.
 
 ## Appendix
 
