@@ -1,7 +1,7 @@
 {
-  "name": "github-workflow",
+  "name": "github-code",
   "version": "0.1.0",
-  "description": "Autonomous GitHub workflow automation with issue planning, code building, review coordination, and merge management",
+  "description": "GitHub workflow commands for issue management and development",
   "author": "Nikhil Maddirala",
   "commands": [
     "commands/gh-repo.md",
@@ -10,14 +10,5 @@
     "commands/gh-build.md",
     "commands/gh-commit.md",
     "commands/gh-review.md"
-  ],
-  "agents": [
-    "agents/gh-build.md",
-    "agents/gh-merge.md",
-    "agents/gh-maintenance.md"
-  ],
-  "skills": [
-    "skills/github-workflow",
-    "skills/implementation"
   ]
 }
