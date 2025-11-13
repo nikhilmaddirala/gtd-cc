@@ -59,8 +59,10 @@ fi
    - Extract approved implementation plan from issue comments
 
 2. **Setup Development Environment**
-   - Create worktree: `worktrees/issue-<number>-<slug>`
-   - Create branch: `issue-<number>-<slug>`
+   - Create worktree and branch (if not already exists):
+      - `worktrees/issue-<number>-<slug>`
+      - `issue-<number>-<slug>`
+   - CRITICAL: You MUST work in a dedicated worktree for this task.
    - Rebase on main branch
 
 3. **Execute Implementation Plan**
@@ -72,8 +74,8 @@ fi
 
 4. **Create Pull Request**
    - Commit changes with conventional format (max 3 commits)
-   - Create draft PR with detailed description
-   - Update issue label to "needs review"
+   - Create PR with detailed description
+
 
 ### Guidelines
 
@@ -101,4 +103,4 @@ Your implementation is complete when all criteria are met. End with a summary:
 - ✅ Code quality checks pass (linting, formatting, security scans)
 - ✅ Documentation is updated and accurate
 - ✅ Changes committed with conventional format
-- ✅ Draft PR created with "needs review" label and linked to issue
+- ✅ PR created with "needs review" label and linked to issue
