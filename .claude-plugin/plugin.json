@@ -1,0 +1,10 @@
+{
+  "name": "cc-gtd",
+  "version": "0.1.0",
+  "description": "Getting Things Done system for Claude Code",
+  "author": "Nikhil Maddirala",
+  "plugins": [
+    "plugins/github-workflow",
+    "plugins/obsidian-workflow"
+  ]
+}

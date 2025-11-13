@@ -1,0 +1,11 @@
+{
+  "name": "obsidian-workflow",
+  "version": "0.1.0",
+  "description": "Obsidian integration for task management and knowledge capture",
+  "author": "Nikhil Maddirala",
+  "commands": [],
+  "agents": [],
+  "skills": [
+    "skills/obsidian-workflow"
+  ]
+}

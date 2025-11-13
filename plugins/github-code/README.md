@@ -1,6 +1,6 @@
 # GitHub Code Workflow Plugin
 
-Streamline your development process with AI-powered automation and human oversight. This workflow transforms GitHub Issues into a structured development pipeline, ensuring quality code through systematic planning, implementation, and review stages.
+This plugin provides commands for GitHub workflow management. The plugin structure is set up for future expansion with agents and skills.
 
 ## TODOs
 - Write workflow table with better structure

@@ -8,8 +8,8 @@ A comprehensive GTD (Getting Things Done) implementation for Claude Code, provid
 
 | Plugin name | Description | Development status |
 |---|---|---|
-| GitHub Workflow Plugin | Streamline your entire GitHub project lifecycle from issue creation to merge. See [plugins/github-code/README.md](plugins/github-code/README.md) for detailed workflow stages, state transitions, and implementation specifications. | Partially completed |
-| Obsidian Workflow Plugin | Enhance your knowledge management with PARA and Zettelkasten workflows. | Coming soon |
+| GitHub Workflow Plugin | Streamline your entire GitHub project lifecycle from issue creation to merge. See [plugins/github-code/README.md](plugins/github-code/README.md) for detailed workflow stages, state transitions, and implementation specifications. | Scaffolding |
+| Obsidian Workflow Plugin | Enhance your knowledge management with PARA and Zettelkasten workflows. | Scaffolding |
 
 
 ## Quick start
@@ -60,4 +60,43 @@ After adding the marketplace, install specific plugins:
 - **Progressive Loading** - Load only what's needed when needed
 - **Repository Awareness** - Adapt to existing project conventions
 
+## Project Structure
+
+The project is organized as a marketplace with multiple focused plugins:
+
+- `plugins/github-code/` - GitHub workflow automation with commands
+- `plugins/obsidian-workflow/` - Obsidian integration for knowledge management (scaffolding)
+- `.claude-plugin/` - Marketplace configuration
+- `references/docs/` - Reference documentation
+
+For detailed information about the directory structure and how to extend it, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Contributing
+
+This GTD suite follows established patterns from reference implementations. Contributions welcome for:
+
+- New workflow plugins
+- Additional commands and agents
+- Enhanced skill libraries
+- Documentation improvements
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on project structure, component creation, and development workflow.
+
+## Support
+
+- **Issues**: Report bugs via GitHub Issues
+- **Documentation**: See `/references/docs/` for detailed guides
+- **Community**: Join discussions for feature requests
+
+## References
+
+- [Plugin Marketplaces Documentation](references/docs/plugin-marketplaces.md) - Comprehensive guide to marketplace structure and best practices
+- [GitHub Projects AI Workflow](references/docs/Github-projects-ai-workflow.md) - Detailed workflow architecture
+- [AI Agents Configuration](references/docs/ai-agents-README.md) - Component architecture and design principles
+
+---
+
+**License:** MIT  
+**Maintainer:** Nikhil Maddirala  
+**Repository:** https://github.com/nikhilmaddirala/cc-gtd
 
