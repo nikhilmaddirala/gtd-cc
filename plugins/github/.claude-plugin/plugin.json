@@ -9,8 +9,11 @@
     "./commands/gh-repo.md",
     "./commands/gh-issue.md",
     "./commands/gh-plan.md",
+    "./commands/gh-approve-plan.md",
     "./commands/gh-build.md",
-    "./commands/gh-commit.md",
-    "./commands/gh-review.md"
+    "./commands/gh-review.md",
+    "./commands/gh-approve.md",
+    "./commands/gh-merge.md",
+    "./commands/gh-commit.md"
   ]
 }
