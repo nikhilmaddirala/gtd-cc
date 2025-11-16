@@ -67,36 +67,10 @@ git branch -a | grep "issue-ISSUE_NUMBER" || echo "No local branch found"
    - Which worktree will be removed (if exists)
    - Ask for confirmation before proceeding
 
-3. **Execute Merge**
-   Squash-merge the PR to main with clean commit message:
+   **Important**: Worktree will be removed first (step 3) to avoid branch deletion conflicts.
 
-   ```bash
-   # Squash merge with custom commit message
-   # Format: <type>(<scope>): <description> (#PR_NUMBER)
-   # Example: feat(auth): add OAuth2 authentication flow (#45)
-
-   gh pr merge PR_NUMBER --squash --delete-branch --body "Closes #ISSUE_NUMBER"
-   ```
-
-   The commit message should:
-   - Follow conventional commit format
-   - Reference the PR number
-   - Be derived from the PR title and issue context
-
-4. **Close Issue**
-   The issue should auto-close when PR is merged (if PR body contains "Closes #ISSUE_NUMBER").
-   If not, manually close it:
-
-   ```bash
-   # Verify issue closed
-   gh issue view ISSUE_NUMBER --json state
-
-   # If still open, close it
-   gh issue close ISSUE_NUMBER --comment "Merged in #PR_NUMBER"
-   ```
-
-5. **Clean Up Worktree**
-   Remove the development worktree if it exists:
+3. **Clean Up Worktree**
+   Remove the development worktree if it exists (must happen before merge to allow branch deletion):
 
    ```bash
    # List worktrees to find the path
@@ -112,6 +86,34 @@ git branch -a | grep "issue-ISSUE_NUMBER" || echo "No local branch found"
 
    # Prune stale worktree references
    git worktree prune
+   ```
+
+4. **Execute Merge**
+   Squash-merge the PR to main with clean commit message:
+
+   ```bash
+   # Squash merge with custom commit message
+   # Format: <type>(<scope>): <description> (#PR_NUMBER)
+   # Example: feat(auth): add OAuth2 authentication flow (#45)
+
+   gh pr merge PR_NUMBER --squash --delete-branch --body "Closes #ISSUE_NUMBER"
+   ```
+
+   The commit message should:
+   - Follow conventional commit format
+   - Reference the PR number
+   - Be derived from the PR title and issue context
+
+5. **Close Issue**
+   The issue should auto-close when PR is merged (if PR body contains "Closes #ISSUE_NUMBER").
+   If not, manually close it:
+
+   ```bash
+   # Verify issue closed
+   gh issue view ISSUE_NUMBER --json state
+
+   # If still open, close it
+   gh issue close ISSUE_NUMBER --comment "Merged in #PR_NUMBER"
    ```
 
 6. **Clean Up Branch**
@@ -142,7 +144,7 @@ git branch -a | grep "issue-ISSUE_NUMBER" || echo "No local branch found"
 
    # Verify PR is merged
    echo "PR status:"
-   gh pr view PR_NUMBER --json state,merged,mergedAt
+   gh pr view PR_NUMBER --json state,mergedAt,mergeCommit
 
    # Verify worktree removed
    echo "Remaining worktrees:"
@@ -153,7 +155,31 @@ git branch -a | grep "issue-ISSUE_NUMBER" || echo "No local branch found"
    git branch -a | grep "issue-ISSUE_NUMBER" || echo "All branches cleaned up"
    ```
 
-8. **Summary**
+8. **Clean Git State and Update Main**
+   Handle any uncommitted changes and update main branch:
+
+   ```bash
+   # Check for stashed changes (may be outdated worktree artifacts)
+   if git stash list | grep -q .; then
+     echo "Found stashed changes - reviewing..."
+     git stash show -p | head -20
+     echo "Note: These are likely outdated. Dropping stash to use merged version."
+     git stash drop
+   fi
+
+   # Ensure clean working directory
+   if [ -n "$(git status --porcelain)" ]; then
+     echo "Warning: Uncommitted changes detected"
+     git status
+     echo "Please commit or stash changes before proceeding"
+     exit 1
+   fi
+
+   # Update main branch with latest changes
+   git pull origin main
+   ```
+
+9. **Summary**
    Provide a summary of what was completed:
    - ✅ PR #X merged to main
    - ✅ Issue #Y closed
@@ -173,9 +199,15 @@ git branch -a | grep "issue-ISSUE_NUMBER" || echo "No local branch found"
 
 ### Error Handling
 
-If merge fails due to:
+If worktree removal fails (step 3):
+- Ensure no active processes are using the worktree: `lsof | grep worktree-path`
+- Try with additional flags: `git worktree remove path --force`
+- If persistent, manually delete the directory and prune: `rm -rf path && git worktree prune`
+
+If merge fails (step 4) due to:
 
 **Merge conflicts:**
+- Worktree may still exist in some scenarios; remove it first
 - Guide user to rebase the branch: `cd worktree && git rebase main`
 - Resolve conflicts, push, then retry merge
 
@@ -187,8 +219,14 @@ If merge fails due to:
 - Show approval status: `gh pr view PR_NUMBER --json reviews`
 - Request necessary approvals, then retry
 
-**Branch deleted but worktree remains:**
-- Manually remove worktree: `git worktree remove path --force`
+If branch deletion fails (step 6):
+- Verify worktree was fully removed: `git worktree list`
+- Try manual deletion: `git branch -D issue-ISSUE_NUMBER-*`
+
+If git state is not clean (step 8):
+- Review stashed changes: `git stash show -p`
+- Drop outdated stash: `git stash drop`
+- Commit any intentional changes: `git add . && git commit -m "message"`
 
 **Issue didn't auto-close:**
 - Manually close: `gh issue close ISSUE_NUMBER --comment "Merged in #PR_NUMBER"`
@@ -210,10 +248,12 @@ Your work is complete when:
 
 **After successful merge:**
 - The workflow for this issue is complete
-- User can pull latest main: `git pull origin main`
+- Main branch is updated with latest changes (step 8)
+- All artifacts cleaned up: worktree removed, branches deleted
 - Ready to start new work with `/gh-issue "next feature"`
 
 **If cleanup incomplete:**
 - Document what remains to be cleaned manually
-- Provide specific commands for manual cleanup
-- Update issue/PR with cleanup status
+- Provide specific commands for manual cleanup (see Error Handling section)
+- Verify git state is clean before starting new work
+- Update issue/PR with cleanup status if needed
