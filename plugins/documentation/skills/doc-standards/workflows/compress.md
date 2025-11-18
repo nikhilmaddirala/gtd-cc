@@ -1,29 +1,29 @@
 ---
-description: Create condensed versions of documentation for quick reference and lookup
+description: Compress documentation in-place to improve clarity while preserving critical information
 ---
 
 ## Compress Documentation Workflow
 
-Create condensed summaries of lengthy documentation for quick reference and lookup.
+Compress lengthy documentation in-place to improve clarity and reduce noise while preserving critical information.
 
 ## Overview
 
-This workflow guides you through systematically compressing a document. The goal is to reduce length while preserving critical information that matters for your use case and audience.
+This workflow guides you through systematically compressing a document in-place. The goal is to reduce length while preserving critical information that matters for your use case and audience. The improved document replaces the original.
 
 ## Context
 
 Before starting:
 
-- You have a lengthy document to compress
-- You want a quick-reference version for your team
+- You have a lengthy document to compress in-place
 - You understand what information is critical vs. supplementary
-- You know your target audience and their lookup needs
+- You know your target audience and their needs
+- You're ready to improve the document's clarity by removing noise
 
 ## Your Task
 
-- Goal: Create a condensed version of documentation
-- Target: Preserve critical information your audience needs
-- Role: Technical editor removing noise while preserving substance
+- Goal: Compress documentation in-place to improve clarity
+- Target: Remove noise while preserving all critical information
+- Role: Technical editor improving the document through careful compression
 
 ### Step 1: Identify the Document and Target Compression
 
@@ -126,15 +126,14 @@ Options:
 - Checklist format
 - Other formats your team prefers
 
-### Step 5: Build the Condensed Version
+### Step 5: Compress the Document In-Place
 
-Write your condensed version using your chosen format:
+Rewrite your document using your chosen format, replacing the original:
 
 ```bash
-# Create new file
-touch /path/to/file-compressed.md
-# or
-touch /path/to/file-quick-ref.md
+# You will be editing the original document directly
+# Preserve the filename - this becomes the improved version
+# /path/to/file.md (not a new file)
 ```
 
 Include only:
@@ -154,105 +153,102 @@ Guidelines:
 
 ### Step 6: Measure Compression
 
-Calculate how much you've compressed:
+After completing your edits, calculate the compression achieved:
 
 ```bash
-# Original stats
-original_lines=$(wc -l < /path/to/file)
-original_words=$(wc -w < /path/to/file)
+# You can use git to see the before/after stats
+# git diff will show the reduction in lines and content
+git diff /path/to/file.md
 
-# Compressed stats
-compressed_lines=$(wc -l < /path/to/file-compressed.md)
-compressed_words=$(wc -w < /path/to/file-compressed.md)
-
-# Calculate ratio
-ratio=$((original_lines / compressed_lines))
-echo "Compression: $original_lines → $compressed_lines lines (~1:${ratio}×)"
+# Or manually count if the file is not yet committed
+# Before: (your original line/word count from Step 1)
+# After: run the commands from Step 1 again to see new stats
+wc -l /path/to/file.md
+wc -w /path/to/file.md
 ```
 
-Compare to your target compression level.
+Compare the achieved compression to your target compression level from Step 1.
 
-### Step 7: Verify Against Original
+### Step 7: Verify Accuracy of Compressed Content
 
-```bash
-# Accuracy check:
-# 1. Do all numbers match the original exactly?
-# 2. Have you changed any terminology or simplified it incorrectly?
-# 3. Are all critical decisions captured?
-# 4. Are important caveats included?
+Before committing, verify the compressed document:
 
-# If format requires specific sections:
-# - Verify each section per SKILL.md guidelines
-# - Confirm all cross-references work
-# - Check that format matches your documentation standards
-```
+- Do all numbers match the source materials exactly?
+- Have you changed any terminology or simplified it incorrectly?
+- Are all critical decisions captured?
+- Are important caveats included?
+- Do all internal cross-references still work?
+- Is the format consistent with SKILL.md guidelines?
+- Is the document scannable and well-organized?
 
-### Step 8: Document What Was Removed
+### Step 8: Summarize What Was Removed
 
-Note what was removed and why:
+Document what was removed and why, for your commit message:
 
 - Removed verbose explanations → kept essential details
-- Removed examples → users can find in original document
-- Removed background context → decisions included
-- Removed repeated information → consolidated to single source
+- Removed examples → focus on core concepts
+- Removed background context → preserved key decisions
+- Removed repeated information → consolidated to single mentions
+- Other removals: [specify based on your document]
 
-This helps readers understand what's in the compressed version vs. where to go for full details.
+This summary will help reviewers understand the intent of your compression.
 
-### Step 9: Save with Clear Naming
+### Step 9: Save the Compressed Document
 
-Use naming that indicates this is a compressed/quick-reference version:
+Since you're compressing in-place, the filename remains the same:
 
 ```bash
-# Original: README.md
-# Compressed: README-quick-ref.md
-# Or: README-compressed.md
+# The original document has been replaced with the compressed version
+# Filename stays the same:
+# README.md (now compressed)
+# docs/api-reference.md (now compressed)
+# docs/architecture.md (now compressed)
 
-# Original: docs/api-reference.md
-# Compressed: docs/api-reference-quick-ref.md
-
-# Original: docs/architecture.md
-# Compressed: docs/architecture-summary.md
+# Save your changes using your editor
 ```
 
-### Step 10: Commit and Link
+### Step 10: Commit the Compressed Document
 
-Link compressed version from original if appropriate:
+Commit your in-place compression changes:
 
 ```bash
-# In original document, add section:
-# ## Quick Reference
-# For a condensed quick-reference version, see [README-quick-ref.md](README-quick-ref.md)
+git add /path/to/file.md
+git commit -m "docs: compress [document name]
 
-git add /path/to/file-compressed.md
-git commit -m "docs: add compressed reference for [document]
-
-- Created [filename] from [original document]
 - Original: X lines/words
 - Compressed: Y lines/words (~1:[ratio]× compression)
 - Compression level: [light/medium/heavy]
-- Includes: [what's included]
-- Removed: [what was removed and why]"
+- Removed: [summarize what was removed and why]
+- Preserved: [summarize critical content kept]"
 ```
+
+The commit message should focus on what was removed and why, since the reader can see the actual changes in the diff.
 
 ## Examples
 
 ### Example 1: API Reference (Medium Compression)
 
-**Original:** 800 lines
-**Target:** 100-150 lines (5-8× compression)
-**Format:** Function signatures + critical details in tables
+Compress docs/api-reference.md in-place:
+- Before: 800 lines
+- After: 100-150 lines (5-8× compression)
+- Format: Function signatures + critical details in tables
+- Removed: Verbose explanations, basic examples, introductory content
 
 ### Example 2: Architecture Document (Light Compression)
 
-**Original:** 600 lines
-**Target:** 200-300 lines (2-3× compression)
-**Format:** Components + data flow + deployment, with essential details preserved
+Compress docs/architecture.md in-place:
+- Before: 600 lines
+- After: 200-300 lines (2-3× compression)
+- Format: Components + data flow + deployment, with essential details preserved
+- Removed: Historical context, detailed walkthroughs, background explanations
 
 ### Example 3: Configuration Reference (Heavy Compression)
 
-**Original:** 400 lines
-**Target:** 40-50 lines (8-10× compression)
-**Format:** Table of options, defaults, constraints only
+Compress docs/configuration.md in-place:
+- Before: 400 lines
+- After: 40-50 lines (8-10× compression)
+- Format: Table of options, defaults, constraints only
+- Removed: Use case examples, detailed descriptions, troubleshooting guides
 
 ## Guidelines
 
@@ -273,6 +269,6 @@ git commit -m "docs: add compressed reference for [document]
 - ✅ Format appropriate for document type
 - ✅ Document is scannable and well-organized
 - ✅ Terminology preserved exactly as in original
-- ✅ Verified against original for accuracy
-- ✅ Removals documented (what was removed and why)
-- ✅ Linked from original document if appropriate
+- ✅ All internal cross-references still work
+- ✅ Removals documented in commit message (what was removed and why)
+- ✅ Compressed document committed with clear commit message
