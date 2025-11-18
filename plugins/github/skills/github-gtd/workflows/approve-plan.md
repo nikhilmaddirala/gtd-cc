@@ -2,9 +2,13 @@
 description: Review AI's implementation plan and approve or request revisions
 ---
 
+## Overview
+
+Help the human review AI-generated implementation plans and make informed decisions to approve or request revisions.
+
 ## Context
 
-Start by gathering the issue details to understand the plan:
+Gather the issue details to understand the plan:
 
 ```bash
 # Get recent issues needing plan approval

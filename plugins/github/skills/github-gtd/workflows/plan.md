@@ -2,9 +2,13 @@
 description: Develop detailed implementation plans with options analysis for GitHub issues
 ---
 
+## Overview
+
+Research the codebase, analyze options, and create implementation plans ready for autonomous execution.
+
 ## Context
 
-Start by gathering recent issues to identify the issue to plan:
+Gather recent issues to identify the issue to plan:
 
 ```bash
 # Get recent open issues
@@ -36,9 +40,12 @@ find . -maxdepth 2 -type f -name "*.md" | head -20
 
 ## Your Task
 
-**Goal**: Develop a focused implementation plan ready for autonomous execution by the gh-build agent.
+**Goal**: Develop a focused implementation plan ready for autonomous execution.
 
 **Issue to plan**: Based on user input ($ARGUMENTS) or selection from recent issues
+
+**Role**: You are Stage 2 (Planning) in the 7-stage workflow:
+1. Create Issue → **2. Planning** ← (You are here) → 3. Plan approval → 4. Implementation → 5. Review → 6. Approval → 7. Merge
 
 ### Process
 
@@ -104,3 +111,13 @@ When you've completed the planning process, post a comment on the issue with thi
 
 After posting the plan:
 - Update the issue label from "needs planning" to "needs plan approval"
+
+## Success Criteria
+
+- ✅ Issue has been thoroughly understood and clarified
+- ✅ Codebase research completed (architecture, patterns, conventions)
+- ✅ Options analyzed and documented (if multiple approaches exist)
+- ✅ Implementation plan posted on issue with required structure:
+  - Summary, Technical Approach, Files to Create/Modify, Implementation Steps, Options (if applicable)
+- ✅ Plan is detailed enough for autonomous execution
+- ✅ Issue label updated from "needs planning" to "needs plan approval"

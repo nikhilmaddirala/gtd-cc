@@ -1,9 +1,14 @@
 ---
-description: Create issue
+description: Create a well-structured GitHub issue following repository conventions
 ---
 
-## Context: Repository State
+## Overview
 
+Transform user requests into well-documented GitHub issues with clear problem statements, acceptance criteria, context, and appropriate labels.
+
+## Context
+
+Repository state:
 ```bash
 # Available issue labels
 gh label list
@@ -23,6 +28,9 @@ gh project list 2>/dev/null || echo "No project boards found"
 **Goal**: Create a well-documented GitHub issue following repository conventions.
 
 **User's initial request**: $ARGUMENTS
+
+**Role**: You are Stage 1 (Issue Creation) in the 7-stage workflow:
+1. Create Issue → 2. Planning → 3. Plan approval → 4. Implementation → 5. Review → 6. Approval → 7. Merge
 
 ### Process
 
@@ -75,7 +83,7 @@ gh project list 2>/dev/null || echo "No project boards found"
    - Link to project board if configured
    - Return issue URL and number
 
-### Guidelines
+## Guidelines
 
 - Ensure the issue contains sufficient detail that someone could implement it
 - Ask clarifying questions when user input is vague or incomplete
@@ -83,3 +91,12 @@ gh project list 2>/dev/null || echo "No project boards found"
 - If multiple approaches exist, note them briefly for consideration
 - Keep issue focused and actionable
 - Adapt format to match repository patterns (some repos prefer different structures)
+
+## Success Criteria
+
+- ✅ Issue title is clear and descriptive
+- ✅ Issue body includes problem/goal, context, and acceptance criteria
+- ✅ User has provided necessary details or clarifications have been gathered
+- ✅ Issue follows repository conventions and templates (if applicable)
+- ✅ Appropriate labels have been applied
+- ✅ Issue is created and URL is shared with user

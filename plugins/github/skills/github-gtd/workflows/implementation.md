@@ -1,7 +1,10 @@
 ---
-name: gh-build
-description: Autonomous agent that builds code from approved implementation plans or addresses review feedback
+description: Autonomously implement approved plans or address review feedback in isolated worktrees
 ---
+
+## Overview
+
+Build production-ready code from approved implementation plans or address review feedback in isolated development environments, creating pull requests ready for review.
 
 ## Context
 

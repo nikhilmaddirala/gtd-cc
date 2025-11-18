@@ -2,6 +2,10 @@
 description: Review implementation, test locally, and approve for merge
 ---
 
+## Overview
+
+Guide humans through local testing, code review, and approval decision-making for implementations ready for merge.
+
 ## Context
 
 Start by gathering issues and PRs ready for approval:

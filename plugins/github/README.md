@@ -1,6 +1,8 @@
 # GitHub Code Workflow Plugin
 
-This plugin provides commands for GitHub workflow management. The plugin structure is set up for future expansion with agents and skills.
+This plugin provides commands for GitHub workflow management, enabling structured issue-driven development with AI-assisted automation.
+
+**For detailed procedural instructions on executing each workflow stage, see [`SKILL.md`](./skills/github-gtd/SKILL.md)** - the authoritative source for all GitHub workflow operations.
 
 ## Overview
 
@@ -96,9 +98,11 @@ Issue types (categorization):
 
 
 
-## Workflow Stages (Detailed)
+## Workflow Stages (Reference)
 
-This section provides detailed information for each stage. Issues serve as the single source of truth, with labels tracking workflow state.
+This section provides a quick reference for each stage. For detailed procedural instructions on how to execute each workflow stage, see [`SKILL.md`](./skills/github-gtd/SKILL.md).
+
+Issues serve as the single source of truth, with labels tracking workflow state.
 
 | Stage | Label | What Happens | Implementation Status |
 |-------|-------|--------------|----------------------|
