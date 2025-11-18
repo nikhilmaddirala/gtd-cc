@@ -4,7 +4,7 @@ description: Set up repo specific claude code workflows
 
 ## Overview
 
-Analyze a specific repository to understand its domain, technologies, and common development operations. Based on this analysis, propose custom skills, commands, and agents to be added to that repository's local .claude/ directory. These components are repository-specific, complementing the generic github-gtd workflows with domain expertise unique to each project. For example, a package manager repository might propose a "publish-package-skill" or "/version-bump" command, while a documentation site might propose a "content-generation-skill" or "/add-doc-page" command.
+Analyze a specific repository to understand its domain, technologies, and common development operations. Based on this analysis, propose ONE domain-specific skill (following the github-gtd pattern) that contains multiple workflows specific to this repository's needs. Then propose lightweight commands and agents that orchestrate different workflows within that skill. For example, a package manager repository might create one "package-management-skill" with workflows for versioning, publishing, and changelog management—then create commands like "/version-bump", "/publish-package", and "/update-changelog" that each reference different workflows. A documentation site might create "documentation-skill" with workflows for content creation, deployment, and SEO optimization—then create commands like "/add-doc-page" and "/deploy-docs" that orchestrate those workflows.
 
 ## Context
 
@@ -72,31 +72,94 @@ Role: This is a standalone workflow that establishes or evolves repository-speci
    - Recognize domain-specific workflows that would benefit from Claude Code support
    - Assess which gaps would provide the most value for development velocity
 
-4. **Design Custom Components**
-   - **Skills**: Domain expertise components that provide specialized knowledge (e.g., "api-versioning-skill", "database-migration-skill")
-   - **Commands**: Interactive workflows for complex operations (e.g., "/create-release", "/add-migration")
-   - **Agents**: Autonomous components for background tasks (e.g., "dependency-updater-agent")
-   - Ensure proposed components complement github-gtd workflows without duplication
-   - Prioritize components by development impact and implementation effort
+4. **Design Skills-First Architecture**
 
-5. **Create Implementation Recommendations and Setup .claude/ Structure**
-   - Document each proposed component with: name, description, purpose, location in .claude/ directory
-   - Provide markdown structure templates for how each component should be organized
-   - Explain how each component integrates with existing github-gtd workflows
-   - Estimate implementation effort for each component
-   - Prioritize recommendations into High/Medium/Low impact categories
+   Follow the core architecture principle: Skills contain the logic and workflows. Commands and agents are thin orchestrators that reference skills.
 
-   **For first-time setup:**
-   - Create .claude/ directory structure if it doesn't exist
-   - Initialize standard subdirectories: .claude/skills/, .claude/commands/, .claude/agents/
-   - Add .claude/ to .gitignore if not already present
+   a. **Create ONE Domain-Specific Skill (Foundation Layer)**
+      - What is the primary domain or purpose of this repository? (e.g., plugin development, API management, documentation)
+      - Create ONE skill named after that domain (e.g., "plugin-development-skill", "api-management-skill", "docs-authoring-skill")
+      - This ONE skill contains ALL domain-specific workflows in its `workflows/` subdirectory
+      - Each workflow is a separate file: workflows/scaffolding-workflow.md, workflows/validation-workflow.md, workflows/release-workflow.md, etc.
+      - Skills contain: comprehensive procedures, bash commands, guidelines, examples, success criteria, and templates
+      - Structure pattern: `.claude/skills/[domain-skill-name]/SKILL.md` + `workflows/[workflow-name].md` (multiple workflow files)
+      - Example model: `plugins/github/skills/github-gtd/` is ONE skill with workflows/ directory:
+        - workflows/issue-creation-workflow.md
+        - workflows/plan-workflow.md
+        - workflows/commit-workflow.md
+        - workflows/review-workflow.md
+        - workflows/approval-workflow.md
+      - The SKILL.md file describes the skill's purpose and lists all available workflows
 
-   **For updating existing setup:**
-   - Review existing .claude/ structure to understand current customizations
-   - Propose additions or modifications that complement existing components
-   - Avoid overwriting existing customizations without user approval
+   b. **Design Multiple Thin Orchestrators Around the ONE Skill (Orchestration Layer)**
+      - Create MULTIPLE commands and/or agents, each referencing a different workflow from your ONE domain skill
+      - **Commands**: Create 3-6 line interactive orchestrators (one per workflow, or per user scenario)
+        - Format: Minimal YAML frontmatter + single instruction to invoke a specific skill workflow
+        - Pattern: "Use the {domain-skill-name} skill and follow its {workflow-name} exactly as written"
+        - Each command orchestrates ONE workflow from the skill
+        - Adds interactivity and context injection, but all logic lives in the skill
+        - Example mapping:
+          - `/create-plugin` → invokes plugin-development-skill's scaffolding-workflow
+          - `/validate-plugin` → invokes plugin-development-skill's validation-workflow
+          - `/release-plugin` → invokes plugin-development-skill's release-workflow
 
-   - Create a structured recommendations document for user review and implementation
+      - **Agents**: Create autonomous orchestrators (can be longer than commands)
+        - Each agent orchestrates one or more workflows from the skill
+        - Include role context and guidance for autonomous decision-making
+        - Example: An agent that autonomously manages the entire plugin workflow chain could reference multiple workflows
+        - Delegate all detailed procedures to the skill rather than containing logic itself
+        - Example: `plugins/obsidian/agents/options-analysis-agent.md` references skill workflows
+
+   c. **Validate Architecture Alignment**
+      - [ ] Are you proposing ONE domain-specific skill (not multiple skills)?
+      - [ ] Does that ONE skill contain all the workflows (not scattered across multiple skills)?
+      - [ ] Are each proposed command/agent 3-6 lines that just reference ONE specific workflow from the skill?
+      - [ ] Do commands/agents reference the skill and add interactivity but delegate all logic to the skill?
+      - [ ] Do you have multiple commands/agents, each orchestrating a different workflow from the ONE skill?
+      - [ ] Have you shown examples that follow the github-gtd pattern (ONE skill → MULTIPLE commands)?
+      - If any checkbox is unchecked, revise your approach before proceeding
+
+5. **Present Analysis to User via Chat**
+
+   Output your analysis directly in chat, structured as follows:
+
+   - **Repository Analysis Summary**: Type, primary technologies, identified workflow gaps and opportunities
+
+   - **Proposed ONE Domain-Specific Skill**: Explain:
+     - What domain expertise and workflows this ONE skill would provide
+     - The skill name (should be domain-focused)
+     - All the workflows it would contain (e.g., workflows/scaffolding.md, workflows/validation.md, workflows/release.md)
+     - Why this single consolidated skill is better than multiple skills
+
+   - **Proposed Commands**: Show the set of commands that orchestrate different workflows from the ONE skill
+     - For each command, show:
+       - The actual thin format (3-6 lines, similar to gh-issue.md)
+       - Which specific workflow from the skill it orchestrates
+       - What user interaction it enables
+     - Group them to show how they coordinate around the one skill
+     - Example:
+       ```
+       /create-plugin → uses plugin-development-skill's scaffolding-workflow
+       /validate-plugin → uses plugin-development-skill's validation-workflow
+       /release-plugin → uses plugin-development-skill's release-workflow
+       ```
+
+   - **Proposed Agents** (if any): Show how they orchestrate workflows from the ONE skill
+     - For each agent, explain:
+       - What autonomous capability it provides
+       - Which workflow(s) from the skill it orchestrates
+
+   - **Priority Tiers**: Group commands/agents into High/Medium/Low impact categories with rationale
+
+   **Important: No file creation at this stage**
+   - Do not create .claude/ directory or subdirectories yet
+   - Do not create recommendation documents
+   - Focus on interactive discussion of the proposed architecture
+
+   **After presenting analysis:**
+   - Ask the user which components they would like to implement first
+   - Offer to provide implementation guidance for any approved component
+   - Be ready to refine the architecture based on user feedback
 
 ### Guidelines
 
@@ -120,14 +183,17 @@ Your work is complete when:
 - ✅ Repository type, domain, and primary technologies are clearly identified
 - ✅ Common development operations and workflows are catalogued
 - ✅ Repository-specific automation gaps are identified and documented
-- ✅ Custom skills, commands, and agents are proposed with clear rationale
-- ✅ Proposed components show how they integrate with github-gtd workflows
-- ✅ Implementation effort and impact prioritization is provided
-
-- ✅ **For first-time setup**: .claude/ directory structure created with subdirectories (skills, commands, agents)
-- ✅ **For update scenario**: Existing customizations respected, no overwrites without approval
-- ✅ A structured recommendations document is generated with markdown structure templates
-- ✅ The recommendations document is provided to the user for review and implementation
+- ✅ Skills-first architecture is proposed where:
+  - ONE domain-specific skill is proposed (not multiple skills)
+  - That ONE skill contains MULTIPLE workflows (scaffolding, validation, release, etc.)
+  - MULTIPLE commands are proposed, each orchestrating a different workflow from the ONE skill
+  - Each command is 3-6 lines that reference the skill (thin orchestrators)
+  - Agents (if any) orchestrate workflows from the ONE skill while adding autonomous decision-making
+- ✅ Clear visual examples show the ONE-skill-to-MULTIPLE-commands relationship (like github-gtd pattern)
+- ✅ Implementation effort and impact prioritization is provided for all commands/agents
+- ✅ Analysis is presented to user in chat (not as a file)
+- ✅ User is asked which components they would like to implement first
+- ✅ No .claude/ files or directories have been created yet
 
 ## Error Handling
 
@@ -160,59 +226,137 @@ If you encounter the following issues, address them as indicated:
 - If updating, clearly mark what's new vs. what's being modified
 - Suggest user review changes before implementation
 
-## Output Structure Templates
+## Architecture Examples to Reference
 
-The recommendations document you generate should follow this markdown structure. You provide these templates to help the user understand and implement your recommendations:
+When presenting your analysis and during implementation, refer users to these examples that demonstrate the skills-first architecture:
 
-```markdown
-# Custom Workflow Recommendations for [Repository Name]
+### Example 1: Skill Structure (Foundation Layer)
 
-## Repository Analysis
+Location: `plugins/github/skills/github-gtd/`
 
-- Type: [Library/Application/Framework/Tool/Monorepo/Other]
-- Primary Technology: [Language/Framework]
-- Key Dependencies: [Major frameworks/tools]
-- Identified Operations: [Bulleted list of common workflows]
-
-## Proposed Skills
-
-### [skill-name-description]
-- **File location**: `.claude/skills/[skill-name]/SKILL.md`
-- **Purpose**: [What domain knowledge this skill provides]
-- **Rationale**: [Why this skill is needed based on repository analysis]
-- **Integration**: [How it works with github-gtd workflows]
-- **Effort estimate**: [Low/Medium/High]
-
-## Proposed Commands
-
-### [/command-name]
-- **File location**: `.claude/commands/[command-name].md`
-- **Purpose**: [What interactive workflow it provides]
-- **Rationale**: [Why this command would improve developer workflows]
-- **Integration**: [How it works with github-gtd workflows]
-- **Effort estimate**: [Low/Medium/High]
-
-## Proposed Agents
-
-### [agent-name]
-- **File location**: `.claude/agents/[agent-name].md`
-- **Purpose**: [What autonomous task it performs]
-- **Rationale**: [Why this agent would improve development automation]
-- **Trigger conditions**: [When/how it runs]
-- **Effort estimate**: [Low/Medium/High]
-
-## Implementation Priority
-
-### High Impact
-[Components that provide immediate value and should be implemented first]
-
-### Medium Impact
-[Nice-to-have components that add value but are less critical]
-
-### Low Impact
-[Future considerations or components for specific scenarios]
-
-## Next Steps
-
-[Guidance for implementing the proposed components using the templates above]
+Structure:
 ```
+skills/github-gtd/
+├── SKILL.md (overview of the skill, available workflows)
+└── workflows/
+    ├── issue-creation-workflow.md (detailed procedure)
+    ├── plan-workflow.md (detailed procedure)
+    ├── commit-workflow.md (detailed procedure)
+    └── [other domain-specific workflows]
+```
+
+Content characteristics:
+- SKILL.md: Overview, when to use this skill, list of available workflow files
+- Workflow files: Detailed step-by-step procedures with bash commands, guidelines, success criteria
+
+### Example 2: Thin Command Orchestration (Orchestration Layer)
+
+Location: `plugins/github/commands/gh-issue.md`
+
+Content pattern (3-6 lines total):
+```markdown
+---
+description: Create a GitHub issue for this repo using templates and conventions
+---
+
+Use the github-gtd skill and follow its issue-creation-workflow exactly as written.
+```
+
+Key characteristics:
+- Minimal YAML frontmatter
+- Single clear instruction to invoke a skill workflow
+- No procedural logic in the command file itself
+- References the specific workflow file in the skill's workflows/ directory
+
+### Example 3: ONE Skill → MULTIPLE Commands Pattern
+
+Directory structure showing the correct relationship:
+```
+.claude/
+├── skills/
+│   └── plugin-development-skill/          ← ONE SKILL
+│       ├── SKILL.md                       (describes skill, lists workflows)
+│       └── workflows/
+│           ├── scaffolding-workflow.md
+│           ├── validation-workflow.md
+│           ├── release-workflow.md
+│           └── documentation-workflow.md
+│
+└── commands/
+    ├── create-plugin.md                   ← MULTIPLE COMMANDS
+    │   └── "Use plugin-development-skill's scaffolding-workflow"
+    ├── validate-plugin.md
+    │   └── "Use plugin-development-skill's validation-workflow"
+    ├── release-plugin.md
+    │   └── "Use plugin-development-skill's release-workflow"
+    └── generate-plugin-docs.md
+        └── "Use plugin-development-skill's documentation-workflow"
+```
+
+**Pattern**: ONE skill with multiple workflows → MULTIPLE thin commands that each reference ONE workflow
+
+Real example from the codebase:
+```
+plugins/github/
+├── skills/github-gtd/                    ← ONE SKILL
+│   ├── SKILL.md
+│   └── workflows/
+│       ├── issue-creation-workflow.md
+│       ├── plan-workflow.md
+│       ├── commit-workflow.md
+│       ├── review-workflow.md
+│       └── [other workflows]
+│
+└── commands/                             ← MULTIPLE COMMANDS
+    ├── gh-issue.md → github-gtd's issue-creation-workflow
+    ├── gh-plan.md → github-gtd's plan-workflow
+    ├── gh-commit.md → github-gtd's commit-workflow
+    ├── gh-review.md → github-gtd's review-workflow
+    └── [more commands]
+```
+
+### Example 4: Agent Orchestration
+
+Location: `plugins/obsidian/agents/options-analysis-agent.md`
+
+Characteristics:
+- Longer than commands (includes autonomous role context and decision-making guidance)
+- Still delegates detailed methodology and procedures to skills
+- References the skills it orchestrates and the specific workflows they provide
+
+### When Presenting Your Recommendations
+
+Follow this structure when presenting to the user:
+
+**THE ONE DOMAIN-SPECIFIC SKILL:**
+- Skill name (e.g., "plugin-development-skill", "api-management-skill")
+- What domain expertise it provides
+- ALL the workflows it would contain (list them all, e.g., scaffolding-workflow, validation-workflow, release-workflow, documentation-workflow)
+- A brief description of each workflow and what problem it solves
+- Why this single consolidated skill is better than multiple separate skills
+
+**THE MULTIPLE COMMANDS (organized by workflow they orchestrate):**
+
+For each command, show:
+```markdown
+### /create-plugin
+Orchestrates: `plugin-development-skill`'s `scaffolding-workflow`
+Use the plugin-development-skill and follow its scaffolding-workflow exactly as written.
+```
+
+- The actual 3-6 line thin format
+- Which workflow from the ONE skill it orchestrates
+- What user interaction/interactivity it enables
+- Low effort estimate (these are thin orchestrators)
+
+Group them to visually show how multiple commands coordinate around the one skill.
+
+**AGENTS (if any):**
+- What autonomous capability each provides
+- Which workflows from the ONE skill it orchestrates
+- Effort estimate
+
+**VISUAL: Show the architecture**
+- Include a diagram or ASCII art showing: ONE SKILL → MULTIPLE COMMANDS
+
+After presenting all components with this structure, ask the user which they would like to implement first, and be ready to help with implementation for any approved component.
