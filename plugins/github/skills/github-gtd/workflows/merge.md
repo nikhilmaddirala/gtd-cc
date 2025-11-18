@@ -2,6 +2,10 @@
 description: Merge approved PR, close issue, and clean up branch and worktree
 ---
 
+## Overview
+
+Execute the final stage of the workflow by merging approved pull requests, closing issues, and cleaning up all development artifacts.
+
 ## Context
 
 Start by gathering issues and PRs approved for merge:

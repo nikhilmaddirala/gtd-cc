@@ -1,8 +1,12 @@
 ---
-description: Sets up workflow labels and worktree directory for issue-driven development
+description: Set up essential GitHub workflow infrastructure including labels and worktree directory
 ---
 
-## Context: Repository State
+## Overview
+
+Configure GitHub repositories for the 7-stage issue-driven development workflow by creating workflow labels and setting up isolated development environments.
+
+## Context
 
 ```bash
 # Check current repository
