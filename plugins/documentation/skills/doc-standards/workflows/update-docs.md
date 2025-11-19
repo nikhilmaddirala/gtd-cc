@@ -46,6 +46,7 @@ Categorize the change:
 - **Architecture changed** → Update /docs/architecture.md and directory READMEs
 - **API changed** → Update /docs/api-reference.md
 - **Directory structure changed** → Update directory READMEs
+- **Contribution processes changed** → Update CONTRIBUTING.md
 - **Bug fixed** → Document in /docs/troubleshooting.md or release notes
 
 ### Step 2: Locate Documentation to Update
@@ -144,6 +145,7 @@ grep -r "\[.*\](" . --include="*.md" | grep -oP '\]\(\K[^)]+' | sort | uniq
 # Manually check key links:
 test -f docs/api-reference.md && echo "✓ api-reference exists"
 test -f docs/architecture.md && echo "✓ architecture exists"
+test -f CONTRIBUTING.md && echo "✓ CONTRIBUTING exists"
 test -f README.md && echo "✓ README exists"
 ```
 

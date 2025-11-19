@@ -25,6 +25,7 @@ Documentation should scale naturally with project complexity using three layers:
 
 ```
 README.md          → Entry point (primary door)
+CONTRIBUTING.md    → Contributor guidance (evolves with project)
 Directory READMEs  → Local context (module explanations)
 /docs/             → Deep dives (multi-page content)
 ```
@@ -36,16 +37,19 @@ This three-layer model prevents:
 - Confusion about where documentation lives
 - Unnecessary duplication
 
+**Core Documentation Files:** README.md and CONTRIBUTING.md are the foundational documentation files that define project understanding and contribution pathways for all users and collaborators.
+
 ## Key Principles
 
 1. The README is the front door - keep it simple and user-focused
-2. Directory docs localize complexity to relevant modules
-3. Deep docs in /docs handle multi-page explanations
-4. Each fact lives in only one place - no duplication
-5. Documentation grows downward as needed - start minimal
-6. Maintenance is continuous, not occasional - tie doc updates to PRs
-7. Version documentation as the project evolves
-8. Documentation rot is prevented through quarterly reviews
+2. CONTRIBUTING.md guides contributor onboarding and evolves with project complexity
+3. Directory docs localize complexity to relevant modules
+4. Deep docs in /docs handle multi-page explanations
+5. Each fact lives in only one place - no duplication
+6. Documentation grows downward as needed - start minimal
+7. Maintenance is continuous, not occasional - tie doc updates to PRs
+8. Version documentation as the project evolves
+9. Documentation rot is prevented through quarterly reviews
 
 ## Documentation Lifecycle: Three Phases
 
@@ -87,6 +91,26 @@ Guidelines:
 - User-focused, not internal-focused
 - Link to deeper docs in /docs rather than including them
 - Update on every PR that changes behavior
+
+### CONTRIBUTING.md
+
+Core contributor guidance document that evolves with project complexity.
+
+Purpose:
+- Defines contribution pathways and expectations
+- Scales from simple section to comprehensive guide
+- Prevents contributor confusion and fragmentation
+
+Evolution:
+- **Phase 1**: Section within README.md for simple projects
+- **Phase 2**: Maintained in main README with module-specific guidance in directory READMEs
+- **Phase 3**: Dedicated file or /docs/guides/contributing.md with comprehensive processes
+
+Guidelines:
+- Keep instructions actionable and clear
+- Include development setup, testing, and PR processes
+- Reference current project standards and tools
+- Update when workflows or requirements change
 
 ### Directory READMEs
 
@@ -275,6 +299,7 @@ This skill includes detailed workflows for:
 A well-maintained documentation system:
 
 - README is the clear entry point, not overwhelming
+- CONTRIBUTING.md provides clear contributor guidance appropriate to project complexity
 - Directory READMEs make local context obvious
 - /docs is organized and cross-referenced
 - No information duplicated across layers
