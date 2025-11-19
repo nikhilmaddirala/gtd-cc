@@ -17,6 +17,9 @@
     "./commands/gh-commit.md",
     "./commands/gh-all-in-one.md"
   ],
+  "agents": [
+    "./agents/gtd-github-agent.md"
+  ],
   "skills": [
     "./skills/github-gtd"
   ]
