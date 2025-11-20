@@ -1,0 +1,34 @@
+{
+  "name": "your-plugin-name",
+  "version": "0.1.0",
+  "description": "Brief description of what this integration plugin does",
+  "author": "Your Name",
+  "homepage": "https://github.com/yourusername/gtd-cc/tree/main/plugins/your-plugin-name",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "setup",
+      "path": "commands/setup.md",
+      "description": "Initial setup and configuration command"
+    },
+    {
+      "name": "main-command",
+      "path": "commands/main-command.md",
+      "description": "Primary workflow command"
+    }
+  ],
+  "agents": [
+    {
+      "name": "main-agent",
+      "path": "agents/main-agent.md",
+      "description": "Autonomous agent for main workflow"
+    }
+  ],
+  "skills": [
+    {
+      "name": "integration-skill",
+      "path": "skills/integration-skill/SKILL.md",
+      "description": "Domain expertise and API integration knowledge"
+    }
+  ]
+}

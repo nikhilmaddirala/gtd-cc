@@ -1,0 +1,34 @@
+{
+  "name": "your-utility-name",
+  "version": "0.1.0",
+  "description": "Utility plugin providing [specific capabilities]",
+  "author": "Your Name",
+  "homepage": "https://github.com/yourusername/gtd-cc/tree/main/plugins/your-utility-name",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "core-operation",
+      "path": "commands/core-operation.md",
+      "description": "Primary utility operation"
+    },
+    {
+      "name": "configuration",
+      "path": "commands/configuration.md",
+      "description": "Configure utility settings"
+    }
+  ],
+  "agents": [
+    {
+      "name": "batch-processing",
+      "path": "agents/batch-processing.md",
+      "description": "Batch processing and advanced operations"
+    }
+  ],
+  "skills": [
+    {
+      "name": "utility-knowledge",
+      "path": "skills/utility-knowledge/SKILL.md",
+      "description": "Technical documentation and usage patterns"
+    }
+  ]
+}

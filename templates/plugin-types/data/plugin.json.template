@@ -1,0 +1,39 @@
+{
+  "name": "your-data-plugin-name",
+  "version": "0.1.0",
+  "description": "Data plugin for [data processing domain]",
+  "author": "Your Name",
+  "homepage": "https://github.com/yourusername/gtd-cc/tree/main/plugins/your-data-plugin-name",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "process-data",
+      "path": "commands/process-data.md",
+      "description": "Process and transform data"
+    },
+    {
+      "name": "create-pipeline",
+      "path": "commands/create-pipeline.md",
+      "description": "Create data processing pipeline"
+    }
+  ],
+  "agents": [
+    {
+      "name": "batch-processor",
+      "path": "agents/batch-processor.md",
+      "description": "Batch data processing agent"
+    },
+    {
+      "name": "pipeline-executor",
+      "path": "agents/pipeline-executor.md",
+      "description": "Pipeline execution and monitoring"
+    }
+  ],
+  "skills": [
+    {
+      "name": "data-processing",
+      "path": "skills/data-processing/SKILL.md",
+      "description": "Data processing techniques and best practices"
+    }
+  ]
+}

@@ -137,43 +137,62 @@ Plus continuous monitoring with `gh-maintenance` agent.
 
 ## Development Workflow
 
-### Adding a New Command
+### Plugin Development Process
+
+For comprehensive guidance on all aspects of plugin development, see [DEVELOPMENT.md](DEVELOPMENT.md):
+
+- Choosing a plugin type (Integration, Utility, Workflow, or Data)
+- Creating components using templates
+- Testing and validation
+- Best practices and integration patterns
+- Troubleshooting common issues
+
+### Quick Start: Adding a New Command
 
 1. Identify which plugin it belongs to (or create new plugin)
-2. Create command file: `plugins/<plugin-name>/commands/<name>.md`
-3. Add it to the plugin manifest: `.claude-plugin/plugin.json`
-4. Update the plugin README.md
-5. Test locally with `/command-name`
-6. Create PR with changes
+2. Use the command template: `templates/components/command-template.md`
+3. Create command file: `plugins/<plugin-name>/commands/<name>.md`
+4. Add it to the plugin manifest: `.claude-plugin/plugin.json`
+5. Update the plugin README.md
+6. Test locally with `/command-name`
+7. Run validation checks (see Validation section below)
+8. Create PR with changes
 
-### Adding a New Skill
+### Quick Start: Adding a New Skill
 
 1. Create skill directory: `plugins/<plugin-name>/skills/<skill-name>/`
-2. Create comprehensive `SKILL.md` documentation
-3. Add skill to plugin manifest if needed
-4. Update plugin README to reference the skill
-5. Create PR with changes
+2. Use the skill template: `templates/components/skill-template.md`
+3. Create comprehensive `SKILL.md` documentation
+4. Add skill to plugin manifest if needed
+5. Update plugin README to reference the skill
+6. Run validation checks
+7. Create PR with changes
 
-### Adding a New Agent
+### Quick Start: Adding a New Agent
 
-1. Create agent file: `plugins/<plugin-name>/agents/<name>.md`
-2. Add it to the plugin manifest: `.claude-plugin/plugin.json`
-3. Document autonomy requirements and error handling
-4. Update plugin README.md
-5. Create PR with changes
+1. Use the agent template: `templates/components/agent-template.md`
+2. Create agent file: `plugins/<plugin-name>/agents/<name>.md`
+3. Add it to the plugin manifest: `.claude-plugin/plugin.json`
+4. Document autonomy requirements and error handling
+5. Update plugin README.md
+6. Run validation checks
+7. Create PR with changes
 
 ### Creating a New Plugin
 
-1. Create plugin directory: `plugins/<new-plugin-name>/`
-2. Create structure:
+1. Choose a plugin type: Integration, Utility, Workflow, or Data
+2. Review the plugin type template in `templates/plugin-types/<type>/`
+3. Create plugin directory: `plugins/<new-plugin-name>/`
+4. Create structure:
    ```bash
    mkdir -p plugins/<new-plugin-name>/{.claude-plugin,commands,agents,skills}
    ```
-3. Create plugin manifest: `.claude-plugin/plugin.json`
-4. Create plugin README.md
-5. Add plugin to root `.claude-plugin/marketplace.json`
-6. Implement initial components (skills, commands, agents)
-7. Create PR with complete plugin
+5. Create plugin manifest: `.claude-plugin/plugin.json` (use template)
+6. Create plugin README.md
+7. Add plugin to root `.claude-plugin/marketplace.json`
+8. Implement initial components using templates
+9. Run validation checks
+10. Create PR with complete plugin
 
 ## Conventions
 
@@ -201,7 +220,22 @@ Plugin manifests should:
 - Follow consistent formatting
 - Include version and description
 
-## Testing Your Changes
+## Testing and Validation
+
+### Validation Checklist
+
+Before submitting a PR, ensure your changes pass all validation checks:
+
+See [templates/tools/VALIDATION-GUIDE.md](templates/tools/VALIDATION-GUIDE.md) for comprehensive validation rules covering:
+
+- Plugin structure validation
+- JSON manifest validation
+- Component (command, agent, skill) validation
+- Link validation
+- Content quality checks
+- Pre-submission checklist
+
+### Quick Validation
 
 Before submitting a PR:
 
@@ -211,10 +245,36 @@ Before submitting a PR:
    jq . plugins/<plugin>/.claude-plugin/plugin.json
    ```
 
-2. Verify directory structure is complete
-3. Test commands/agents locally if possible
-4. Check that all links and references are valid
-5. Ensure documentation is clear and complete
+2. Verify directory structure is complete:
+   ```bash
+   # Check plugin has required structure
+   ls -la plugins/<plugin-name>/
+   ```
+
+3. Check all referenced files exist:
+   ```bash
+   # Verify manifest references are correct
+   find plugins/<plugin-name>/ -type f -name "*.md"
+   ```
+
+4. Test commands/agents locally if possible
+5. Validate all links and references are valid
+6. Ensure documentation is clear, complete, and has no placeholder text
+7. Verify no syntax errors in YAML frontmatter
+8. Run the full validation checklist from VALIDATION-GUIDE.md
+
+### Using Templates
+
+Use the provided templates to ensure consistency:
+
+- **Command Template**: `templates/components/command-template.md`
+- **Agent Template**: `templates/components/agent-template.md`
+- **Skill Template**: `templates/components/skill-template.md`
+- **Plugin Type Templates**: `templates/plugin-types/<type>/plugin.json.template`
+
+### Common Issues
+
+See [DEVELOPMENT.md - Troubleshooting](DEVELOPMENT.md#troubleshooting) for solutions to common problems during development.
 
 ## Pull Request Guidelines
 

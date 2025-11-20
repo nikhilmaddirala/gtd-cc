@@ -1,0 +1,34 @@
+{
+  "name": "your-workflow-name",
+  "version": "0.1.0",
+  "description": "Workflow plugin for [methodology name]",
+  "author": "Your Name",
+  "homepage": "https://github.com/yourusername/gtd-cc/tree/main/plugins/your-workflow-name",
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "main-workflow",
+      "path": "commands/main-workflow.md",
+      "description": "Execute main workflow with guidance"
+    },
+    {
+      "name": "setup",
+      "path": "commands/setup.md",
+      "description": "Initialize workflow environment"
+    }
+  ],
+  "agents": [
+    {
+      "name": "workflow-executor",
+      "path": "agents/workflow-executor.md",
+      "description": "Autonomous workflow execution"
+    }
+  ],
+  "skills": [
+    {
+      "name": "methodology",
+      "path": "skills/methodology/SKILL.md",
+      "description": "Workflow methodology and best practices"
+    }
+  ]
+}
