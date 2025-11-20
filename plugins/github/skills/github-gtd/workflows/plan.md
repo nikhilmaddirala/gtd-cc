@@ -144,7 +144,7 @@ When you've completed the planning process, post a comment on the issue with thi
 ```
 
 After posting the plan:
-- Update the issue label from "needs planning" to "needs plan approval"
+- Update the issue label from "status-planning-todo" to "status-planning-review"
 
 ## Success Criteria
 
@@ -158,4 +158,4 @@ After posting the plan:
 - ✅ Implementation plan posted on issue with required structure:
   - Summary, Technical Approach, Files to Create/Modify, Implementation Steps, Options (if applicable)
 - ✅ Plan is detailed enough for autonomous execution by gh-build agent
-- ✅ Issue label updated from "needs planning" to "needs plan approval"
+- ✅ Issue label updated from "status-planning-todo" to "status-planning-review"

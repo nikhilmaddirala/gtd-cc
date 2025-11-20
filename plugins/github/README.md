@@ -46,55 +46,55 @@ Every issue progresses through these stages:
 
 **1. Issue creation**
 - Trigger: `/gh-issue "description"` command
-- Label: → `needs planning`
+- Label: → `status-planning-todo`
 - User provides request, AI captures it as lightweight issue with basic categorization
 
 **2. Planning**
 - Trigger: `/gh-plan <issue-number>` command
-- Label: `needs planning` → `needs implementation` or `needs plan approval`
+- Label: `status-planning-todo` → `status-planning-review` or `status-planning-done`
 - AI researches and creates implementation plan; auto-approves if confident, otherwise requests human review
 
 **3. Plan approval** (conditional)
 - Trigger: Human reviews plan in issue comments
-- Label: `needs plan approval` → `needs implementation` or back to `needs planning`
+- Label: `status-planning-review` → `status-planning-done` or back to `status-planning-todo`
 - Only occurs if AI requests human input on approach
 
 **4. Implementation**
 - Trigger: `/gh-build <issue-number>` command
-- Label: `needs implementation` → `in review`
+- Label: `status-planning-done` → `status-implementation-todo`
 - AI creates branch/worktree, writes code, creates draft PR
 
 **5. Code review**
 - Trigger: `/gh-review <issue-number>` command
-- Label: `in review` → `ready for approval`
+- Label: `status-implementation-todo` → `status-implementation-review`
 - AI reviews code for quality, security, completeness
 
 **6. Human approval**
 - Trigger: Human approves PR in GitHub UI
-- Label: `ready for approval` → `approved for merge`
+- Label: `status-implementation-review` → `status-implementation-done`
 - Human tests and approves implementation
 
 **7. Merge and cleanup**
 - Trigger: `/gh-merge <issue-number>` command or auto-merge
-- Label: `approved for merge` → closed
+- Label: `status-implementation-done` → closed
 - Squash merge to main, delete branch/worktree
 
 ### Label reference
 
-Workflow states (applied to issues):
-- `needs planning` - Requires implementation plan
-- `needs plan approval` - Human must review approach
-- `needs implementation` - Ready for coding
-- `in review` - Code under review
-- `ready for approval` - Awaiting human approval
-- `approved for merge` - Ready to merge
+Status labels (track issue progress through planning and implementation):
+- `status-planning-todo` - Requires implementation plan
+- `status-planning-review` - Plan is under review (conditional stage)
+- `status-planning-done` - Planning completed, ready for implementation
+- `status-implementation-todo` - Ready for coding
+- `status-implementation-review` - Implementation under review
+- `status-implementation-done` - Implementation completed, ready to merge
 - `blocked` - Work stopped, needs intervention
 
-Issue types (categorization):
-- `feature` - New functionality
-- `bug` - Defect or unexpected behavior
-- `docs` - Documentation changes
-- `refactor` - Code improvements without behavior change
+Type labels (categorize issue):
+- `type-feature` - New functionality
+- `type-bug` - Defect or unexpected behavior
+- `type-docs` - Documentation changes
+- `type-refactor` - Code improvements without behavior change
 
 
 
@@ -107,13 +107,13 @@ Issues serve as the single source of truth, with labels tracking workflow state.
 | Stage | Label | What Happens | Implementation Status |
 |-------|-------|--------------|----------------------|
 | 0. Repository initialization | none | AI sets up labels, issue templates, PR templates, branch protection rules | **Manual**: Create repo, configure settings<br>**Command**: `/gh-repo` 📋<br>**Agent**: Repo init agent 📋 |
-| 1. Issue creation | → `needs planning` | User provides task description; AI captures lightweight issue with basic categorization | **Manual**: Create issue in GitHub UI<br>**Command**: `/gh-issue "description"` ✅<br>**Agent**: Issue creation agent 📋 |
-| 2. Planning | `needs planning` → `needs implementation` or `needs plan approval` | AI conducts comprehensive analysis: requirement clarification, scoping, repository research, feasibility assessment, and creates detailed implementation plan; self-assesses confidence; if confident auto-approves to `needs implementation`, otherwise sets `needs plan approval` for human review | **Manual**: Research and write plan in issue comments<br>**Command**: `/gh-plan <issue>` ✅<br>**Agent**: Planning agent 📋 |
-| 3. Plan approval (conditional) | `needs plan approval` → `needs implementation` or `needs planning` | Human reviews AI's plan and reasoning; approves by changing label to `needs implementation`, or requests revision by changing to `needs planning` with feedback | **Manual**: Review plan, change label in GitHub UI<br>**Command**: `/gh-approve-plan <issue>` 📋<br>**Agent**: N/A (requires human judgment) |
-| 4. Implementation | `needs implementation` → `in review` | AI creates branch `issue-<num>-<slug>`; sets up worktree; implements code with conventional commits; creates draft PR linked to issue; runs tests | **Manual**: Write code, create PR manually<br>**Command**: `/gh-build <issue>` 📋<br>**Agent**: Build agent 📋 |
-| 5. Code review | `in review` → `ready for approval` | AI reviews code for style, security, completeness, test coverage; adds review comments; marks PR as ready for review | **Manual**: Review code manually in GitHub<br>**Command**: `/gh-review <issue>` 📋<br>**Agent**: Review agent 📋 |
-| 6. Human approval | `ready for approval` → `approved for merge` | Human reviews implementation, tests locally, approves PR in GitHub UI | **Manual**: Review and approve PR in GitHub UI<br>**Command**: `/gh-approve <issue>` 📋<br>**Agent**: N/A (requires human judgment) |
-| 7. Merge and cleanup | `approved for merge` → closed | AI squash-merges PR to main; closes issue and PR; deletes branch; removes worktree; verifies cleanup | **Manual**: Merge PR, delete branch/worktree<br>**Command**: `/gh-merge <issue>` 📋<br>**Agent**: Merge agent 📋 |
+| 1. Issue creation | → `status-planning-todo` | User provides task description; AI captures lightweight issue with basic categorization | **Manual**: Create issue in GitHub UI<br>**Command**: `/gh-issue "description"` ✅<br>**Agent**: Issue creation agent 📋 |
+| 2. Planning | `status-planning-todo` → `status-planning-done` or `status-planning-review` | AI conducts comprehensive analysis: requirement clarification, scoping, repository research, feasibility assessment, and creates detailed implementation plan; self-assesses confidence; if confident auto-approves to `status-planning-done`, otherwise sets `status-planning-review` for human review | **Manual**: Research and write plan in issue comments<br>**Command**: `/gh-plan <issue>` ✅<br>**Agent**: Planning agent 📋 |
+| 3. Plan approval (conditional) | `status-planning-review` → `status-planning-done` or `status-planning-todo` | Human reviews AI's plan and reasoning; approves by changing label to `status-planning-done`, or requests revision by changing to `status-planning-todo` with feedback | **Manual**: Review plan, change label in GitHub UI<br>**Command**: `/gh-approve-plan <issue>` 📋<br>**Agent**: N/A (requires human judgment) |
+| 4. Implementation | `status-planning-done` → `status-implementation-todo` | AI creates branch `issue-<num>-<slug>`; sets up worktree; implements code with conventional commits; creates draft PR linked to issue; runs tests | **Manual**: Write code, create PR manually<br>**Command**: `/gh-build <issue>` 📋<br>**Agent**: Build agent 📋 |
+| 5. Code review | `status-implementation-todo` → `status-implementation-review` | AI reviews code for style, security, completeness, test coverage; adds review comments; marks PR as ready for review | **Manual**: Review code manually in GitHub<br>**Command**: `/gh-review <issue>` 📋<br>**Agent**: Review agent 📋 |
+| 6. Human approval | `status-implementation-review` → `status-implementation-done` | Human reviews implementation, tests locally, approves PR in GitHub UI | **Manual**: Review and approve PR in GitHub UI<br>**Command**: `/gh-approve <issue>` 📋<br>**Agent**: N/A (requires human judgment) |
+| 7. Merge and cleanup | `status-implementation-done` → closed | AI squash-merges PR to main; closes issue and PR; deletes branch; removes worktree; verifies cleanup | **Manual**: Merge PR, delete branch/worktree<br>**Command**: `/gh-merge <issue>` 📋<br>**Agent**: Merge agent 📋 |
 
 **Implementation Status Legend:**
 - ✅ Implemented and functional
@@ -254,7 +254,7 @@ Here's how a typical feature request flows through the complete workflow:
 /gh-repo
 ```
 AI sets up repository with:
-- Workflow labels (needs planning, needs implementation, etc.)
+- Workflow labels (status-planning-todo, status-implementation-todo, etc.)
 - Issue templates
 - PR templates
 - Branch protection rules
@@ -265,7 +265,7 @@ AI sets up repository with:
 ```
 AI creates Issue #123 with:
 - Formatted description and acceptance criteria
-- Label: `needs planning`
+- Label: `status-planning-todo`
 
 **2. Planning**
 ```bash
@@ -280,12 +280,12 @@ AI performs research:
 AI self-assesses confidence:
 - This is a well-understood pattern with clear implementation path
 - **Decision**: Auto-approve
-- Updates Issue #123 label: `needs implementation`
+- Updates Issue #123 label: `status-planning-done`
 
 **Alternative scenario**: If the plan involved complex state management or unclear requirements, AI would instead:
 - Add comment: "I need human input on this approach because [reason]"
-- Update Issue #123 label: `needs plan approval`
-- Wait for human to review and change label to `needs implementation`
+- Update Issue #123 label: `status-planning-review`
+- Wait for human to review and change label to `status-planning-done`
 
 **3. Plan approval** (skipped in this example - AI was confident)
 
@@ -305,7 +305,7 @@ AI implements the feature:
   test(ui): add dark mode toggle tests
   ```
 - Creates draft PR #45 with description, screenshots, linked to Issue #123
-- Updates Issue #123 label: `in review`
+- Updates Issue #123 label: `status-implementation-todo`
 
 **5. Code review**
 ```bash
@@ -317,7 +317,7 @@ AI reviews the implementation:
 - Confirms test coverage is adequate
 - Adds review comments on PR #45
 - Marks PR #45 as "Ready for review"
-- Updates Issue #123 label: `ready for approval`
+- Updates Issue #123 label: `status-implementation-review`
 
 **6. Human approval**
 Human reviews in GitHub:
@@ -325,7 +325,7 @@ Human reviews in GitHub:
 - Tests dark mode toggle functionality
 - Reviews code changes on PR #45
 - Approves PR in GitHub UI
-- Issue #123 label automatically updates: `approved for merge`
+- Issue #123 label automatically updates: `status-implementation-done`
 
 **7. Merge and cleanup**
 ```bash

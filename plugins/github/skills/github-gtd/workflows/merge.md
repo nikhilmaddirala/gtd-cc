@@ -12,13 +12,13 @@ Start by gathering issues and PRs approved for merge:
 
 ```bash
 # Get issues approved for merge
-gh issue list --state open --label "approved for merge" --limit 10 --json number,title,labels,author
+gh issue list --state open --label "status-implementation-done" --limit 10 --json number,title,labels,author
 
 # Get corresponding PRs
 gh pr list --state open --limit 20 --json number,title,headRefName,mergeable,state,reviews
 ```
 
-If $ARGUMENTS is empty, show the user recent issues with "approved for merge" label and ask them to select one.
+If $ARGUMENTS is empty, show the user recent issues with "status-implementation-done" label and ask them to select one.
 
 If $ARGUMENTS contains only digits, treat it as an issue number. If $ARGUMENTS contains text, search for matching items from the recent list.
 
@@ -57,7 +57,7 @@ git branch -a | grep "issue-ISSUE_NUMBER" || echo "No local branch found"
 ### Process
 
 1. **Verify Merge Readiness**
-   - Confirm issue has "approved for merge" label
+   - Confirm issue has "status-implementation-done" label
    - Confirm linked PR exists and is approved
    - Verify PR is mergeable (no conflicts, checks passing)
    - Verify PR has required approvals

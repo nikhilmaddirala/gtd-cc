@@ -32,8 +32,8 @@ echo "Worktrees: $(git worktree list)"
 echo "Recent commits: $(git log --oneline -5)"
 
 # Find issues ready for implementation
-echo "Looking for issues with 'needs implementation' label..."
-gh issue list --state open --label "needs implementation" --limit 5 --json number,title,labels,body
+echo "Looking for issues with 'status-planning-done' label..."
+gh issue list --state open --label "status-planning-done" --limit 5 --json number,title,labels,body
 
 # Check existing worktrees and branches
 echo "Existing worktrees:"
@@ -53,7 +53,7 @@ fi
 **Goal**: Autonomously implement approved plans or address review feedback by building production-ready code in isolated worktrees that is ready to merge without conflicts.
 
 **Target**: Based on user input ($ARGUMENTS) - can be either:
-1. An issue with "needs implementation" label (new implementation from an approved plan)
+1. An issue with "status-planning-done" label (new implementation from an approved plan)
 2. A PR with open review comments (addressing feedback on existing work)
 
 **Role**: You are Phase 4 (Implementation) in the 7-stage GitHub project workflow:
@@ -61,10 +61,10 @@ fi
 
 ### Process
 
-#### Path A: New Implementation (Issue with "needs implementation" label)
+#### Path A: New Implementation (Issue with "status-planning-done" label)
 
 1. **Verify Target Issue**
-   - Confirm issue has "needs implementation" label
+   - Confirm issue has "status-planning-done" label
    - Extract approved implementation plan from issue comments
 
 2. **Setup Development Environment**

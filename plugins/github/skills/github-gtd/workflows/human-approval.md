@@ -12,13 +12,13 @@ Start by gathering issues and PRs ready for approval:
 
 ```bash
 # Get issues ready for human approval
-gh issue list --state open --label "ready for approval" --limit 10 --json number,title,labels,author
+gh issue list --state open --label "status-implementation-review" --limit 10 --json number,title,labels,author
 
 # Get corresponding PRs
 gh pr list --state open --limit 20 --json number,title,labels,headRefName,state,isDraft
 ```
 
-If $ARGUMENTS is empty, show the user recent issues with "ready for approval" label and ask them to select one.
+If $ARGUMENTS is empty, show the user recent issues with "status-implementation-review" label and ask them to select one.
 
 If $ARGUMENTS contains only digits, treat it as an issue number. If $ARGUMENTS contains text, search for matching items from the recent list.
 
@@ -57,7 +57,7 @@ gh pr checks PR_NUMBER
 ### Process
 
 1. **Verify Issue and PR Status**
-   - Confirm issue has "ready for approval" label
+   - Confirm issue has "status-implementation-review" label
    - Confirm linked PR exists and is ready for review (not draft)
    - Check that AI code review is complete
    - Verify all checks/tests are passing
@@ -115,17 +115,17 @@ gh pr checks PR_NUMBER
 
    **Option A: Approve for merge**
    - Approve the PR in GitHub
-   - Update issue label from "ready for approval" to "approved for merge"
+   - Update issue label from "status-implementation-review" to "status-implementation-done"
    - Optionally add approval comment
 
    **Option B: Request changes**
    - Add review comments specifying what needs to change
-   - Update issue label from "ready for approval" back to "in review"
+   - Update issue label from "status-implementation-review" back to "status-implementation-todo"
    - Tag the implementation for revision
 
    **Option C: Ask questions or need more time**
    - Help user add questions as PR comments
-   - Keep "ready for approval" label until ready to decide
+   - Keep "status-implementation-review" label until ready to decide
 
 6. **Execute Decision**
    Depending on user's choice:
@@ -136,7 +136,7 @@ gh pr checks PR_NUMBER
    gh pr review PR_NUMBER --approve --body "[Optional approval message]"
 
    # Update issue label
-   gh issue edit ISSUE_NUMBER --remove-label "ready for approval" --add-label "approved for merge"
+   gh issue edit ISSUE_NUMBER --remove-label "status-implementation-review" --add-label "status-implementation-done"
 
    # Optionally add comment
    gh issue comment ISSUE_NUMBER --body "Implementation approved. Ready to merge."
@@ -148,7 +148,7 @@ gh pr checks PR_NUMBER
    gh pr review PR_NUMBER --request-changes --body "[Specific feedback on what needs to change]"
 
    # Update issue label
-   gh issue edit ISSUE_NUMBER --remove-label "ready for approval" --add-label "in review"
+   gh issue edit ISSUE_NUMBER --remove-label "status-implementation-review" --add-label "status-implementation-todo"
 
    # Add comment to issue
    gh issue comment ISSUE_NUMBER --body "Changes requested. See PR for details."
@@ -159,7 +159,7 @@ gh pr checks PR_NUMBER
    # Add questions as PR comment
    gh pr comment PR_NUMBER --body "[User's questions or notes]"
 
-   # Label stays "ready for approval"
+   # Label stays "status-implementation-review"
    ```
 
 ### Guidelines
@@ -179,22 +179,22 @@ Your work is complete when:
 - ✅ User has made an informed decision (approve, request changes, or ask questions)
 - ✅ PR approved in GitHub (if approved)
 - ✅ Issue label updated appropriately:
-  - "approved for merge" if approved
-  - "in review" if changes requested
-  - "ready for approval" if questions asked (unchanged)
+  - "status-implementation-done" if approved
+  - "status-implementation-todo" if changes requested
+  - "status-implementation-review" if questions asked (unchanged)
 - ✅ Comments added documenting the decision
 - ✅ User understands next steps
 
 ## Next Steps
 
-**After approval** ("approved for merge" label):
+**After approval** ("status-implementation-done" label):
 - User can run `/gh-merge <issue-number>` to merge and clean up
 - Or wait for autonomous merge agent to handle it
 
-**After requesting changes** ("in review" label):
+**After requesting changes** ("status-implementation-todo" label):
 - Implementation team (or AI) addresses feedback
-- Returns to "ready for approval" when changes are made
+- Returns to "status-implementation-review" when changes are made
 
-**After questions** ("ready for approval" label - unchanged):
+**After questions** ("status-implementation-review" label - unchanged):
 - Wait for questions to be answered
 - Then complete the approval process

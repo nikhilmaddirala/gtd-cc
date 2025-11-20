@@ -37,23 +37,23 @@ gh label list | grep -E "needs planning|needs plan approval|needs implementation
 2. **Set Up Workflow Labels**
    Create labels for workflow state tracking. These are required for all subsequent workflow stages:
 
-   **Workflow state labels:**
+   **Status labels (track issue progress through planning and implementation):**
    ```bash
-   gh label create "needs planning" --description "Requires implementation plan" --color "FEF2C0"
-   gh label create "needs plan approval" --description "Human must review approach" --color "FBCA04"
-   gh label create "needs implementation" --description "Ready for coding" --color "0E8A16"
-   gh label create "in review" --description "Code under review" --color "1D76DB"
-   gh label create "ready for approval" --description "Awaiting human approval" --color "5319E7"
-   gh label create "approved for merge" --description "Ready to merge" --color "0E8A16"
+   gh label create "status-planning-todo" --description "Requires implementation plan" --color "FEF2C0"
+   gh label create "status-planning-review" --description "Plan is under review" --color "FBCA04"
+   gh label create "status-planning-done" --description "Planning completed, ready for implementation" --color "C2E0C6"
+   gh label create "status-implementation-todo" --description "Ready for coding" --color "0E8A16"
+   gh label create "status-implementation-review" --description "Implementation under review" --color "1D76DB"
+   gh label create "status-implementation-done" --description "Implementation completed, ready to merge" --color "6F42C1"
    gh label create "blocked" --description "Work stopped, needs intervention" --color "D93F0B"
    ```
 
-   **Issue type labels (optional but recommended):**
+   **Type labels (categorize issue - optional but recommended):**
    ```bash
-   gh label create "feature" --description "New functionality" --color "A2EEEF"
-   gh label create "bug" --description "Defect or unexpected behavior" --color "D73A4A"
-   gh label create "docs" --description "Documentation changes" --color "0075CA"
-   gh label create "refactor" --description "Code improvements without behavior change" --color "FBCA04"
+   gh label create "type-feature" --description "New functionality" --color "A2EEEF"
+   gh label create "type-bug" --description "Defect or unexpected behavior" --color "D73A4A"
+   gh label create "type-docs" --description "Documentation changes" --color "0075CA"
+   gh label create "type-refactor" --description "Code improvements without behavior change" --color "FBCA04"
    ```
 
 3. **Create Worktree Directory**
