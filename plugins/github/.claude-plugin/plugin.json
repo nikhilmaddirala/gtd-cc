@@ -15,7 +15,8 @@
     "./commands/gh-approve.md",
     "./commands/gh-merge.md",
     "./commands/gh-commit.md",
-    "./commands/gh-all-in-one.md"
+    "./commands/gh-all-in-one.md",
+    "./commands/gh-orchestrate.md"
   ],
   "agents": [
     "./agents/gtd-github-agent.md"
