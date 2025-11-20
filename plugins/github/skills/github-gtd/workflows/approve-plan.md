@@ -12,10 +12,10 @@ Gather the issue details to understand the plan:
 
 ```bash
 # Get recent issues needing plan approval
-gh issue list --state open --label "needs plan approval" --limit 10 --json number,title,labels,author
+gh issue list --state open --label "status-planning-review" --limit 10 --json number,title,labels,author
 ```
 
-If $ARGUMENTS is empty, show the user recent issues with "needs plan approval" label and ask them to select one.
+If $ARGUMENTS is empty, show the user recent issues with "status-planning-review" label and ask them to select one.
 
 If $ARGUMENTS contains only digits, treat it as an issue number. If $ARGUMENTS contains text, search for matching issues from the recent list.
 
@@ -47,7 +47,7 @@ git branch -a
 ### Process
 
 1. **Verify Issue Status**
-   - Confirm issue has "needs plan approval" label
+   - Confirm issue has "status-planning-review" label
    - Extract the implementation plan from comments
    - Identify why AI requested human approval (stated in plan comments)
 
@@ -72,12 +72,12 @@ git branch -a
    Ask the user what they want to do:
 
    **Option A: Approve the plan**
-   - Update issue label from "needs plan approval" to "needs implementation"
+   - Update issue label from "status-planning-review" to "status-planning-done"
    - Add comment confirming approval
    - Optionally add any additional guidance or constraints
 
    **Option B: Request revisions**
-   - Update issue label from "needs plan approval" back to "needs planning"
+   - Update issue label from "status-planning-review" back to "status-planning-todo"
    - Add comment with specific feedback on what needs to change
    - Explain what concerns need to be addressed
 
@@ -95,7 +95,7 @@ git branch -a
    gh issue comment ISSUE_NUMBER --body "Plan approved. Proceeding to implementation."
 
    # Update label
-   gh issue edit ISSUE_NUMBER --remove-label "needs plan approval" --add-label "needs implementation"
+   gh issue edit ISSUE_NUMBER --remove-label "status-planning-review" --add-label "status-planning-done"
    ```
 
    **For revision request:**
@@ -108,7 +108,7 @@ git branch -a
    Please address these concerns and update the plan."
 
    # Update label
-   gh issue edit ISSUE_NUMBER --remove-label "needs plan approval" --add-label "needs planning"
+   gh issue edit ISSUE_NUMBER --remove-label "status-planning-review" --add-label "status-planning-todo"
    ```
 
    **For questions:**
@@ -120,7 +120,7 @@ git branch -a
 
    Please clarify these points."
 
-   # Label stays "needs plan approval"
+   # Label stays "status-planning-review"
    ```
 
 ### Guidelines
@@ -138,22 +138,22 @@ Your work is complete when:
 - ✅ Implementation plan presented clearly to user
 - ✅ User has made an informed decision (approve, revise, or ask questions)
 - ✅ Issue label updated appropriately:
-  - "needs implementation" if approved
-  - "needs planning" if revisions requested
-  - "needs plan approval" if questions asked (unchanged)
+  - "status-planning-done" if approved
+  - "status-planning-todo" if revisions requested
+  - "status-planning-review" if questions asked (unchanged)
 - ✅ Comment added to issue documenting the decision
 - ✅ User understands next steps
 
 ## Next Steps
 
-**After approval** ("needs implementation" label):
+**After approval** ("status-planning-done" label):
 - User can run `/gh-build <issue-number>` to start implementation
 - Or wait for autonomous build agent to pick it up
 
-**After revision request** ("needs planning" label):
+**After revision request** ("status-planning-todo" label):
 - User can run `/gh-plan <issue-number>` to revise the plan
 - Or wait for autonomous planning agent to pick it up
 
-**After questions** ("needs plan approval" label - unchanged):
+**After questions** ("status-planning-review" label - unchanged):
 - User can run `/gh-plan <issue-number>` to have AI address questions
 - Or manually review AI's response when it answers the questions

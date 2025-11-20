@@ -51,14 +51,14 @@ ls -la .github/ISSUE_TEMPLATE/ 2>/dev/null || echo "No issue templates found"
 
 4. **Apply basic labels (if available)**
    - Check `gh label list` output to see what labels exist
-   - Apply `needs planning` label if available
-   - Apply basic type label based on issue type (feature, bug, docs, etc.)
+   - Apply `status-planning-todo` label if available
+   - Apply basic type label based on issue type (type-feature, type-bug, type-docs, type-refactor, etc.)
 
 5. **Create the issue**
    - Use `gh issue create` with:
      - Clear title based on user request
      - Lightweight body with request and basic info
-     - `needs planning` label (if available)
+     - `status-planning-todo` label (if available)
    - Return issue URL and number
 
 ## Guidelines
@@ -68,7 +68,7 @@ ls -la .github/ISSUE_TEMPLATE/ 2>/dev/null || echo "No issue templates found"
 - **No scoping**: Don't ask about scope, dependencies, or implementation approaches
 - **No feasibility assessment**: Don't evaluate if/how something should be implemented
 - **Fast turnaround**: The goal is quick issue creation without extensive discussion
-- **Apply `needs planning` label**: This signals the next stage should handle detailed analysis
+- **Apply `status-planning-todo` label**: This signals the next stage should handle detailed analysis
 
 ## Success Criteria
 

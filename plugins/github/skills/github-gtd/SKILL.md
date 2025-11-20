@@ -31,30 +31,30 @@ Every issue progresses through these sequential stages:
 | Stage | Workflow | Purpose | Label | Duration |
 |-------|----------|---------|-------|----------|
 | **0** | [Repository Setup](#stage-0-repository-setup) | Configure labels, templates, and worktree structure | none | One-time |
-| **1** | [Issue Creation](#stage-1-issue-creation) | Transform user request into well-structured issue | → `needs planning` | Minutes |
-| **2** | [Planning](#stage-2-planning) | Research codebase, analyze options, create implementation plan | `needs planning` → `needs implementation` or `needs plan approval` | Hours |
-| **3** | [Plan Approval](#stage-3-plan-approval-conditional) | Human reviews and approves (or revises) implementation approach | `needs plan approval` → `needs implementation` or `needs planning` | Minutes-Hours |
-| **4** | [Implementation](#stage-4-implementation) | Write code in isolated worktree, create PR with tests | `needs implementation` → `in review` | Hours-Days |
-| **5** | [Code Review](#stage-5-code-review) | Review code for quality, security, completeness | `in review` → `ready for approval` | Minutes-Hours |
-| **6** | [Human Approval](#stage-6-human-approval) | Human tests locally, reviews code, approves for merge | `ready for approval` → `approved for merge` or `in review` | Minutes-Hours |
-| **7** | [Merge & Cleanup](#stage-7-merge--cleanup) | Merge PR, close issue, delete branch and worktree | `approved for merge` → closed | Minutes |
+| **1** | [Issue Creation](#stage-1-issue-creation) | Transform user request into well-structured issue | → `status-planning-todo` | Minutes |
+| **2** | [Planning](#stage-2-planning) | Research codebase, analyze options, create implementation plan | `status-planning-todo` → `status-planning-done` or `status-planning-review` | Hours |
+| **3** | [Plan Approval](#stage-3-plan-approval-conditional) | Human reviews and approves (or revises) implementation approach | `status-planning-review` → `status-planning-done` or `status-planning-todo` | Minutes-Hours |
+| **4** | [Implementation](#stage-4-implementation) | Write code in isolated worktree, create PR with tests | `status-planning-done` → `status-implementation-todo` | Hours-Days |
+| **5** | [Code Review](#stage-5-code-review) | Review code for quality, security, completeness | `status-implementation-todo` → `status-implementation-review` | Minutes-Hours |
+| **6** | [Human Approval](#stage-6-human-approval) | Human tests locally, reviews code, approves for merge | `status-implementation-review` → `status-implementation-done` or `status-implementation-todo` | Minutes-Hours |
+| **7** | [Merge & Cleanup](#stage-7-merge--cleanup) | Merge PR, close issue, delete branch and worktree | `status-implementation-done` → closed | Minutes |
 
 ### Workflow Labels
 
-**Workflow state labels** (track issue progress):
-- `needs planning` - Requires implementation plan
-- `needs plan approval` - Human must review approach (conditional stage)
-- `needs implementation` - Ready for coding
-- `in review` - Code under review
-- `ready for approval` - Awaiting human approval
-- `approved for merge` - Ready to merge
+**Status labels** (track issue progress through planning and implementation):
+- `status-planning-todo` - Requires implementation plan
+- `status-planning-review` - Plan is under review (conditional stage)
+- `status-planning-done` - Planning completed, ready for implementation
+- `status-implementation-todo` - Ready for coding
+- `status-implementation-review` - Implementation under review
+- `status-implementation-done` - Implementation completed, ready to merge
 - `blocked` - Work stopped, needs intervention
 
-**Issue type labels** (categorize issue):
-- `feature` - New functionality
-- `bug` - Defect or unexpected behavior
-- `docs` - Documentation changes
-- `refactor` - Code improvements without behavior change
+**Type labels** (categorize issue):
+- `type-feature` - New functionality
+- `type-bug` - Defect or unexpected behavior
+- `type-docs` - Documentation changes
+- `type-refactor` - Code improvements without behavior change
 
 ## Individual Workflow Guides
 
