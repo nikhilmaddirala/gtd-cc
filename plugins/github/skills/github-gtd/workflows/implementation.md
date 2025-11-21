@@ -65,7 +65,7 @@ fi
 
 1. **Verify Target Issue**
    - Confirm issue has "status-planning-done" label
-   - Extract approved implementation plan from issue comments
+   - IMPORTANT: Get all the issue comments and extract approved implementation plan from issue comments
 
 2. **Setup Development Environment**
    - Create worktree and branch (if not already exists):
