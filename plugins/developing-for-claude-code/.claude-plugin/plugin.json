@@ -1,0 +1,28 @@
+{
+  "name": "developing-for-claude-code",
+  "version": "1.0.0",
+  "description": "Guide for developing Claude Code plugins using gtd-cc architectural patterns",
+  "author": {
+    "name": "Nikhil Maddirala"
+  },
+  "commands": [
+    {
+      "name": "pl-create",
+      "path": "./commands/pl-create.md"
+    },
+    {
+      "name": "pl-update",
+      "path": "./commands/pl-update.md"
+    },
+    {
+      "name": "pl-validate",
+      "path": "./commands/pl-validate.md"
+    }
+  ],
+  "skills": [
+    {
+      "name": "plugin-development-gtd",
+      "path": "./skills/plugin-development-gtd"
+    }
+  ]
+}
