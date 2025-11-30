@@ -1,52 +1,30 @@
 ---
 name: gh-manage
-description: GitHub workflow automation skill for repository management, operations, and workflow coordination.
+description: Manager/dispatcher skill that triages human requests and orchestrates plan/build/review/merge agents.
 ---
 
 # GitHub Manage Skill
 
 ## Overview
 
-This skill provides comprehensive guidance for GitHub repository management workflows including repository setup, issue creation, plan approval, code review, human approval, git operations, merge processes, and cleanup activities. It serves as the authoritative source for all GitHub management operations. Use this skill when setting up new repositories for issue-driven development, creating well-structured issues from user requirements, reviewing implementation approaches, performing code reviews, conducting approval processes, managing git commits, or executing merge and cleanup operations.
+This skill is the single human-facing entry point. It clarifies requests, decides the right path, and dispatches to specialized agents (plan, build, review/merge) with the necessary context.
 
 ## Workflows
 
-Use the appropriate workflow from the `workflows/` directory:
-
-- **repo-setup.md** - Sets up essential GitHub workflow infrastructure including workflow labels, issue templates, PR templates, branch protection rules, and worktree directory structure
-- **issue-creation.md** - Transforms user requirements into well-documented GitHub issues with clear problem statements, acceptance criteria, and appropriate labels
-- **approve-plan.md** - Guides humans through reviewing AI-generated implementation plans with decision framework for approval or revision requests
-- **review-pr.md** - Performs code reviews focusing on compliance with requirements, bugs, and architectural alignment
-- **human-approval.md** - Guides humans through local testing, code review, and approval decision-making for implementations ready for merge
-- **commit.md** - Creates well-structured git commits with conventional commit format
-- **merge.md** - Executes final merge operations including squash-merging PR to main, closing issues, deleting branches, and removing worktrees
-- **orchestrate.md** - Orchestrates multiple GitHub workflow stages by analyzing issue state and delegating to appropriate agents
-- **issue-management.md** - Manages issue workflow including labeling, linking, and status tracking throughout the development lifecycle
+- **triage.md** - Clarifies vague asks, classifies work, applies labels, and decides whether to create/update an issue before routing
+- **orchestrate.md** - Routes to plan/build/review/merge based on labels/state and passes packaged context
 
 ## Guidelines
 
-Follow these general guidelines when executing any workflow in this skill:
-
-- **Single Source of Truth**: This skill and its workflow files contain all procedural knowledge for GitHub management operations.
-- **Repository Foundation**: Management workflows emphasize proper repository setup and infrastructure before other operations.
-- **Git Best Practices**: All git operations follow conventional commit standards and branch management practices with format `<type>(<scope>): <description>`
-- **Clean Operations**: Merge and cleanup workflows focus on maintaining repository hygiene and organization.
-- **When this skill is referenced by a command or agent**: Read the workflow file, follow the process steps exactly as written, reference guidelines and success criteria to ensure quality.
-
-## Error Handling
-
-If workflows encounter blocking issues:
-- Document the problem clearly in repository documentation
-- Update issue label to indicate blocking status
-- Suggest alternative approaches or ask for clarification
-- Resume when blocker is resolved
+- **Context Packaging**: Always pass issue/PR numbers, labels, plan link/comment URL, acceptance criteria, CI status (if any), and summary notes to the next agent.
+- **Label-Driven Flow**: Use shared lifecycle labels from `../_common/labels.md` to steer routing decisions.
+- **Single Entry**: Humans talk to this skill; it delegates. Avoid asking users to hop directly into downstream skills unless necessary.
+- **DO NOT EXECUTE WORK YOURSELF**: THIS SKILL ONLY TRIAGES/ROUTES. IT MUST CALL DOWNSTREAM AGENTS/SKILLS FOR PLAN/BUILD/REVIEW/MERGE WORK.
+- **Common References**: See `../_common/guidelines.md` and `../_common/labels.md`.
+- **ALWAYS INVOKE SUBAGENTS**: When routing, invoke `gh-plan-agent` for planning, `gh-build-agent` for implementation/PR updates, and `gh-review-agent` (and its merge workflow) for review/approval/merge. For ops hygiene use `gh-repo-setup-agent`, `gh-issue-creation-agent`, `gh-issue-management-agent`, or `gh-commit-agent`. Never run those skills directly in this manager context.
+- **LABEL SAFETY**: NEVER invent ad-hoc labels. Only use labels defined in `../_common/labels.md`. If a required label is missing in the repo, delegate to an ops agent (e.g., `gh-issue-management-agent` or `gh-repo-setup-agent`) to create/apply it. Map human phrases to canonical labels (e.g., “ready for review” → `status-review-in-progress` or `status-implementation-done` for handoff).
 
 ## Dependencies
 
-- **Repository Access**: Management workflows require appropriate repository permissions
-- **Git Configuration**: Proper git configuration required for commit and merge operations
-- **Team Coordination**: Repository setup often requires team consensus and configuration
-
-## Reference Files
-
-All workflow details are contained in individual `.md` files in the `workflows/` directory. Each file provides complete procedural guidance for its specific workflow.
+- Access to issues/PRs and labels
+- Downstream agents available: `gh-plan-agent`, `gh-build-agent`, `gh-review-agent`

@@ -33,6 +33,7 @@ Follow these general guidelines when executing any workflow in this skill:
 - **Repository Conventions**: Adapt to existing code style, architecture patterns, and naming conventions.
 - **Security Awareness**: Review code for security vulnerabilities (XSS, injection, etc.) before submitting.
 - **When this skill is referenced by a command or agent**: Read the workflow file, follow the process steps exactly as written, reference guidelines and success criteria to ensure quality.
+- **Common References**: See `../_common/guidelines.md` for shared hygiene and `../_common/labels.md` for lifecycle labels expected by ops/review.
 
 ### Common Requirements (Both Workflows)
 

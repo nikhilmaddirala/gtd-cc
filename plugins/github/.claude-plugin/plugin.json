@@ -8,18 +8,19 @@
   "commands": [
     "./commands/gh-repo.md",
     "./commands/gh-issue.md",
+    "./commands/gh-manage.md",
     "./commands/gh-plan.md",
     "./commands/gh-approve-plan.md",
     "./commands/gh-build.md",
     "./commands/gh-review.md",
     "./commands/gh-approve.md",
     "./commands/gh-merge.md",
-    "./commands/gh-commit.md",
-    "./commands/gh-orchestrate.md"
+    "./commands/gh-commit.md"
   ],
   "agents": [
     "./agents/gh-build-agent.md",
     "./agents/gh-plan-agent.md",
+    "./agents/gh-manage-agent.md",
     "./agents/gh-repo-setup-agent.md",
     "./agents/gh-issue-creation-agent.md",
     "./agents/gh-issue-management-agent.md",
@@ -30,6 +31,8 @@
   "skills": [
     "./skills/gh-build",
     "./skills/gh-plan",
+    "./skills/gh-review",
+    "./skills/gh-ops",
     "./skills/gh-manage"
   ]
 }

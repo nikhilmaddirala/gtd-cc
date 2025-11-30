@@ -86,7 +86,7 @@ find . -maxdepth 2 -type f -name "*.md" | head -20
    - Plan for testing, documentation, and validation
 
 8. **Post Plan as Issue Comment**
-   - Create a plan comment using the template structure from SKILL.md
+   - Create a plan comment using the template at `../../_common/templates/plan-comment.md`
    - Include Summary, Technical Approach, Files to Create/Modify, Implementation Steps, and Options (if applicable)
    - Update issue label from "status-planning-todo" to "status-planning-review"
 
@@ -112,4 +112,4 @@ Refer to the guidelines in SKILL.md:
 - ✅ Implementation plan posted on issue with required structure:
   - Summary, Technical Approach, Files to Create/Modify, Implementation Steps, Options (if applicable)
 - ✅ Plan is detailed enough for autonomous execution by gh-build agent
-- ✅ Issue label updated from "status-planning-todo" to "status-planning-review"
+- ✅ Issue label updated from "status-planning-todo" to "status-planning-review" (see `../../_common/labels.md`)

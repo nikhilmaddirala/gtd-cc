@@ -80,3 +80,4 @@ Refer to the common guidelines in SKILL.md:
 - ✅ PR rebased on main with zero merge conflicts
 - ✅ PR is mergeable and ready for approval
 - ✅ PR comment summarizes addressed feedback
+- ✅ Review-ready labels applied for handoff (see `../../_common/labels.md`)

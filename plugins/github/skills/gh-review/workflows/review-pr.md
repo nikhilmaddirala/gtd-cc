@@ -19,7 +19,7 @@ Repository and PR information gathered via:
 - Existing README.md files in modified directories
 - CI checks and status signals
 
-Review structure follows the [PR review template](./references/pr-review-template.md) format with merge blockers and nice-to-haves.
+Review structure follows the [PR review template](../../_common/templates/pr-review-checklist.md) format with merge blockers and nice-to-haves.
 
 ## Your Task
 

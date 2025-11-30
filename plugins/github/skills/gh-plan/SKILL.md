@@ -31,6 +31,7 @@ Follow these general guidelines when executing any workflow in this skill:
 - **Options Analysis**: If multiple significant approaches exist, compare alternatives with key tradeoffs and considerations.
 - **Repository Context**: Research recent issues, pull requests, and documentation to understand project standards and processes.
 - **When this skill is referenced by a command or agent**: Read the workflow file, follow the process steps exactly as written, reference guidelines and success criteria to ensure quality.
+- **Common References**: See `../_common/guidelines.md` for shared hygiene practices and `../_common/labels.md` for lifecycle labels to apply when posting plans.
 
 ## Additional Information
 

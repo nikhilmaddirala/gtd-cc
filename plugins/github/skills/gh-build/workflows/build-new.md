@@ -78,3 +78,4 @@ Refer to the common guidelines in SKILL.md:
 - ✅ Changes committed with conventional format
 - ✅ PR created with link to issue
 - ✅ PR rebased on main with zero merge conflicts
+- ✅ Issue/PR labeled for review handoff (see `../../_common/labels.md`)
