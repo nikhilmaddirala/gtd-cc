@@ -19,9 +19,18 @@
     "./commands/gh-orchestrate.md"
   ],
   "agents": [
-    "./agents/gtd-github-agent.md"
+    "./agents/gh-build-agent.md",
+    "./agents/gh-plan-agent.md",
+    "./agents/gh-repo-setup-agent.md",
+    "./agents/gh-issue-creation-agent.md",
+    "./agents/gh-issue-management-agent.md",
+    "./agents/gh-review-agent.md",
+    "./agents/gh-commit-agent.md",
+    "./agents/gh-merge-agent.md"
   ],
   "skills": [
-    "./skills/github-gtd"
+    "./skills/gh-build",
+    "./skills/gh-plan",
+    "./skills/gh-manage"
   ]
 }

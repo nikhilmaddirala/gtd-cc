@@ -18,9 +18,7 @@ gh issue list --state open --label "status-implementation-done" --limit 10 --jso
 gh pr list --state open --limit 20 --json number,title,headRefName,mergeable,state,reviews
 ```
 
-If $ARGUMENTS is empty, show the user recent issues with "status-implementation-done" label and ask them to select one.
-
-If $ARGUMENTS contains only digits, treat it as an issue number. If $ARGUMENTS contains text, search for matching items from the recent list.
+Issue to work on will be provided as context when invoking this skill.
 
 Once you have identified the issue, gather PR and cleanup details:
 
@@ -49,7 +47,7 @@ git branch -a | grep "issue-ISSUE_NUMBER" || echo "No local branch found"
 
 **Goal**: Complete the workflow by merging the approved PR, closing the issue, and cleaning up all artifacts (branch and worktree).
 
-**Issue to merge**: Based on user input ($ARGUMENTS) or selection from recent issues
+**Issue to merge**: Provided as context when invoking this skill
 
 **Role**: You are Stage 7 (Merge & Cleanup) - the final stage in the workflow:
 1. Create Issue → ... → 6. Human approval → **7. Merge & cleanup** ← (You are here - final stage!)

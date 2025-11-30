@@ -15,9 +15,7 @@ Gather recent issues to identify the issue to plan:
 gh issue list --state open --limit 20 --json number,title,labels,author
 ```
 
-If $ARGUMENTS is empty, show the user the recent issues and ask them to select one.
-
-If $ARGUMENTS contains only digits, treat it as an issue number. If $ARGUMENTS contains text, search for matching issues from the recent list.
+Issue to work on will be provided as context when invoking this skill.
 
 Once you have identified the issue number, gather repository information:
 
@@ -42,7 +40,7 @@ find . -maxdepth 2 -type f -name "*.md" | head -20
 
 **Goal**: Develop a focused implementation plan ready for autonomous execution.
 
-**Issue to plan**: Based on user input ($ARGUMENTS) or selection from recent issues
+**Issue to plan**: Provided as context when invoking this skill
 
 **Role**: You are Stage 2 (Planning) in the 7-stage workflow:
 1. Create Issue → **2. Planning** ← (You are here) → 3. Plan approval → 4. Implementation → 5. Review → 6. Approval → 7. Merge

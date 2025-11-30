@@ -166,7 +166,7 @@ allowed_tools: (optional)
 
 **Goal**: [Clear statement of what needs to be accomplished]
 
-**Issue/PR to [action]**: [How to identify the target - from $ARGUMENTS or selection]
+**Issue/PR to [action]**: [How to identify the target - provided as context]
 
 **Role**: [Position in the 7-stage workflow, showing current stage with arrow]
 

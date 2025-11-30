@@ -18,9 +18,7 @@ gh issue list --state open --limit 20 --json number,title,labels,author,body
 gh pr list --state open --limit 20 --json number,title,labels,headRefName,body
 ```
 
-If $ARGUMENTS is empty, show the user recent issues and PRs, then ask them to select one.
-
-If $ARGUMENTS contains only digits, treat it as an issue or PR number. If $ARGUMENTS contains text, search for matching items from the recent list.
+Issue/PR to work on will be provided as context when invoking this skill.
 
 Once you have identified the target (issue or PR), gather repository information:
 
@@ -52,7 +50,7 @@ fi
 
 **Goal**: Autonomously implement approved plans or address review feedback by building production-ready code in isolated worktrees that is ready to merge without conflicts.
 
-**Target**: Based on user input ($ARGUMENTS) - can be either:
+**Target**: Provided as context when invoking this skill - can be either:
 1. An issue with "status-planning-done" label (new implementation from an approved plan)
 2. A PR with open review comments (addressing feedback on existing work)
 

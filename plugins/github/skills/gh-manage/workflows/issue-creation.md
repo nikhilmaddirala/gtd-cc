@@ -21,7 +21,7 @@ ls -la .github/ISSUE_TEMPLATE/ 2>/dev/null || echo "No issue templates found"
 
 **Goal**: Create a lightweight GitHub issue that captures the user's request.
 
-**User's initial request**: $ARGUMENTS
+**User's initial request**: Provided in command execution context
 
 **Role**: You are Stage 1 (Issue Creation) in the 7-stage workflow:
 1. Create Issue → 2. Planning → 3. Plan approval → 4. Implementation → 5. Review → 6. Approval → 7. Merge
