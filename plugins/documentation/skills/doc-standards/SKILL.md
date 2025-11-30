@@ -1,6 +1,6 @@
 ---
 name: doc-standards
-description: GitHub project documentation implementation and maintenance based on three-layer model with Best README Template patterns
+description: GitHub project documentation implementation and maintenance skill. You MUST use this skill whenever you need to create, edit, or refactor any documentation.
 ---
 
 # Documentation Standards Skill
@@ -10,14 +10,25 @@ Three-layer documentation system for GitHub projects that scales with complexity
 ## Philosophy
 
 Documentation scales using three layers:
-```
-README.md          → Entry point (200-500 lines)
-CONTRIBUTING.md    → Contributor guidance (evolves with project)
-Directory READMEs  → Local context (100-300 lines)
-/docs/             → Deep dives (multi-page content)
-```
+
+- Phase 1: Single README.md
+    - Solo developer, simple scripts, MVP
+
+**Phase 2: Multiple READMEs**
+- 2+ modules, separate concerns
+- Contributors need local context
+
+**Phase 3: READMEs + docs**
+- Complex architecture, multiple tutorials
+- Internal/external documentation needs
+
+- ./README.md: Entry point for the project
+- ./some-dir/README.md: Entry point for individual components 
+- ./docs/some-doc.md: Deep dive documentation, user guides, etc. (only for complex projects)
 
 **Key Principles:**
+- Low documentation overhead. Don't write things that are obvious from code. E.g. listing plugins in documents is a bad practice because it creates too much doc overhead.
+- Each doc should be concise: 200 - 500 lines max
 - One fact, one place (no duplication)
 - README is front door (keep simple)
 - Documentation grows downward as needed
@@ -28,16 +39,6 @@ Directory READMEs  → Local context (100-300 lines)
 
 Choose based on project stage:
 
-**Phase 1: Single README**
-- Solo developer, simple scripts, MVP
-
-**Phase 2: Multiple READMEs**
-- 2+ modules, separate concerns
-- Contributors need local context
-
-**Phase 3: READMEs + docs**
-- Complex architecture, multiple tutorials
-- Internal/external documentation needs
 
 ## Documentation Components
 

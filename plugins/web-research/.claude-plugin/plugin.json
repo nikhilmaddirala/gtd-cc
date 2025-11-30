@@ -9,7 +9,7 @@
   "agents": [],
   "skills": [
     "./skills/crawl4ai",
-    "./skills/gemini-headless",
+    "./skills/gemini-web-research",
     "./skills/web-crawler"
   ]
 }

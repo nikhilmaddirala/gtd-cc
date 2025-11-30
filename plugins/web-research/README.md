@@ -7,7 +7,7 @@ Comprehensive toolkit for web crawling, content analysis, and research automatio
 This plugin provides three specialized skills for web research workflows:
 
 - **Crawl4AI** - Full-featured web crawling and data extraction with schema generation
-- **Gemini Headless** - AI-powered content analysis and research synthesis using Google Gemini CLI
+- **Gemini Web Research** - AI-powered content analysis and research synthesis using Google Gemini CLI
 - **Web Crawler** - Automated website crawling with organized markdown output
 
 These skills enable rapid information gathering, content analysis, and research automation for your development and knowledge management workflows.
@@ -39,7 +39,7 @@ python scripts/basic_crawler.py https://example.com
 
 See `skills/crawl4ai/SKILL.md` for comprehensive documentation and SDK reference.
 
-### 2. Gemini Headless
+### 2. Gemini Web Research
 
 Web research and content analysis using Google Gemini CLI in headless mode for automation and scripting.
 
@@ -62,7 +62,7 @@ gemini -p "What is machine learning?"
 - Fast content analysis and synthesis
 - Scriptable research workflows
 
-See `skills/gemini-headless/SKILL.md` for comprehensive documentation and usage patterns.
+See `skills/gemini-web-research/SKILL.md` for comprehensive documentation and usage patterns.
 
 ### 3. Web Crawler
 
@@ -170,7 +170,7 @@ See individual skill documentation for configuration details.
 ## Related Documentation
 
 - [Crawl4AI SKILL.md](skills/crawl4ai/SKILL.md) - Complete SDK reference and examples
-- [Gemini Headless SKILL.md](skills/gemini-headless/SKILL.md) - Headless mode guide and patterns
+- [Gemini Web Research SKILL.md](skills/gemini-web-research/SKILL.md) - Headless mode guide and patterns
 - [Web Crawler SKILL.md](skills/web-crawler/SKILL.md) - Website crawling workflows
 - [GTD-CC Plugin Marketplace](../../README.md) - Overview of all available plugins
 

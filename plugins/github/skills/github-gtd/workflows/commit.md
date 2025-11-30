@@ -1,5 +1,5 @@
 ---
-description: Create a git commit with conventional message format
+description: Create a git commit with conventional message format based on the current changes.
 allowed_tools:
   - Bash(git add:*)
   - Bash(git status:*)
@@ -24,16 +24,15 @@ Repository state:
 
 **Process**:
 1. Understand the git context and changes made
-2. Determine appropriate commit structure (usually 1 commit, but up to 2-3 if significant changes warrant separation)
+2. Determine appropriate number of commits and commit structure 
 3. Create commits with clear, conventional format messages
-4. Ensure all uncommitted changes are committed
+4. Ensure all uncommitted changes are committed. 
 
 ## Guidelines
 
-- Keep commits focused and logical
+- Keep commits focused and logical; keep the number of commits to a minimum; aim for 1-3 commits; if it's a single commit just do `git add .`
 - Use conventional commit format (e.g., `feat:`, `fix:`, `docs:`, `refactor:`)
 - Keep messages concise but descriptive
-- Generally aim for a single commit; use multiple commits only when changes are distinct in purpose
 
 ## Success Criteria
 
