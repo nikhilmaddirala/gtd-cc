@@ -7,12 +7,12 @@ description: Template for creating autonomous agents that wrap skills and workfl
 
 ## Overview
 
-This agent executes [skill-name] and runs [workflow-name] autonomously.
+This agent executes [skill-name] - [workflow-name] autonomously. CRITICAL: You MUST use [skill-name] for this task.
 
 ## Context
 
-User provides [required inputs].
+[Describe the input context and requirements for autonomous execution].
 
 ## Process
 
-Load [skill-name] and execute [workflow-name] with provided context.
+Load [skill-name] first. Execute [workflow-name] autonomously using the provided context, handling errors gracefully and providing detailed progress updates throughout execution.

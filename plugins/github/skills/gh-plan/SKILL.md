@@ -5,57 +5,36 @@ description: GitHub workflow automation skill for implementation planning and re
 
 # GitHub Plan Skill
 
-This skill provides comprehensive guidance for GitHub planning workflows including implementation planning and codebase research. It serves as the authoritative source for all GitHub planning operations.
+## Overview
 
-## About This Skill
+This skill provides comprehensive guidance for GitHub planning workflows including implementation planning and codebase research. It serves as the authoritative source for all GitHub planning operations. Use this skill when researching codebase to understand existing patterns and architecture, developing implementation plans through analysis and options evaluation, creating technical approaches and development strategies, or documenting acceptance criteria and implementation requirements.
 
-The GitHub Plan skill is designed to facilitate structured planning workflows. It encompasses codebase research, developing implementation plans through analysis and options evaluation, creating technical approaches and development strategies, and documenting acceptance criteria and implementation requirements. This skill consolidates procedural knowledge, best practices, and detailed workflow instructions used across interactive commands and autonomous agents.
+## Workflows
 
-### When to Use This Skill
+Use the appropriate workflow from the `workflows/` directory:
 
-This skill should be used when:
-- Researching codebase to understand existing patterns and architecture
-- Developing implementation plans through analysis and options evaluation
-- Creating technical approaches and development strategies
-- Documenting acceptance criteria and implementation requirements
+- **plan.md** - Develops focused implementation plans through codebase research, options analysis, and technical approach definition. Includes self-assessment logic to determine if human approval is needed.
 
-## Available Workflows
+## Resources
 
-This skill provides detailed guidance for the following workflows:
+- **resources/plan-template.md** - Template structure for posting implementation plans as issue comments. Use this when creating plan comments to ensure consistent formatting and completeness.
 
-- **Plan** - Develop focused implementation plans through codebase research, options analysis, and technical approach definition
+## Guidelines
 
-## Individual Workflow Guides
+Follow these general guidelines when executing any workflow in this skill:
 
-Each workflow provides detailed procedural instructions in its respective markdown file:
+- **Single Source of Truth**: This skill and its workflow files contain all procedural knowledge for GitHub planning operations.
+- **Research-First Approach**: Planning workflows emphasize thorough codebase research and analysis before implementation decisions.
+- **Requirements Clarity**: Focus on creating clear problem statements, acceptance criteria, and technical specifications.
+- **Comprehensive Analysis**: Since issue creation is lightweight, conduct thorough requirement gathering, scoping, and analysis.
+- **Detail for Execution**: Create plans detailed enough for autonomous execution by gh-build agent. Specify enough context to avoid ambiguity.
+- **Options Analysis**: If multiple significant approaches exist, compare alternatives with key tradeoffs and considerations.
+- **Repository Context**: Research recent issues, pull requests, and documentation to understand project standards and processes.
+- **When this skill is referenced by a command or agent**: Read the workflow file, follow the process steps exactly as written, reference guidelines and success criteria to ensure quality.
 
-### Plan
-**File**: `workflows/plan.md`
+## Additional Information
 
-Develops focused implementation plans through codebase research, options analysis, and technical approach definition. Includes self-assessment logic to determine if human approval is needed.
-
-**Use this when**: Planning how to implement an issue
-
-## How to Use This Skill
-
-When this skill is referenced by a command or agent:
-
-1. **Read the workflow file** for the appropriate workflow (see list above)
-2. **Follow the process steps** as written in the workflow
-3. **Reference guidelines and success criteria** to ensure quality
-4. **Execute the operations** (usually bash/git/gh commands embedded in workflow)
-
-## Key Principles
-
-**Single Source of Truth**: This skill and its workflow files contain all procedural knowledge for GitHub planning operations. Commands reference this skill rather than containing inline instructions.
-
-**Research-First Approach**: Planning workflows emphasize thorough codebase research and analysis before implementation decisions.
-
-**Requirements Clarity**: Focus on creating clear problem statements, acceptance criteria, and technical specifications.
-
-**Quality Assurance**: Each workflow has success criteria and error handling guidelines to maintain planning integrity.
-
-## Error Handling
+### Error Handling
 
 If workflows encounter blocking issues:
 - Document the problem clearly in issue comments or planning documentation
@@ -63,12 +42,8 @@ If workflows encounter blocking issues:
 - Identify missing information or requirements
 - Resume when blocker is resolved
 
-## Dependencies
+### Dependencies
 
 - **Repository Setup**: Repository must have proper labels and issue templates configured
 - **Team Coordination**: Planning often requires stakeholder input and approval
 - **Technical Analysis**: Planning depends on access to codebase and architecture understanding
-
-## Reference Files
-
-All workflow details are contained in individual `.md` files in the `workflows/` directory. Each file provides complete procedural guidance for its specific workflow.

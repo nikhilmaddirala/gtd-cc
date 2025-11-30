@@ -6,16 +6,17 @@ description: Develop detailed implementation plans with options analysis for Git
 
 Research the codebase, analyze options, and create implementation plans ready for autonomous execution.
 
+**Goal**: Develop a focused implementation plan ready for autonomous execution.
+
 ## Context
 
-Gather recent issues to identify the issue to plan:
+Issue to work on will be provided as context when invoking this skill. The issue may be specified by issue number or by description. Gather recent issues to identify the issue to plan:
 
 ```bash
 # Get recent open issues
 gh issue list --state open --limit 20 --json number,title,labels,author
 ```
 
-Issue to work on will be provided as context when invoking this skill.
 
 Once you have identified the issue number, gather repository information:
 
@@ -36,16 +37,8 @@ ls -la worktrees/ 2>/dev/null || echo "No worktrees directory"
 find . -maxdepth 2 -type f -name "*.md" | head -20
 ```
 
-## Your Task
 
-**Goal**: Develop a focused implementation plan ready for autonomous execution.
-
-**Issue to plan**: Provided as context when invoking this skill
-
-**Role**: You are Stage 2 (Planning) in the 7-stage workflow:
-1. Create Issue → **2. Planning** ← (You are here) → 3. Plan approval → 4. Implementation → 5. Review → 6. Approval → 7. Merge
-
-### Process
+## Process
 
 1. **Understand the Issue**
    - Read and summarize the requirement from the lightweight issue
@@ -92,57 +85,20 @@ find . -maxdepth 2 -type f -name "*.md" | head -20
    - Consider integration points and impacts on existing functionality
    - Plan for testing, documentation, and validation
 
-8. **Post Plan**
-   - Create plan comment with structured format (see below)
-   - Update issue label from "needs planning" to "needs plan approval"
+8. **Post Plan as Issue Comment**
+   - Create a plan comment using the template structure from SKILL.md
+   - Include Summary, Technical Approach, Files to Create/Modify, Implementation Steps, and Options (if applicable)
+   - Update issue label from "status-planning-todo" to "status-planning-review"
 
 ### Guidelines
 
-- **Comprehensive analysis**: Since issue creation is now lightweight, you must conduct thorough requirement gathering, scoping, and analysis.
-
-- **Research before deciding**: Understand the codebase architecture, patterns, conventions, and options. This prevents wasted implementation effort.
-
-- **Detail for autonomous execution**: The gh-build agent will execute this plan independently. Be specific enough to avoid ambiguity.
-
-- **Follow repository conventions**: Research and adapt to existing code style, architecture patterns, testing standards, and documentation requirements.
-
-- **Ask clarifying questions**: Get alignment early on requirements, scope, dependencies, and technical approach if the issue is ambiguous or complex.
-
-- **Consider all aspects**: Analyze technical feasibility, risks, testing requirements, documentation needs, and integration impacts.
-
-- **Repository context gathering**: Analyze recent issues, pull requests, and documentation to understand project standards and processes.
-
-## Plan Structure (Post as Issue Comment)
-
-When you've completed the planning process, post a comment on the issue with this structure:
-
-```markdown
-## Implementation Plan
-
-### Summary
-[1-2 sentence overview of the approach]
-
-### Technical Approach
-[How the feature will be implemented and key rationale]
-
-### Files to Create/Modify
-- `file/path/one.ts` - Description of changes
-- `new-file.ts` - Description of new code
-
-### Implementation Steps
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
-...
-
-### Options (if applicable)
-**Option 1: [Name]** - [Description and tradeoffs]
-**Option 2: [Name]** - [Description and tradeoffs]
-**Recommended: Option [X]** - [Why]
-```
-
-After posting the plan:
-- Update the issue label from "status-planning-todo" to "status-planning-review"
+Refer to the guidelines in SKILL.md:
+- Research-First Approach
+- Comprehensive Analysis
+- Detail for Autonomous Execution
+- Follow Repository Conventions
+- Options Analysis
+- Repository Context Gathering
 
 ## Success Criteria
 

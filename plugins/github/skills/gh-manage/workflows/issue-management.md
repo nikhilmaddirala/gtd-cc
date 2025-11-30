@@ -41,7 +41,7 @@ git worktree list | grep "issue-$ISSUE_NUMBER" || echo "No worktree found"
    **Planning needed** (no implementation plan):
    ```bash
    gh issue edit $ISSUE_NUMBER --add-label "status-planning-todo"
-   gh issue comment $ISSUE_NUMBER --body "This issue needs implementation planning. Adding planning label to begin stage 2."
+   gh issue comment $ISSUE_NUMBER --body "This issue needs implementation planning."
    ```
 
    **Plan ready for review** (implementation plan exists but not approved):
@@ -53,19 +53,19 @@ git worktree list | grep "issue-$ISSUE_NUMBER" || echo "No worktree found"
    **Implementation needed** (plan approved, no PR):
    ```bash
    gh issue edit $ISSUE_NUMBER --remove-label "status-planning-done" --add-label "status-implementation-todo"
-   gh issue comment $ISSUE_NUMBER --body "Plan approved. Ready for implementation (stage 4)."
+   gh issue comment $ISSUE_NUMBER --body "Plan approved. Ready for implementation."
    ```
 
    **Implementation ready for review** (PR exists and needs review):
    ```bash
    gh issue edit $ISSUE_NUMBER --remove-label "status-implementation-todo" --add-label "status-implementation-review"
-   gh issue comment $ISSUE_NUMBER --body "Implementation complete and ready for code review (stage 5)."
+   gh issue comment $ISSUE_NUMBER --body "Implementation complete and ready for code review."
    ```
 
    **Implementation approved** (PR reviewed and approved):
    ```bash
    gh issue edit $ISSUE_NUMBER --remove-label "status-implementation-review" --add-label "status-implementation-done"
-   gh issue comment $ISSUE_NUMBER --body "Implementation approved and ready for merge (stage 7)."
+   gh issue comment $ISSUE_NUMBER --body "Implementation approved and ready for merge."
    ```
 
    **Blocked or needs clarification**:

@@ -23,8 +23,7 @@ ls -la .github/ISSUE_TEMPLATE/ 2>/dev/null || echo "No issue templates found"
 
 **User's initial request**: Provided in command execution context
 
-**Role**: You are Stage 1 (Issue Creation) in the 7-stage workflow:
-1. Create Issue → 2. Planning → 3. Plan approval → 4. Implementation → 5. Review → 6. Approval → 7. Merge
+**Role**: Issue creation stage of the GitHub workflow
 
 ### Process
 

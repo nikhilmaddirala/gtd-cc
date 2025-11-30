@@ -4,7 +4,7 @@ description: Set up essential GitHub workflow infrastructure including labels an
 
 ## Overview
 
-Configure GitHub repositories for the 7-stage issue-driven development workflow by creating workflow labels and setting up isolated development environments.
+Configure GitHub repositories for issue-driven development by creating workflow labels and setting up isolated development environments.
 
 ## Context
 
@@ -23,10 +23,9 @@ gh label list | grep -E "needs planning|needs plan approval|needs implementation
 
 ## Your Task
 
-**Goal**: Set up essential GitHub workflow infrastructure in the current repository, enabling the 7-stage issue-driven development workflow.
+**Goal**: Set up essential GitHub workflow infrastructure in the current repository to enable issue-driven development workflows.
 
-**Role**: You are Stage 0 (Repository Initialization) in the workflow:
-**0. Repository initialization** ← (You are here) → 1. Create Issue → 2. Planning → ... → 7. Merge & cleanup
+**Role**: Repository initialization stage of the GitHub workflow
 
 ### Process
 

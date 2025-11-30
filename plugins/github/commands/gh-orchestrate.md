@@ -1,27 +1,31 @@
 ---
-description: Orchestrate sub-agents to manage various parts of the GitHub GTD workflows
+name: gh-orchestrate
+description: Orchestrates GitHub workflow stages autonomously
 ---
 
-## Your task
+# Workflow Orchestration
 
-You are the workflow coordinator. Parse $ARGUMENTS to determine the issue number and workflow type, then invoke the gtd-github-agent with appropriate instructions. If the user's request spans multiple stages or issues, you will determine how to call multiple instances of the subagent in sequence or parallel.
+## Overview
 
-## Parsing $ARGUMENTS
+This command orchestrates multiple GitHub workflow stages by delegating to the appropriate agents. It serves as a coordinator for complex multi-stage workflows.
 
-- If empty: show recent open issues and ask the user to select one
-- If numeric: treat as issue number, ask user for workflow type (or default to `auto`)
-- If text: parse for issue number and workflow type keywords (full, plan, build, review, merge, auto)
+## Context
 
-## Invoking the agent
+User provides issue number and optional workflow type via $ARGUMENTS. If not provided, recent issues will be shown for selection.
 
-Call the gtd-github-agent with instructions specifying:
+## Process
 
-- **Issue number** - the GitHub issue to work with
-- **Workflow type** - the stage(s) to execute:
-  - `plan` - planning stage only
-  - `build` - implementation stage only
-  - `review` - code review stage only
-  - `merge` - merge and cleanup stage only
+Parse $ARGUMENTS to determine the issue number and workflow type:
+- If empty: Show recent open issues and ask user to select one and choose workflow type
+- If numeric: Treat as issue number, ask for workflow type (plan, build, review, merge, or auto)
+- If text: Parse for issue number and workflow keywords
 
-The agent will analyze the issue state and execute the requested workflow autonomously.
+Based on the workflow type selected:
+- **plan**: Invoke gh-plan-agent for planning
+- **build**: Invoke gh-build-agent for implementation
+- **review**: Invoke gh-review-agent for code review
+- **merge**: Invoke gh-merge-agent for merge and cleanup
+- **auto**: Analyze issue state and invoke appropriate agent(s) in sequence
+
+For multi-stage requests, orchestrate agents in the correct sequence.
 

@@ -5,71 +5,56 @@ description: GitHub workflow automation skill for code implementation and buildi
 
 # GitHub Build Skill
 
-This skill provides comprehensive guidance for GitHub build workflows including code implementation in isolated development environments. It serves as the authoritative source for all GitHub build operations.
+## Overview
 
-## About This Skill
+This skill provides comprehensive guidance for GitHub build workflows including code implementation in isolated development environments. It serves as the authoritative source for all GitHub build operations. Use this skill when implementing approved plans in isolated development environments, creating worktrees, writing code and running tests, or creating draft pull requests ready for review.
 
-The GitHub Build skill is designed to facilitate structured build workflows. It encompasses code implementation in isolated environments, creating worktrees, writing code, running tests, and creating draft pull requests ready for review. This skill consolidates procedural knowledge, best practices, and detailed workflow instructions used across interactive commands and autonomous agents.
+## Workflows
 
-### When to Use This Skill
+Use the appropriate workflow from the `workflows/` directory:
 
-This skill should be used when:
-- Implementing approved plans in isolated development environments
-- Creating worktrees for isolated development
-- Writing code and running tests
-- Creating draft pull requests ready for review
+- **build-new.md** - Implements approved plans from scratch by creating worktrees, writing code, running tests, and creating draft PRs ready for review
+- **build-iterate.md** - Updates existing PRs by addressing review feedback and change requests
 
-## Available Workflows
+## Guidelines
 
-This skill provides detailed guidance for the following workflows:
+Follow these general guidelines when executing any workflow in this skill:
 
-- **Build/Implement** - Autonomously implements approved plans by creating worktrees, writing code, running tests, and creating draft PRs ready for review
+- **Single Source of Truth**: This skill and its workflow files contain all procedural knowledge for GitHub build operations.
+- **Isolated Development**: Always work in dedicated worktrees for isolated development environments.
+- **Quality First**: All code must pass tests, linting, and build verification before creating or updating PRs.
+- **Merge Conflict Prevention**: Always rebase on main before creating or updating PRs to ensure zero merge conflicts:
+  1. Fetch latest from main: `git fetch origin main`
+  2. Rebase your work: `git rebase origin/main`
+  3. If conflicts arise, resolve them immediately and verify tests still pass
+  4. Force-push if needed after rebase: `git push --force-with-lease`
+  5. Verify PR shows as mergeable in GitHub before finishing
+- **Conventional Commits**: Use imperative mood with format: `<type>(<scope>): <description>` (e.g., `feat(auth): add login form`)
+- **Repository Conventions**: Adapt to existing code style, architecture patterns, and naming conventions.
+- **Security Awareness**: Review code for security vulnerabilities (XSS, injection, etc.) before submitting.
+- **When this skill is referenced by a command or agent**: Read the workflow file, follow the process steps exactly as written, reference guidelines and success criteria to ensure quality.
 
-## Individual Workflow Guides
+### Common Requirements (Both Workflows)
 
-Each workflow provides detailed procedural instructions in its respective markdown file:
+- **Work autonomously**: No human interaction during implementation
+- **Document thoroughly**: Clear commit messages and PR descriptions with context
+- **Handle errors gracefully**: Update labels and provide clear error information when blockers occur
+- **Worktree management**: Use the pattern `worktrees/issue-<number>-<slug>` and clean up after merging
 
-### Build/Implement
-**File**: `workflows/build.md`
+## Additional Information
 
-Autonomously implements approved plans by creating worktrees, writing code, running tests, and creating draft PRs ready for review.
-
-**Use this when**: Building code from an approved implementation plan
-
-## How to Use This Skill
-
-When this skill is referenced by a command or agent:
-
-1. **Read the workflow file** for the appropriate workflow (see list above)
-2. **Follow the process steps** as written in the workflow
-3. **Reference guidelines and success criteria** to ensure quality
-4. **Execute the operations** (usually bash/git/gh commands embedded in workflow)
-
-## Key Principles
-
-**Single Source of Truth**: This skill and its workflow files contain all procedural knowledge for GitHub build operations. Commands reference this skill rather than containing inline instructions.
-
-**Isolated Development**: Implementation workflows emphasize using worktrees for isolated development environments.
-
-**Quality First**: Code review and commit workflows focus on maintaining quality standards and compliance.
-
-**Security Awareness**: Build workflows include security considerations and best practices.
-
-## Error Handling
+### Error Handling
 
 If workflows encounter blocking issues:
-- Document the problem clearly in PR comments or build documentation
-- Update issue label to indicate blocking status
-- Suggest alternative approaches or ask for clarification
-- Resume when blocker is resolved
+- Document the problem clearly in PR comments or issue comments
+- For technical issues: Suggest alternative approaches or request clarification
+- For merge conflicts: Rebase on main; if unresolvable, document resolution strategy
+- For test failures: Fix issues or document known limitations with mitigation plans
+- For worktree issues: Clean up worktree and branch, update issue label to "blocked"
 
-## Dependencies
+### Dependencies
 
-- **Planning Completed**: Implementation depends on having an approved implementation plan
+- **Planning Completed**: Implementation depends on having an approved implementation plan (for build-new)
 - **Repository Setup**: Repository must have proper worktree structure and branch protection
 - **Development Environment**: Build requires isolated development environments
 - **Code Review Standards**: Review depends on established quality guidelines and requirements
-
-## Reference Files
-
-All workflow details are contained in individual `.md` files in the `workflows/` directory. Each file provides complete procedural guidance for its specific workflow.
