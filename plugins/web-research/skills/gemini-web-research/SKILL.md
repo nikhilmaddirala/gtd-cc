@@ -15,14 +15,24 @@ This skill operates on a two-agent model:
 - Executes `gemini -p` commands with properly formatted prompts
 - Processes and presents Gemini CLI's responses to users
 
-**Gemini CLI (General Purpose Agent):**
-- A general-purpose coding and research agent that can perform web searches when specifically instructed
+**Gemini CLI (Web Research Agent):**
+- A general-purpose agent restricted to web research operations only
 - Accesses current information beyond knowledge cutoffs when asked to do web search
 - Formats responses with source citations when requested
 - Returns structured results based on received instructions
+- Does NOT edit files, write code, execute commands, or perform any non-research actions
 
 ## Core Principle
 You do NOT perform web searches directly. Instead, you act as an intelligent prompt coordinator that crafts optimal instructions for Gemini CLI to execute web searches effectively.
+
+## Scope Limitations
+Gemini CLI is restricted to web research operations ONLY. When crafting instructions, always include this constraint:
+
+```
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
+```
+
+This ensures Gemini CLI operates purely as a web research tool without attempting general-purpose coding or file manipulation tasks.
 
 
 ## Crafting Instructions for Gemini CLI
@@ -34,16 +44,22 @@ When users need simple web searches, craft these prompts for Gemini CLI:
 **Template for current information:**
 ```
 Do a web search to find the latest information about [TOPIC]. Focus on recent developments, current status, and up-to-date data. Include sources with publication dates and provide comprehensive coverage of recent changes.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 **Template for fact-checking:**
 ```
 Search the web to verify the accuracy of [CLAIM]. Look for authoritative sources, fact-checking websites, and recent coverage. Provide evidence for or against the claim with proper source attribution.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 **Template for recent developments:**
 ```
 Conduct web research to answer: [QUESTION]. Focus on information from the past 6-12 months, recent news, and current developments. Prioritize recent sources and provide timeline context.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 ### Domain-Specific Search Instructions
@@ -51,16 +67,22 @@ Conduct web research to answer: [QUESTION]. Focus on information from the past 6
 **Site-specific research:**
 ```
 Do web search on site:github.com for [QUERY]. Look for repositories, documentation, discussions, and issues related to [TOPIC]. Include repository stats, recent activity, and community feedback.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 **Multiple domain restriction:**
 ```
 Search the web on site:stackoverflow.com OR site:docs.microsoft.com OR site:medium.com for [TECHNICAL QUESTION]. Focus on recent solutions, best practices, and current documentation.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 **News and industry sources:**
 ```
 Conduct web research on site:techcrunch.com OR site:theverge.com OR site:arstechnica.com about [TOPIC]. Focus on recent coverage, industry analysis, and expert opinions from the past year.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 ### Advanced Research Instructions
@@ -68,16 +90,22 @@ Conduct web research on site:techcrunch.com OR site:theverge.com OR site:arstech
 **Competitive analysis:**
 ```
 Do comprehensive web research to compare [PRODUCT A] vs [PRODUCT B]. Include recent reviews, pricing information, feature comparisons, user feedback, and market position. Look for sources from the past 6 months and provide balanced analysis with specific examples.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 **Industry trends and statistics:**
 ```
 Search the web for current trends and statistics about [INDUSTRY OR MARKET]. Focus on recent reports, market research, expert analysis, and quantitative data from the past 12 months. Include sources like industry reports, research firms, and reputable business publications.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 **Technical documentation and examples:**
 ```
 Do web search for latest best practices, documentation, and examples about [TECHNOLOGY]. Focus on official documentation, recent tutorials, community discussions, and current conventions. Include code examples and practical implementation guidance from 2024-2025.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
 ```
 
 ## Execution Commands
@@ -143,19 +171,25 @@ When processing Gemini CLI responses, verify:
 If Gemini CLI returns inadequate results:
 
 1. **Refine the instruction** with more specific requirements:
-   ```
-   Do web search for [TOPIC]. Focus on sources from 2024-2025, look for official documentation, and include specific examples and data points.
-   ```
+    ```
+    Do web search for [TOPIC]. Focus on sources from 2024-2025, look for official documentation, and include specific examples and data points.
+
+    IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
+    ```
 
 2. **Add domain constraints** for better source quality:
-   ```
-   Search the web on site:official-docs.com OR site:reputable-news.com about [TOPIC]. Focus on recent coverage and expert analysis.
-   ```
+    ```
+    Search the web on site:official-docs.com OR site:reputable-news.com about [TOPIC]. Focus on recent coverage and expert analysis.
+
+    IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
+    ```
 
 3. **Request specific source types**:
-   ```
-   Do web research about [TOPIC]. Look for academic papers, industry reports, and government statistics from the past 12 months.
-   ```
+    ```
+    Do web research about [TOPIC]. Look for academic papers, industry reports, and government statistics from the past 12 months.
+
+    IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.
+    ```
 
 ## Common Usage Scenarios
 
@@ -165,7 +199,9 @@ If Gemini CLI returns inadequate results:
 
 **Claude Code action:**
 ```bash
-gemini -p "Do web search for latest developments in AI and machine learning. Focus on breakthrough technologies, recent product launches, and research advances from 2024-2025. Include specific examples, company announcements, and expert analysis with proper source attribution."
+gemini -p "Do web search for latest developments in AI and machine learning. Focus on breakthrough technologies, recent product launches, and research advances from 2024-2025. Include specific examples, company announcements, and expert analysis with proper source attribution.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations."
 ```
 
 ### Technical Research
@@ -174,7 +210,9 @@ gemini -p "Do web search for latest developments in AI and machine learning. Foc
 
 **Claude Code action:**
 ```bash
-gemini -p "Search the web for current best practices and examples of implementing authentication in React applications. Focus on modern libraries like Auth0, Firebase Auth, and Next.js auth from 2024-2025. Include code examples, security considerations, and official documentation sources."
+gemini -p "Search the web for current best practices and examples of implementing authentication in React applications. Focus on modern libraries like Auth0, Firebase Auth, and Next.js auth from 2024-2025. Include code examples, security considerations, and official documentation sources.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations."
 ```
 
 ### Current Events Verification
@@ -183,7 +221,9 @@ gemini -p "Search the web for current best practices and examples of implementin
 
 **Claude Code action:**
 ```bash
-gemini -p "Search the web to verify the current business status of [COMPANY]. Look for recent news, official company announcements, financial reports, and reliable business sources from the past 6 months. Provide evidence of current operational status or changes."
+gemini -p "Search the web to verify the current business status of [COMPANY]. Look for recent news, official company announcements, financial reports, and reliable business sources from the past 6 months. Provide evidence of current operational status or changes.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations."
 ```
 
 ## Integration with Local Content
@@ -192,10 +232,14 @@ gemini -p "Search the web to verify the current business status of [COMPANY]. Lo
 
 ```bash
 # Analyze codebase with current best practices
-cat codebase.txt | gemini -p "Analyze this code structure and do web search for current best practices, security vulnerabilities, and modern alternatives for [TECHNOLOGY] as of 2024-2025. Focus on recent documentation and community recommendations."
+cat codebase.txt | gemini -p "Analyze this code structure and do web search for current best practices, security vulnerabilities, and modern alternatives for [TECHNOLOGY] as of 2024-2025. Focus on recent documentation and community recommendations.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations."
 
 # Update outdated patterns
-README.md | gemini -p "Review this documentation and do web search for current project standards, formatting conventions, and comprehensive examples for [TOPIC]. Focus on recent guidelines and community best practices."
+README.md | gemini -p "Review this documentation and do web search for current project standards, formatting conventions, and comprehensive examples for [TOPIC]. Focus on recent guidelines and community best practices.
+
+IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations."
 ```
 
 ## Resources
