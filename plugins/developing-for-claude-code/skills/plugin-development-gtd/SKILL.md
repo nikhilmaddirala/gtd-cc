@@ -1,26 +1,51 @@
 ---
 name: plugin-development-gtd
-description: Guide for developing Claude Code plugins following gtd-cc architectural patterns - central skills with workflows, thin wrapper commands and agents.
+description: Guide for developing Claude Code plugins following gtd-cc architectural patterns with skills, workflows, commands, and agents.
 ---
 
-# Plugin Development GTD Skill
+# Plugin Development Skill
 
-This skill provides complete guidance for developing Claude Code plugins following the gtd-cc repository's architectural patterns.
+## Overview
 
-## About This Skill
+This skill provides expertise for developing Claude Code plugins following the gtd-cc architectural patterns. This skill should be used when creating new plugins, updating existing ones, or setting up repository-specific automation. Commands and agents should reference specific workflows from the `workflows/` directory and follow the detailed procedures exactly as written.
 
-This skill should be used when developing plugins for the gtd-cc marketplace or creating repository-specific automation. It encompasses all aspects of plugin development from planning through release, following the gtd-cc architecture where skills contain domain expertise, commands are thin wrappers, and agents execute autonomously.
+## Workflows
 
-### When to Use This Skill
+Use the appropriate workflow from the `workflows/` directory:
 
-Use this skill when:
-- Creating new plugins for the gtd-cc marketplace
-- Updating existing plugins with new components
-- Creating repository-specific automation in `.claude/` directories
-- Validating plugin structure and consistency
-- Learning the gtd-cc architectural patterns
+- **create-new-plugin.md**: For building new gtd-cc marketplace plugins from scratch
+- **update-existing-plugin.md**: For adding components to existing gtd-cc plugins
+- **validate-existing-plugins.md**: For checking plugin health before releases or contributions
+- **create-repo-plugin.md**: For creating repository-specific `.claude/` automation
 
-## The gtd-cc Plugin Architecture Pattern
+## Resources
+
+- **templates/**: Contains template files for skills, commands, agents, workflows, and READMEs
+- **references/**: Contains gtd-cc architectural patterns and conventions
+
+## Guidelines
+
+Follow these general guidelines when executing any workflow in this skill:
+
+- **Always validate JSON manifests** before modification using `jq .` or similar validation tools
+- **Use absolute paths** for all file operations to avoid ambiguity
+- **Maintain git hygiene** - keep working directories clean and use conventional commit messages
+- **Provide clear error messages** with actionable next steps when operations fail
+- **Backup before modification** - create copies of files before making significant changes
+- **Test locally** before publishing or submitting changes to validate functionality
+- **Use templates instead of duplicating content** - when writing detailed code or templates in workflows, reference the files in `templates/` directory instead of embedding content directly
+
+## Additional Information
+
+This section can contain any additional domain-specific information needed for the skill, such as:
+- Domain concepts and terminology
+- Integration patterns with other plugins
+- Best practices and conventions
+- Architecture patterns
+- Troubleshooting guidance
+- Examples and use cases
+
+### gtd-cc Architecture Pattern
 
 All plugins in this marketplace follow a layered architecture:
 
@@ -32,121 +57,75 @@ All plugins in this marketplace follow a layered architecture:
 **Commands - Interactive Wrappers**
 - Thin wrappers (3-6 lines) that reference specific skill workflows
 - No inline logic - just pointers to workflows
-- Example: "Use the <skill-name> and follow its <workflow-name> exactly as written."
+- Example: "Use the <skill-name> and follow its <workflow-name> exactly as written"
 
 **Agents - Autonomous Executors**
 - Configuration plus instructions to execute workflows autonomously
 - Maintain context across multi-step processes
 - Delegate all procedures to skill workflows
 
-## Plugin Development Workflows
+**Key Principles**
+- **Single Source of Truth**: Skills contain all logic in workflow files
+- **Layered Architecture**: Skills → Commands → Agents for clear separation
+- **Maintainability**: Update workflow once, affects all commands/agents using it
+- **Consistency**: All plugins follow the same pattern, making the codebase predictable
 
-Each workflow provides detailed step-by-step guidance for specific plugin development tasks. Select the workflow that matches your current goal:
+### gtd-cc Naming Conventions
 
-### Workflow 1: Create New Plugin
-**File**: `workflows/create-new-plugin.md`
+**File Naming Patterns**
+- **Plugins**: kebab-case (e.g., `create-new-plugin`, `doc-audit`, `pl-create`)
+- **Agents**: kebab-case with descriptive suffix (e.g., `gtd-github-agent`, `build-test-deploy-agent`)
+- **Skills**: kebab-case directories with uppercase `SKILL.md` files (e.g., `plugin-development`)
+- **Workflows**: kebab-case with `.md` extension (e.g., `create-new-plugin`, `validate-existing-plugins`)
+- **Commands**: kebab-case with `.md` extension, typically prefixed by plugin (e.g., `gh-issue`, `doc-init`)
 
-Create a brand new plugin in the gtd-cc marketplace with complete directory structure, manifests, initial components, and marketplace registration.
+**Component Structure Standards**
+- **Plugin directories**: `plugins/<plugin-name>/`
+- **Skill directories**: `plugins/<plugin-name>/skills/<skill-name>/`
+- **Command files**: `plugins/<plugin-name>/commands/<command-name>.md`
+- **Agent files**: `plugins/<plugin-name>/agents/<agent-name>.md`
+- **Workflow files**: `plugins/<plugin-name>/skills/<skill-name>/workflows/<workflow-name>.md`
 
-**Use when**: Building a new plugin from scratch for the gtd-cc marketplace
+**Path Registration in Manifests**
+All paths in plugin manifests should be relative to plugin root:
+- Commands: `commands/command-name.md`
+- Agents: `agents/agent-name.md`
+- Skills: `skills/skill-name/SKILL.md`
+- Workflows: `skills/skill-name/workflows/workflow-name.md`
 
-### Workflow 2: Update Existing Plugin
-**File**: `workflows/update-existing-plugin.md`
+**Manifest Structure Requirements**
+Each plugin must have a `.claude-plugin/plugin.json` with:
+- `name`: Plugin name (kebab-case)
+- `version`: Semantic version (e.g., "1.0.0")
+- `description`: Brief description of plugin purpose
+- `components`: Array of commands, agents, and skills with name and path
+- `dependencies`: Array of required dependencies (can be empty)
+- `marketplace`: "gtd-cc" for marketplace plugins or "repository-specific" for local plugins
 
-Add new components (commands, agents, skills, workflows) to existing plugins while maintaining consistency and updating manifests.
+### Component Naming Relationships
 
-**Use when**: Extending or modifying an existing gtd-cc marketplace plugin
+Components within a plugin should have consistent naming relationships:
 
-### Workflow 3: Validate Existing Plugins
-**File**: `workflows/validate-existing-plugins.md`
+**Plugin Prefix Pattern**: All component names are prefixed with the plugin name
+- Plugin: `github` → Components: `gh-*`
+- Plugin: `documentation` → Components: `doc-*`
+- Plugin: `obsidian` → Components: `ob-*`
+- Plugin: `web-research` → Components: `wr-*`
 
-Comprehensive validation of plugin structure, manifests, documentation, and marketplace consistency.
+**Example: GitHub Plugin**
+```
+Plugin: github
+Skill: github-gtd
+Workflows: gh-build, gh-plan, gh-manage, gh-merge, gh-review
+Commands: gh-build, gh-plan, gh-manage, gh-merge, gh-review
+Agents: gh-build-agent, gh-plan-agent, gh-manage-agent, gh-merge-agent, gh-review-agent
+```
 
-**Use when**: Checking plugin health before releases, contributions, or during development
-
-### Workflow 4: Create Repository-Specific Plugin
-**File**: `workflows/create-repo-plugin.md`
-
-Analyze any repository and create custom `.claude/` automation tailored to that repository's specific needs, following gtd-cc patterns.
-
-**Use when**: Adding Claude Code automation to a specific repository with domain-specific operations
-
-## How to Use This Skill
-
-When this skill is referenced by a command or agent:
-
-1. **Select the relevant workflow** based on your current task
-2. **Read the workflow file** for detailed step-by-step procedures
-3. **Follow the process exactly** as written in the workflow
-4. **Execute operations** (bash commands, file creation, validation)
-5. **Verify success criteria** to ensure quality
-
-### Workflow Selection Logic
-
-**For gtd-cc marketplace plugins:**
-- New plugin → Use `create-new-plugin.md`
-- Modifying existing → Use `update-existing-plugin.md`
-- Before release → Use `validate-existing-plugins.md`
-
-**For repository-specific automation:**
-- Custom `.claude/` setup → Use `create-repo-plugin.md`
-
-**For learning:**
-- All workflows demonstrate the gtd-cc pattern in action
-
-## Key Principles
-
-**Single Source of Truth**: Skills contain all logic in workflow files. Commands and agents are thin orchestrators.
-
-**Layered Architecture**: Skills (expertise) → Commands (interactive interface) → Agents (autonomous execution)
-
-**Maintainability**: Update workflow once, affects all commands/agents using it.
-
-**Clarity**: Clean separation between knowledge (skills) and interface (commands/agents).
-
-**Consistency**: All plugins follow the same pattern, making the codebase predictable.
-
-## gtd-cc Repository Conventions
-
-**Naming:**
-- Commands: kebab-case with plugin prefix (e.g., `gh-issue`, `doc-audit`, `pl-create`)
-- Agents: kebab-case with descriptive suffix (e.g., `gtd-github-agent`)
-- Skills: kebab-case directories, uppercase `SKILL.md` files
-- Workflows: kebab-case with `.md` extension
-
-**File Organization:**
-- Skills: `plugins/<plugin>/skills/<skill-name>/SKILL.md`
-- Workflows: `plugins/<plugin>/skills/<skill-name>/workflows/*.md`
-- Commands: `plugins/<plugin>/commands/<command-name>.md`
-- Agents: `plugins/<plugin>/agents/<agent-name>.md`
-
-**Content Style:**
-- SKILL.md: Lean overview, lists workflows, provides selection logic
-- Workflows: Detailed step-by-step procedures with bash commands and examples
-- Commands: Minimal (3-6 lines) references to workflows
-- Agents: Configuration plus autonomous execution instructions
-
-## Examples to Study
-
-**Complex multi-workflow plugin:**
-- `plugins/github/` - GitHub workflow automation
-- Study `skills/github-gtd/SKILL.md` and its workflows/ directory
-- Notice how commands are thin wrappers (1-2 lines each)
-
-**Simple plugin:**
-- `plugins/documentation/` - Documentation tools
-- Straightforward structure
-
-**Meta-example:**
-- `plugins/developing-for-claude-code/` - This plugin
-- Demonstrates the pattern it teaches
-
-## Workflow Dependencies
-
-- Workflows are independent and can be used in any order
-- `validate-existing-plugins.md` should be run before releases
-- `create-repo-plugin.md` is for different use case (repository-specific vs marketplace plugins)
-
-## Reference Files
-
-All detailed procedures are in individual workflow files in the `workflows/` directory. SKILL.md serves as the index and overview - all implementation details live in workflows.
+**Example: Documentation Plugin**
+```
+Plugin: documentation
+Skill: doc-standards
+Workflows: doc-init, doc-update, doc-audit, doc-compress
+Commands: doc-init, doc-update, doc-audit, doc-compress
+Agents: doc-init-agent, doc-update-agent, doc-audit-agent, doc-compress-agent
+```
