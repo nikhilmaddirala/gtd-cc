@@ -16,10 +16,12 @@ Use the appropriate workflow from the `workflows/` directory:
 - **repo-setup.md** - Sets up essential GitHub workflow infrastructure including workflow labels, issue templates, PR templates, branch protection rules, and worktree directory structure
 - **issue-creation.md** - Transforms user requirements into well-documented GitHub issues with clear problem statements, acceptance criteria, and appropriate labels
 - **approve-plan.md** - Guides humans through reviewing AI-generated implementation plans with decision framework for approval or revision requests
-- **review.md** - Performs code reviews focusing on compliance with requirements, bugs, and architectural alignment
+- **review-pr.md** - Performs code reviews focusing on compliance with requirements, bugs, and architectural alignment
 - **human-approval.md** - Guides humans through local testing, code review, and approval decision-making for implementations ready for merge
 - **commit.md** - Creates well-structured git commits with conventional commit format
 - **merge.md** - Executes final merge operations including squash-merging PR to main, closing issues, deleting branches, and removing worktrees
+- **orchestrate.md** - Orchestrates multiple GitHub workflow stages by analyzing issue state and delegating to appropriate agents
+- **issue-management.md** - Manages issue workflow including labeling, linking, and status tracking throughout the development lifecycle
 
 ## Guidelines
 
