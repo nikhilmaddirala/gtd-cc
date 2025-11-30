@@ -5,29 +5,13 @@
   "author": {
     "name": "Nikhil Maddirala"
   },
-  "components": {
-    "commands": [
-      {
-        "name": "pl-create",
-        "path": "commands/pl-create.md"
-      },
-      {
-        "name": "pl-update",
-        "path": "commands/pl-update.md"
-      },
-      {
-        "name": "pl-validate",
-        "path": "commands/pl-validate.md"
-      }
-    ],
-    "agents": [],
-    "skills": [
-      {
-        "name": "plugin-development-gtd",
-        "path": "skills/plugin-development-gtd/SKILL.md"
-      }
-    ]
-  },
-  "dependencies": [],
-  "marketplace": "gtd-cc"
+  "commands": [
+    "./commands/pl-create.md",
+    "./commands/pl-update.md",
+    "./commands/pl-validate.md"
+  ],
+  "agents": [],
+  "skills": [
+    "./skills/plugin-development-gtd"
+  ]
 }

@@ -87,20 +87,20 @@ All plugins in this marketplace follow a layered architecture:
 - **Workflow files**: `plugins/<plugin-name>/skills/<skill-name>/workflows/<workflow-name>.md`
 
 **Path Registration in Manifests**
-All paths in plugin manifests should be relative to plugin root:
-- Commands: `commands/command-name.md`
-- Agents: `agents/agent-name.md`
-- Skills: `skills/skill-name/SKILL.md`
-- Workflows: `skills/skill-name/workflows/workflow-name.md`
+All paths in plugin manifests should be relative to plugin root with `./` prefix:
+- Commands: `./commands/command-name.md`
+- Agents: `./agents/agent-name.md`
+- Skills: `./skills/skill-name` (reference the directory, not SKILL.md file)
 
 **Manifest Structure Requirements**
 Each plugin must have a `.claude-plugin/plugin.json` with:
 - `name`: Plugin name (kebab-case)
 - `version`: Semantic version (e.g., "1.0.0")
 - `description`: Brief description of plugin purpose
-- `components`: Array of commands, agents, and skills with name and path
-- `dependencies`: Array of required dependencies (can be empty)
-- `marketplace`: "gtd-cc" for marketplace plugins or "repository-specific" for local plugins
+- `author`: Author object with name field
+- `commands`: Array of command file paths (e.g., `"./commands/command-name.md"`)
+- `agents`: Array of agent file paths (e.g., `"./agents/agent-name.md"`)
+- `skills`: Array of skill directory paths (e.g., `"./skills/skill-name"`)
 
 ### Component Naming Relationships
 
