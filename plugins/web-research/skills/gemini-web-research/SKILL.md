@@ -26,7 +26,22 @@ This skill operates on a two-agent model:
 You do NOT perform web searches directly. Instead, you act as an intelligent prompt coordinator that crafts optimal instructions for Gemini CLI to execute web searches effectively.
 
 ## Scope Limitations
-Gemini CLI is restricted to web research operations ONLY. When crafting instructions, always include this constraint:
+Gemini CLI has the following tools:
+  - Codebase Investigator Agent
+    (codebase_investigator)
+  - Edit (replace)
+  - FindFiles (glob)
+  - GoogleSearch (google_web_search)
+  - ReadFile (read_file)
+  - ReadFolder (list_directory)
+  - SaveMemory (save_memory)
+  - SearchText (search_file_content)
+  - Shell (run_shell_command)
+  - WebFetch (web_fetch)
+  - WriteFile (write_file)
+  - WriteTodos (write_todos)
+
+But in this skill, we want to restrict Gemini CLI to web research operations ONLY. When crafting instructions, always include this constraint:
 
 ```
 IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations.

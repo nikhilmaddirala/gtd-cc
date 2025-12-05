@@ -8,7 +8,9 @@
   "commands": [
     "./commands/pl-create.md",
     "./commands/pl-update.md",
-    "./commands/pl-validate.md"
+    "./commands/pl-validate.md",
+    "./commands/pl-skill.md",
+    "./commands/pl-repo.md"
   ],
   "agents": [],
   "skills": [

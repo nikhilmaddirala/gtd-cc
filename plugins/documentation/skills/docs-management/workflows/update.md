@@ -1,53 +1,130 @@
 ---
-description: Update documentation based on code changes, structure changes, or before releases
+description: Update documentation based on scope and type parameters
 ---
 
-## Update Documentation Workflow
+# Update Documentation Workflow
 
-Keep documentation synchronized with code changes and prepare documentation for releases.
+Keep documentation synchronized with code changes using structured parameters.
 
-## Overview
+## Parameters
 
-This workflow guides you through updating documentation when code changes or before releases. It ensures changes are documented in the right layer without duplication.
+- **scope**: Determines documentation reach
+  - single: Update individual documents
+  - multiple: Update across documentation layers
+  - all: Systematic maintenance across all documentation
+
+- **type**: Determines update nature
+  - minor: Update references, key information, version numbers
+  - refactor: Restructure content, reorganize sections
+  - release: Prepare documentation for release
 
 ## Context
 
 Before starting:
-
-- You've made code changes that affect user-facing behavior
+- Code changes have been made that affect documentation
 - Or you're preparing for a release
-- Or you want to restructure existing documentation
-- Documentation exists and follows three-layer model
+- Or doing scheduled maintenance (scope=all, type=minor)
+- Documentation follows three-layer model
 
-## Your Task
+## Process
 
-- Goal: Update documentation to reflect code/structure changes
-- Target: Documentation is current and in the right layers
-- Role: Maintain documentation accuracy across layers
+### Step 1: Analyze Update Requirements
 
-### Step 1: Identify What Changed
+Use the shared folder-exploration component to understand what needs updating:
+> "Use the shared folder-exploration component to analyze project structure and identify documentation requirements"
 
-```bash
-# Review recent code changes
-git log --oneline HEAD~5..HEAD
+### Step 2: Execute Based on Parameters
 
-# Check what files were modified
-git diff --name-only HEAD~1
+#### scope=single, type=minor (Individual Document Updates)
 
-# See what behavior changed
-git diff HEAD~1 | head -50
-```
+1. **Identify target document**
+   ```bash
+   # Find document related to code changes
+   grep -r "function/class/module_name" docs/ *.md
+   ```
 
-Categorize the change:
+2. **Update specific sections**
+   - Version numbers
+   - API references
+   - Configuration examples
+   - Cross-references
 
-- **Installation/setup changed** → Update README or /docs/tutorials/getting-started.md
-- **Feature added** → Add to README or /docs/api-reference.md
-- **Configuration changed** → Update /docs/configuration.md if exists
-- **Architecture changed** → Update /docs/architecture.md and directory READMEs
-- **API changed** → Update /docs/api-reference.md
-- **Directory structure changed** → Update directory READMEs
-- **Contribution processes changed** → Update CONTRIBUTING.md
-- **Bug fixed** → Document in /docs/troubleshooting.md or release notes
+3. **Reference templates as needed**
+   - Use `../templates/template-readme.md` for structure reference
+   - Ensure consistent formatting across updates
+
+#### scope=multiple, type=minor (Cross-Layer Updates)
+
+1. **Update root README.md** using `../templates/template-readme.md`
+   - Quick start instructions
+   - Version compatibility
+   - Key feature changes
+
+2. **Update directory READMEs**
+   - Module interfaces
+   - Inter-module dependencies
+   - Local examples
+
+3. **Update /docs files**
+   - API reference changes
+   - Configuration updates
+   - Tutorial adjustments
+
+#### scope=single, type=refactor (Document Restructure)
+
+1. **Analyze current structure**
+   ```bash
+   # Document current organization
+   grep -n "^#" target-document.md
+   ```
+
+2. **Plan restructure**
+   - Identify sections to move/merge/delete
+   - Plan new organization
+   - Maintain cross-reference integrity
+
+3. **Execute restructure**
+   - Reference `../templates/template-readme.md` for consistency
+   - Preserve critical information
+   - Update all internal links
+
+#### scope=multiple, type=refactor (Architecture Updates)
+
+1. **Assess documentation architecture**
+   - Phase appropriateness (1→2→3 transitions)
+   - Content distribution across layers
+   - Redundancy identification
+
+2. **Restructure across layers**
+   - Move content to appropriate layers
+   - Eliminate duplication
+   - Update cross-references
+
+3. **Consider phase transitions**
+   - Phase 1→2: Add module READMEs
+   - Phase 2→3: Create /docs folder
+   - Move detailed content from READMEs to /docs
+
+#### scope=all, type=minor (Maintenance)
+
+1. **Quarterly maintenance checklist**
+   ```bash
+   # Check for outdated content
+   find . -name "*.md" -exec grep -l "TODO|FIXME|v[0-9]\." {} \;
+
+   # Check broken links
+   find . -name "*.md" -exec markdown-link-check {} \;
+   ```
+
+2. **Update all references**
+   - Version numbers across all documents
+   - Outdated feature descriptions
+   - Deprecated configuration options
+   - External links
+
+3. **Remove outdated information**
+   - Don't patch around it - delete and replace
+   - Add cross-references instead of duplicating
 
 ### Step 2: Locate Documentation to Update
 

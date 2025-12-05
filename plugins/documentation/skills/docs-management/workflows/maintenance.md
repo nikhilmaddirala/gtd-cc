@@ -5,6 +5,7 @@ description: Implement and maintain documentation health over time
 ## Maintenance Workflow
 
 Keep documentation fresh through PR-based updates and scheduled reviews.
+For implementation details, use the update.md workflow with scope=all, type=minor parameters.
 
 ## Core Workflows
 

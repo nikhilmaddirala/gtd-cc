@@ -59,21 +59,22 @@ Periodically review your documentation:
 - **`/doc-init`** - Initialize documentation structure for new or existing projects
 - **`/doc-update`** - Update documentation when code changes
 - **`/doc-audit`** - Run interactive documentation health audit
+- **`/doc-compress`** - Create condensed versions for quick reference
 
 ### Agents (Autonomous Execution)
 
 - **`doc-generator-agent`** - Automatically generate missing documentation
 - **`doc-auditor-agent`** - Comprehensively audit documentation and generate improvement report
 
-### Skill: doc-standards
+### Skill: docs-management
 
-The **doc-standards** skill contains all documentation guidance and workflows:
+The **docs-management** skill contains all documentation guidance and workflows:
 
 - **SKILL.md** - Philosophy and core principles
-- **initialization.md** - Setting up documentation structure
-- **structure.md** - Organizing content across layers
+- **initialize.md** - Setting up documentation structure
+- **update.md** - Updating documentation across layers
 - **maintenance.md** - Keeping documentation fresh
-- **audit.md** - Evaluating documentation health
+- **compress.md** - Reducing documentation bloat
 
 ## Key Principles
 
@@ -164,7 +165,7 @@ Then customize the generated documentation with your specific content.
 
 ### "I'm preparing for a release"
 
-Follow the release checklist in the **maintenance.md** workflow:
+Follow the release checklist in the **update.md** workflow with scope=all, type=minor:
 
 - [ ] README matches current behavior
 - [ ] Quick start instructions work end-to-end
@@ -184,7 +185,7 @@ Run `/doc-audit` to identify:
 
 ### "I want to establish documentation practices for my team"
 
-From **maintenance.md**, implement:
+From **update.md** with scope=all, type=minor, implement:
 
 1. Add documentation checklist to PR template
 2. Establish release documentation checklist
@@ -352,10 +353,10 @@ This documentation plugin works alongside the GitHub workflow plugin:
 
 ### Learn More
 
-- See the **doc-standards** skill for detailed procedures
-- Read **initialization.md** for setup guidance
-- Review **maintenance.md** for ongoing practices
-- Check **audit.md** for quality evaluation
+- See the **docs-management** skill for detailed procedures
+- Read **initialize.md** for setup guidance
+- Review **update.md** for ongoing practices
+- Check **compress.md** for reducing documentation bloat
 
 ### Use Cases
 
@@ -370,10 +371,10 @@ This documentation plugin works alongside the GitHub workflow plugin:
 
 The plugin includes detailed workflows for:
 
-1. **Initialization** - Choosing your phase and setting up structure
-2. **Structure** - Organizing content across three layers
-3. **Maintenance** - Keeping docs fresh and preventing rot
-4. **Audit** - Comprehensive documentation health evaluation
+1. **initialize.md** - Choosing your phase and setting up structure
+2. **update.md** - Updating documentation across layers
+3. **maintenance.md** - Keeping docs fresh and preventing rot
+4. **compress.md** - Reducing documentation bloat
 
 ## Status
 

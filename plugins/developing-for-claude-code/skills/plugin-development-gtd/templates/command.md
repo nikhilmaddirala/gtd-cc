@@ -15,4 +15,6 @@ User will provide $ARGUMENTS. [Describe user input and how this command should p
 
 ## Process
 
-Load [skill name] first. Interactively guide the user through this skill and (if applicable) [workflow name] step by step, collecting inputs and executing each step with confirmation.
+- Load [skill name] and (if applicable) [workflow name]; you MUST do this first.
+- Parse the user input and understand how it relates to [skill name]/[workflow name]. 
+- Interactively guide the user through [skill name]/[workflow name] step by step, collecting inputs and executing each step with confirmation.
