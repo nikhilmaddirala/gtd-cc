@@ -28,10 +28,15 @@
       "description": "GitHub project documentation generation and maintenance using three-layer model with initialization, structure, maintenance, and audit workflows",
       "source": "./plugins/documentation"
     },
-    {
-      "name": "developing-for-claude-code",
-      "description": "Guide for developing Claude Code plugins using gtd-cc architectural patterns - central skills with workflows, thin wrapper commands and agents",
-      "source": "./plugins/developing-for-claude-code"
-    }
-  ]
-}
+     {
+       "name": "developing-for-claude-code",
+       "description": "Guide for developing Claude Code plugins using gtd-cc architectural patterns - central skills with workflows, thin wrapper commands and agents",
+       "source": "./plugins/developing-for-claude-code"
+     },
+     {
+       "name": "random",
+       "description": "Miscellaneous productivity and development skills including GTD task management and theme port creation",
+       "source": "./plugins/random"
+     }
+   ]
+ }

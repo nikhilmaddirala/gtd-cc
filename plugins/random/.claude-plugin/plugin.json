@@ -1,0 +1,14 @@
+{
+  "name": "random",
+  "version": "0.1.0",
+  "description": "Miscellaneous productivity and development skills",
+  "author": {
+    "name": "Nikhil Maddirala"
+  },
+  "commands": [],
+  "agents": [],
+  "skills": [
+    "./backlog-md-skill",
+    "./catppuccin-port-creation"
+  ]
+}
