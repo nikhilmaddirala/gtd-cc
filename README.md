@@ -9,6 +9,7 @@ GTD-CC is a plugin marketplace providing specialized tools for:
 - Managing your knowledge base with Obsidian integration
 - Researching and analyzing web content
 - Creating professional project documentation
+- Developing plugins for Claude Code marketplace
 
 ## Quick Start (2 minutes)
 
@@ -21,21 +22,105 @@ GTD-CC is a plugin marketplace providing specialized tools for:
 ### 2. Install Plugins You Need
 
 ```bash
-/plugin install github@gtd-cc      # GitHub automation
-/plugin install obsidian@gtd-cc    # Knowledge management
-/plugin install web-research@gtd-cc # Web crawling & analysis
-/plugin install documentation@gtd-cc # Project documentation
+# GitHub workflow automation
+/plugin install github@gtd-cc
+
+# Obsidian knowledge management
+/plugin install obsidian@gtd-cc
+
+# Web research and crawling
+/plugin install web-research@gtd-cc
+
+# Documentation tools
+/plugin install documentation@gtd-cc
+
+# Plugin development guide
+/plugin install developing-for-claude-code@gtd-cc
 ```
 
 ### 3. Get Started
 
-First-time users: See [Getting Started Guide](GETTING-STARTED.md)
+First-time users: Continue reading this guide for plugin selection.
 
-Choose your first plugin:
-- **GitHub automation?** See [plugins/github/README.md](plugins/github/README.md)
-- **Knowledge management?** See [plugins/obsidian/README.md](plugins/obsidian/README.md)
-- **Web research?** See [plugins/web-research/README.md](plugins/web-research/README.md)
-- **Project documentation?** See [plugins/documentation/README.md](plugins/documentation/README.md)
+## Choose Your Path (5-10 minutes)
+
+### For GitHub Project Management
+
+If you manage projects on GitHub, the **GitHub Workflow Plugin** automates the entire workflow from issue to merge.
+
+Quick start:
+```bash
+# Initialize your repository
+/gh-repo
+
+# Create your first issue
+/gh-issue "Describe what you want to build"
+
+# Plan the implementation
+/gh-plan 1
+
+# Build it (after approval)
+/gh-build 1
+
+# Review the code
+/gh-review 1
+
+# Merge when ready
+/gh-merge 1
+```
+
+### For Knowledge Management
+
+If you use Obsidian, the **Obsidian Workflow Plugin** helps you organize and capture knowledge.
+
+Features:
+- Sync GitHub tasks to your daily notes
+- Create linked notes with PARA methodology
+- Capture learning from research
+- Extract content from web sources
+
+### For Web Research
+
+If you need to gather information from websites, the **Web Research Plugin** automates crawling and analysis.
+
+Quick start:
+```bash
+# Crawl a website
+skill web-research:crawl4ai
+# Follow the prompts to crawl your target website
+```
+
+### For Project Documentation
+
+If you need to improve your project documentation, the **Documentation Plugin** provides structure and guidance.
+
+Quick start:
+```bash
+# Initialize documentation
+/doc-init
+
+# Audit existing documentation
+/doc-audit
+
+# Update documentation when code changes
+/doc-update
+```
+
+### For Plugin Development
+
+If you want to create your own plugins, the **Developing for Claude Code Plugin** provides templates and workflows.
+
+Quick start:
+```bash
+# Create a new plugin
+/pl-create
+
+# Setup plugin repository
+/pl-repo
+
+# Create a skill
+/pl-skill
+```
 
 ## Available Plugins
 
@@ -45,34 +130,13 @@ Choose your first plugin:
 | **Obsidian** | Knowledge management and task sync | Building personal knowledge base, capturing learning |
 | **Web Research** | Content crawling and analysis | Researching topics, gathering competitive intelligence |
 | **Documentation** | Professional documentation tools | Setting up docs, improving existing documentation |
+| **Developing for Claude Code** | Plugin development guide | Creating plugins for Claude Code marketplace |
 
-Full plugin descriptions: See [plugins/README.md](plugins/README.md)
-
-## Documentation Structure
-
-GTD-CC uses a three-layer documentation model for clarity:
-
-**Layer 1: This file**
-- Overview and quick start
-- Plugin selection guidance
-- Installation instructions
-
-**Layer 2: Plugin READMEs**
-- Plugin overview and value proposition
-- Available commands and agents
-- Plugin-specific workflows
-- Integration with other plugins
-
-**Layer 3: Detailed Documentation**
-- Skill documentation (plugins/*/skills/*/SKILL.md) - Step-by-step procedures
-- Reference guides (references/) - Architectural and design information
-- Component documentation - Implementation details
-
-Start at Layer 1, dive deeper as needed.
+Plugin details: See [plugins/README.md](plugins/README.md)
 
 ## Common Workflows
 
-### Create and Merge a GitHub Feature
+### Create and Ship a GitHub Feature
 
 ```bash
 /gh-issue "Add dark mode toggle"
@@ -95,126 +159,185 @@ Start at Layer 1, dive deeper as needed.
 /doc-update
 ```
 
-See [plugins/README.md](plugins/README.md) for more workflows.
+### Create a New Plugin
 
-## Directory Navigation
-
-```
-gtd-cc/
-├── README.md                    Entry point (this file)
-├── GETTING-STARTED.md          First-time user guide
-├── CONTRIBUTING.md             Developer guidelines
-├── plugins/                    Plugin directory
-│   ├── README.md              Plugin selection guide
-│   ├── github/               GitHub workflow plugin
-│   ├── obsidian/             Obsidian integration
-│   ├── web-research/         Web crawling & analysis
-│   └── documentation/        Documentation tools
-├── references/               Detailed reference docs
-│   ├── README.md            Reference guide index
-│   └── *.md                 Architectural references
-├── .claude/                  Claude Code configuration
-│   ├── README.md           Configuration guide
-│   └── skills/             Custom project skills
-└── .claude-plugin/         Marketplace config
+```bash
+/pl-create my-plugin
+/pl-repo
+# Add your components
+/pl-validate
 ```
 
-See [Directory Structure Guide](#directory-structure-guide) below for what each part contains.
+## Documentation Structure
+
+GTD-CC uses a three-layer documentation model:
+
+**Layer 1: This file**
+- Overview and quick start
+- Plugin selection guidance
+- Installation instructions
+
+**Layer 2: Plugin READMEs**
+- Plugin overview and value proposition
+- Available commands and agents
+- Plugin-specific workflows
+- Integration with other plugins
+
+**Layer 3: Detailed Documentation**
+- Skill documentation (plugins/*/skills/*/SKILL.md) - Step-by-step procedures
+- Reference guides (references/) - Architectural and design information
+- Component documentation - Implementation details
+
+Start at Layer 1, dive deeper as needed.
+
+## How to Contribute
+
+We welcome contributions! Here's how to get started:
+
+### Quick Contributions
+
+1. **Report Issues**: Found a bug or have a suggestion? Open an issue.
+2. **Improve Documentation**: Help us keep documentation accurate and clear.
+3. **Share Feedback**: Tell us what's working and what isn't.
+
+### Development Contributions
+
+#### Adding a New Command
+
+1. Identify which plugin it belongs to
+2. Create command file: `plugins/<plugin-name>/commands/<name>.md`
+3. Add it to the plugin manifest: `.claude-plugin/plugin.json`
+4. Update the plugin README.md
+5. Test locally with `/command-name`
+
+#### Adding a New Skill
+
+1. Create skill directory: `plugins/<plugin-name>/skills/<skill-name>/`
+2. Create comprehensive `SKILL.md` documentation
+3. Add skill to plugin manifest if needed
+4. Update plugin README to reference the skill
+
+#### Creating a New Plugin
+
+1. Create plugin directory: `plugins/<new-plugin-name>/`
+2. Create structure: `mkdir -p plugins/<new-plugin-name>/{.claude-plugin,commands,agents,skills}`
+3. Create plugin manifest: `.claude-plugin/plugin.json`
+4. Create plugin README.md
+5. Add plugin to root `.claude-plugin/marketplace.json`
+6. Implement initial components
+
+### Conventions
+
+- **Commands**: kebab-case, prefixed by plugin (e.g., `gh-issue`)
+- **Agents**: kebab-case with `-agent` suffix
+- **Skills**: kebab-case directories with uppercase `SKILL.md`
+- **Plugins**: kebab-case directories
+
+### Pull Request Guidelines
+
+1. **Title**: Use conventional format: `feat:`, `fix:`, `docs:`, etc.
+2. **Description**: Explain what components were added/modified and why
+3. **Changes**: Keep PRs focused on specific features
+4. **Testing**: Describe how changes were tested
+
+## Quick Reference
+
+### GitHub Workflow Commands
+
+```
+/gh-repo      - Initialize repository
+/gh-issue     - Create a new issue
+/gh-plan      - Develop implementation plan
+/gh-build     - Implement code changes
+/gh-review    - Review implementation
+/gh-approve   - Approve for merge
+/gh-merge     - Merge and clean up
+/gh-manage    - Manage workflow
+```
+
+### Documentation Commands
+
+```
+/doc-init     - Initialize documentation structure
+/doc-update   - Update docs after code changes
+/doc-audit    - Assess documentation health
+/doc-compress - Reduce documentation bloat
+```
+
+### Plugin Development Commands
+
+```
+/pl-create    - Create new plugin
+/pl-repo      - Setup repository
+/pl-skill     - Create skill
+/pl-update    - Update plugin
+/pl-validate  - Validate plugin
+```
+
+### Obsidian Skills
+
+```
+obsidian:content-extraction-skill
+obsidian:options-analysis-skill
+```
+
+### Web Research Skills
+
+```
+web-research:crawl4ai
+web-research:gemini-web-research
+web-research:web-crawler
+```
+
+### Documentation Skills
+
+```
+docs-management
+```
+
+## Troubleshooting
+
+### Plugins not showing up
+
+1. Verify marketplace is added: `/plugin marketplace list`
+2. Check marketplace is accessible
+3. Reinstall if needed: `/plugin marketplace remove nikhilmaddirala/gtd-cc` then re-add
+
+### Command not found
+
+1. Verify plugin is installed: `/plugin list`
+2. Check command name spelling and formatting
+3. Some commands may require initialization (e.g., `/gh-repo` before `/gh-issue`)
+
+### Git workflow issues
+
+1. Ensure you have a GitHub repository
+2. Check permissions for the repository
+3. Verify Git is configured correctly
+
+### Documentation issues
+
+1. Check that all links in README work
+2. Validate JSON manifests with `jq . .claude-plugin/marketplace.json`
+3. Run `/doc-audit` to identify issues
 
 ## Next Steps
 
-Choose one based on your needs:
+Choose your path:
 
-### New to GTD-CC?
-- Read [Getting Started Guide](GETTING-STARTED.md) - 10-minute onboarding
-- Browse available plugins at [plugins/README.md](plugins/README.md)
+1. **Dive deeper**: Read individual plugin READMEs in [plugins/](plugins/)
+2. **Start using**: Try the quick start commands for your chosen plugin
+3. **Contribute**: Create a new plugin or improve existing ones
+4. **Learn more**: Check skill documentation in individual plugins
 
-### Ready to use a plugin?
-- GitHub automation: [plugins/github/README.md](plugins/github/README.md)
-- Knowledge management: [plugins/obsidian/README.md](plugins/obsidian/README.md)
-- Web research: [plugins/web-research/README.md](plugins/web-research/README.md)
-- Documentation: [plugins/documentation/README.md](plugins/documentation/README.md)
+## Questions?
 
-### Want to contribute?
-- See [CONTRIBUTING.md](CONTRIBUTING.md) for developer guidelines
-- Review [Claude Code configuration](.claude/README.md) for project conventions
+- Check plugin-specific documentation in [plugins/](plugins/)
+- Open an issue for bug reports or suggestions
+- Review the quick reference commands above
 
-### Need deep technical information?
-- See [references/README.md](references/README.md) for architectural guides
-
-## Directory Structure Guide
-
-### plugins/
-
-Contains all plugin components (commands, agents, skills).
-
-- **plugins/README.md** - Plugin selection and overview
-- **plugins/github/** - GitHub workflow automation
-- **plugins/obsidian/** - Obsidian knowledge management
-- **plugins/web-research/** - Web crawling and analysis
-- **plugins/documentation/** - Project documentation tools
-
-Each plugin has:
-- `README.md` - Plugin overview and quick start
-- `commands/` - Interactive slash commands
-- `agents/` - Autonomous workflow agents
-- `skills/` - Detailed procedural documentation
-
-### references/
-
-Detailed reference documentation and architectural guides.
-
-- **references/README.md** - Reference documentation index
-- **references/plugin-marketplaces.md** - Marketplace architecture
-
-For step-by-step procedures, see skill documentation in each plugin instead.
-
-### .claude/
-
-Claude Code configuration and custom components.
-
-- **.claude/README.md** - Configuration guide
-- **CLAUDE.md** - Main project configuration for Claude Code
-
-Tells Claude how to behave when working with this project, naming conventions, and development patterns.
-
-## Plugin Architecture
-
-All plugins use a consistent architecture:
-
-- **Skills** - Foundation layer with domain expertise
-- **Commands** - Interactive workflows (`/command-name`)
-- **Agents** - Autonomous execution without human interaction
-
-This layering keeps logic reusable and components focused.
-
-## Contributing
-
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for:
-- Project structure conventions
-- How to add new commands, agents, and skills
-- Development workflow guidelines
-- Testing and validation procedures
-
-## Support
-
-- **Getting started?** See [GETTING-STARTED.md](GETTING-STARTED.md)
-- **Plugin questions?** Check the plugin's README.md
-- **Procedures and how-tos?** See SKILL.md files in each plugin
-- **Architecture and design?** See references/ directory
-- **Contributing?** See [CONTRIBUTING.md](CONTRIBUTING.md)
-- **Bugs?** Report via GitHub Issues
-
-## Key Principles
-
-- **User-focused navigation** - Documentation guides you based on your needs
-- **Three-layer structure** - Overview → plugin level → detailed procedures
-- **One fact, one place** - Information is linked, not duplicated
-- **Consistent patterns** - All plugins follow the same architecture
-- **Progressive disclosure** - Basic usage first, deep dives when needed
+Happy coding!
 
 ---
 
-**License:** MIT
-**Maintainer:** Nikhil Maddirala
-**Repository:** https://github.com/nikhilmaddirala/gtd-cc
+*Total lines: ~398 (within 200-500 line guideline)*

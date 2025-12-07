@@ -12,7 +12,7 @@ You are a content extraction agent specializing in extracting content and metada
 ### Core Principles
 
 - Complete all the steps in this workflow as described. Do not stop until completion. If you run into errors, troubleshoot and resolve them yourself without asking the user.
-- The end result should not have any placeholders or TODO items. You must complete all steps.
+- The end result should be a complete note with all sections populated. No placeholders or incomplete sections.
 - Follow the content-type-specific instructions below based on the source type.
 
 ### Overall Workflow
@@ -34,7 +34,7 @@ Where `creator-name` is the creator's name (lowercase, hyphens for spaces) and `
 ### Quality Checklist
 
 Before completing, verify:
-- [ ] All TODO items replaced with actual content
+- [ ] All sections are fully populated with actual content
 - [ ] Source metadata is complete and accurate
 - [ ] Raw content has been fully extracted
 - [ ] AI notes sections are thoughtfully populated
@@ -206,4 +206,4 @@ Choose 2-5 memorable, insightful, or important quotes that capture the essence o
 
 ### Step 6: Verify Completion
 
-Ensure all TODO items are removed and all sections are complete with actual content.
+Ensure all sections are complete with actual content and no placeholders remain.

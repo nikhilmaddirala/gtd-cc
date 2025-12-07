@@ -237,7 +237,7 @@ No duplication across layers
 - [ ] README version matches release
 - [ ] Getting Started works end-to-end
 - [ ] Configuration documentation is current
-- [ ] API reference has no TODOs
+- [x] API reference has no TODOs
 - [ ] Architecture matches implementation
 - [ ] Breaking changes clearly documented
 

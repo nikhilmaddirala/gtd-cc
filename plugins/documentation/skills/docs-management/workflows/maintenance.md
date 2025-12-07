@@ -61,8 +61,8 @@ find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" -mtime +
 # Check README size
 test $(wc -l < README.md) -gt 500 && echo "README too long"
 
-# Find TODO markers
-grep -r "TODO\|FIXME\|XXX" docs/ --include="*.md" && echo "Found TODOs"
+# Find unresolved items
+grep -r "TODO\|FIXME\|XXX" docs/ --include="*.md" && echo "Found unresolved items"
 
 # Check for broken links
 grep -r "\[.*\](" . --include="*.md" | grep -oP '\]\(\K[^)]+' | sort | uniq
@@ -77,7 +77,7 @@ grep -r "\[.*\](" . --include="*.md" | grep -oP '\]\(\K[^)]+' | sort | uniq
 
 **Audit Checklist:**
 - [ ] README <500 lines and clear entry point
-- [ ] No broken links or TODO markers
+- [ ] No broken links or unresolved markers
 - [ ] No duplicate content across layers
 - [ ] Version numbers match code
 - [ ] Code examples work

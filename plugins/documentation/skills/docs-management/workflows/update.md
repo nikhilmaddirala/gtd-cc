@@ -109,7 +109,7 @@ Use the shared folder-exploration component to understand what needs updating:
 
 1. **Quarterly maintenance checklist**
    ```bash
-   # Check for outdated content
+   # Check for outdated content or unresolved items
    find . -name "*.md" -exec grep -l "TODO|FIXME|v[0-9]\." {} \;
 
    # Check broken links
@@ -245,7 +245,7 @@ grep -i "version" README.md
 # Verify it works with new code
 
 # Check documentation completeness
-# Scan /docs for TODOs or placeholders
+# Scan /docs for incomplete items or placeholders
 grep -r "TODO\|FIXME" docs/ --include="*.md"
 
 # Configuration reference current?

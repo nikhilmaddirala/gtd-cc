@@ -68,6 +68,22 @@ When to use: Setting up documentation for new projects, maintaining existing doc
 
 Learn more: See [documentation/README.md](documentation/README.md)
 
+### Developing for Claude Code Plugin
+
+Comprehensive guide and toolkit for creating plugins for Claude Code marketplace.
+
+Location: `developing-for-claude-code/`
+
+Core capabilities:
+- Plugin development patterns and templates
+- Command, agent, and skill creation guidelines
+- Repository setup and validation tools
+- GTD architectural patterns for plugins
+
+When to use: Creating new plugins for Claude Code, learning plugin development best practices, setting up plugin repository structure.
+
+Learn more: See [developing-for-claude-code/README.md](developing-for-claude-code/README.md)
+
 ## Plugin Architecture
 
 All plugins follow a consistent architecture:
@@ -115,6 +131,13 @@ Use the **Documentation Plugin** (`documentation/`). It offers:
 - Best practices for README formatting
 - Maintenance checklists and automation
 
+### I want to create plugins for Claude Code
+Use the **Developing for Claude Code Plugin** (`developing-for-claude-code/`). It provides:
+- Plugin development templates and patterns
+- Step-by-step creation workflows
+- Validation and testing tools
+- GTD-based architectural guidance
+
 ## Common Workflows
 
 ### Create and implement a GitHub issue
@@ -128,6 +151,12 @@ Use the **Documentation Plugin** (`documentation/`). It offers:
 2. Use the **Obsidian plugin** to organize findings in your vault
 3. Use the **Documentation plugin** to create reference documentation
 4. Link everything together in `/docs/` structure
+
+### Create a new plugin
+1. Use the **Developing for Claude Code plugin** to create a plugin template
+2. Follow the GTD architectural patterns for plugin design
+3. Use the provided validation tools to check your work
+4. Submit your plugin to the marketplace
 
 ### Conduct quarterly documentation review
 1. Run `/doc-audit` from the **Documentation plugin** to assess current state
@@ -143,6 +172,7 @@ Plugins are designed to work together:
 - **GitHub + Obsidian**: Sync GitHub issues to your Obsidian daily notes for personal task tracking
 - **Web Research + Obsidian**: Research and capture findings directly into your knowledge base
 - **Web Research + Documentation**: Use crawled content as reference material for project documentation
+- **Developing for Claude Code + All Plugins**: Use development patterns to create new plugins that integrate with existing ones
 
 ## Plugin Installation
 
@@ -157,6 +187,7 @@ To use plugins from this marketplace:
 /plugin install obsidian@gtd-cc
 /plugin install web-research@gtd-cc
 /plugin install documentation@gtd-cc
+/plugin install developing-for-claude-code@gtd-cc
 ```
 
 ## Next Steps
@@ -164,7 +195,8 @@ To use plugins from this marketplace:
 1. **New to GTD-CC?** Start with [Getting Started Guide](../GETTING-STARTED.md)
 2. **Want to learn about a specific plugin?** See the plugin-specific README
 3. **Need detailed procedures?** Check the skill documentation in each plugin
-4. **Contributing?** See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines
+4. **Want to create a plugin?** See the [Developing for Claude Code plugin](developing-for-claude-code/README.md)
+5. **Contributing?** See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines
 
 ## Related Documentation
 

@@ -4,24 +4,25 @@ description: Shared component for exploring folder structure and understanding c
 
 # Folder Exploration Component
 
-Shared component used by documentation workflows to analyze project structure, identify documentation locations, and understand the relationship between code and documentation through structured subagent delegation.
+Shared component used by documentation workflows to analyze project structure and return data for updating documentation. This component gathers data through subagent delegation and returns structured findings for making targeted documentation updates.
 
 ## Purpose
 
 This component provides a systematic approach to:
-- Understanding current folder structure through parallel analysis
-- Identifying existing documentation patterns efficiently
-- Analyzing code-documentation relationships with scalable recursion
-- Determining appropriate documentation updates based on comprehensive findings
+- Gather project structure data through parallel subagent analysis
+- Identify existing documentation patterns and locations
+- Analyze code-documentation relationships
+- Return structured context for documentation updates
+- Enable targeted updates to existing README files
 
 ## When to Use
 
 This component is referenced by other workflows when they need to:
-- Assess the current state of documentation
-- Identify which documents need updating
+- Assess the current state of documentation for updates
+- Identify which specific documents need updating
 - Understand project complexity for phase determination
 - Map code changes to documentation requirements
-- Handle large projects with scalable analysis
+- Gather data before making documentation updates
 
 ## Process
 
@@ -31,22 +32,22 @@ Launch three subagents in parallel to gather comprehensive project data:
 
 #### Subagent 1: Root Structure Analyzer
 ```markdown
-Task: Analyze the top-level directory structure
+Task: Analyze the top-level directory structure and return data
 - List all files and directories in the project root
 - Identify configuration files, build files, and special directories
 - Count immediate subdirectories
 - Note any unusual patterns or naming conventions
-- Output: Structured list of root contents with descriptions
+- Return: Structured data with file paths and descriptions
 ```
 
 #### Subagent 2: Documentation Locator
 ```markdown
-Task: Find all documentation files and patterns
+Task: Find all documentation files and return locations
 - Search for all README files (case insensitive)
 - Find all markdown files (*.md, *.MD)
 - Locate docs directories and their contents
 - Identify other documentation formats (rst, txt, etc.)
-- Output: Complete inventory of documentation with locations
+- Return: Complete inventory data with file paths and locations
 ```
 
 #### Subagent 3: Module Mapper
@@ -56,7 +57,7 @@ Task: Map code modules to their documentation status
 - Check for README files in each module
 - Identify main code files and their purposes
 - Note any module-specific documentation
-- Output: Matrix of modules vs documentation coverage
+- Return: Matrix data of modules vs documentation coverage
 ```
 
 ### Phase 2: Checkpoint Analysis
@@ -99,66 +100,57 @@ Task: Perform two-level recursive analysis
 ```markdown
 Task: Identify specific documentation gaps and needs
 - Cross-reference code with missing documentation
-- Check for outdated references or TODOs
+- Check for outdated references or unresolved items
 - Identify complex code lacking explanation
 - Note configuration files without documentation
 - Output: Prioritized list of documentation needs
 ```
 
-### Phase 4: Synthesize Findings
+### Phase 4: Return Structured Context
 
-Compile all subagent results into a structured report:
+Compile all subagent results into structured data for documentation updates:
 
-1. **Phase Determination**:
+1. **Phase Determination Data**:
    - **Phase 1**: Single README.md, simple structure (<5 modules)
    - **Phase 2**: Multiple READMEs, 2+ modules, moderate complexity
    - **Phase 3**: READMEs + docs folder, complex architecture
 
-2. **Documentation Coverage Score**:
-   - Calculate percentage of modules with documentation
-   - Identify critical missing documentation
-   - Note outdated or incomplete sections
+2. **Documentation Coverage Data**:
+   - Percentage of modules with documentation
+   - List of missing documentation files
+   - Locations of outdated or incomplete sections
 
-3. **Recommendations**:
-   - Immediate documentation needs
-   - Structural improvements
-   - Maintenance requirements
+3. **Update Targets Data**:
+   - Specific files that need updating
+   - Types of updates required (version, links, content)
+   - Priority levels for each update
 
-## Output Format
+## Return Format
 
-The component provides structured output that other workflows can use:
+The component returns structured data for making documentation updates:
 
-```markdown
-## Project Structure Analysis
+```
+Project Structure Data:
+- Phase: 1|2|3
+- Total directories: N
+- Total files: N
+- Documentation coverage: N%
 
-### Overview
-- **Phase**: 1|2|3
-- **Total Directories**: N
-- **Total Files**: N
-- **Documentation Coverage**: N%
+Documentation Files Data:
+- Root README: path/to/README.md (exists/missing)
+- Module READMEs: [list of paths and status]
+- Docs folder: path/to/docs/ (exists/missing)
+- Other docs: [list of paths]
 
-### Documentation Inventory
-- **Root README**: ✓/✗
-- **Module READMEs**: N found, N missing
-- **Docs Folder**: ✓/✗ (if present)
-- **Other Documentation**: List
+Update Targets Data:
+- Files needing updates: [file paths]
+- Update types: [version|links|content|structure]
+- Priority order: [high|medium|low]
 
-### Module Analysis
-| Module | README | Docs | Status |
-|--------|--------|-------|--------|
-| module1 | ✓ | ✗ | Basic coverage |
-| module2 | ✗ | ✓ | Needs module README |
-| ... | ... | ... | ... |
-
-### Critical Gaps
-1. Missing documentation for [module/function]
-2. Outdated information in [file]
-3. Complex code in [location] needs explanation
-
-### Recommendations
-- [Priority 1] Create README for [module]
-- [Priority 2] Update [section] in existing docs
-- [Priority 3] Add API documentation for [component]
+Gap Analysis Data:
+- Missing documentation: [locations]
+- Outdated information: [file paths and sections]
+- Coverage gaps: [specific areas needing attention]
 ```
 
 ## Subagent Task Templates
@@ -167,39 +159,43 @@ When implementing this component, use these task templates:
 
 ```markdown
 # Root Structure Analyzer Task
-Analyze the project root directory structure. Use Glob and Read tools to:
-1. List all files in root (ls -la equivalent)
-2. Describe each file/directory's purpose
-3. Identify project type and technology stack
-4. Note any special patterns (monorepo, multi-module, etc.)
+Analyze the project root directory structure and return data. Use Glob and Read tools to:
+1. List all files in root with full paths
+2. Identify file types and purposes
+3. Determine project type and technology stack
+4. Note special patterns (monorepo, multi-module, etc.)
+5. Return structured data with file paths and descriptions
 
 # Documentation Locator Task
-Comprehensive documentation search. Use Glob and Grep tools to:
-1. Find all README files (including case variations)
-2. Locate all markdown files
-3. Find docs directories and their contents
-4. Identify API docs, guides, or other documentation formats
+Find all documentation files and return location data. Use Glob and Grep tools to:
+1. Find all README files with full paths
+2. Locate all markdown files with paths
+3. Find docs directories and list contents
+4. Identify other documentation formats
+5. Return complete inventory data with file paths
 
 # Module Mapper Task
-Map each module's documentation status. Use Read and Glob tools to:
+Map module documentation status and return coverage data. Use Read and Glob tools to:
 1. Examine each top-level directory
-2. Check for module READMEs
+2. Check for module READMEs and note their paths
 3. Identify main code files and their purposes
-4. Create a matrix of modules vs documentation coverage
+4. Create matrix data of modules vs documentation coverage
+5. Return structured mapping data
 
 # Deep Directory Analyzer Task (conditional)
-Two-level recursive analysis for large directories. Use Task tool to:
-1. For each large directory, spawn a subagent to analyze its structure
-2. Map subdirectory relationships
+Perform recursive analysis and return structure data. Use Task tool to:
+1. For each large directory, analyze subdirectory structure
+2. Map subdirectory relationships and dependencies
 3. Identify nested documentation patterns
-4. Report on organizational complexity
+4. Return hierarchical structure data with documentation gaps
 
 # Gap Analyzer Task (conditional)
-Identify specific documentation needs. Use Grep and Read tools to:
-1. Search for TODO, FIXME, or documentation markers
-2. Find complex functions without comments
-3. Identify configuration files without explanation
-4. Cross-reference with code changes to find outdated docs
+Identify documentation gaps and return needs data. Use Grep and Read tools to:
+1. Search for incomplete documentation or unresolved items
+2. Find complex code without explanations
+3. Identify configuration files lacking documentation
+4. Cross-reference with code changes for outdated docs
+5. Return prioritized data of documentation needs
 ```
 
 ## Performance Considerations
@@ -214,4 +210,4 @@ Identify specific documentation needs. Use Grep and Read tools to:
 Workflows reference this component using:
 > "Use the shared folder-exploration component to analyze project structure and identify documentation requirements"
 
-The component maintains backward compatibility while providing enhanced analysis through subagent delegation.
+The component returns structured data for making targeted documentation updates without creating separate report files.
