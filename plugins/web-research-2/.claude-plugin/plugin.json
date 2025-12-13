@@ -1,9 +1,0 @@
-{
-  "name": "web-research",
-  "version": "0.1.0",
-  "description": "Comprehensive web scraping and crawling toolkit for extracting documentation, crawling sites, and fetching pages",
-  "author": {
-    "name": "Nikhil Maddirala"
-  },
-  "keywords": ["web-scraping", "crawling", "documentation", "research", "crawl4ai"]
-}
