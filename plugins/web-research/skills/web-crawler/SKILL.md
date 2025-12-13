@@ -1,12 +1,6 @@
 ---
 name: web-crawler
 description: Crawl entire websites and save markdown files to obsidian-2025-07/05-misc/web-crawl using crawl4ai
-license: MIT
-allowed-tools:
-  - bash
-metadata:
-  version: "1.0"
-  keywords: "web, crawling, markdown, crawl4ai"
 ---
 
 # Web Crawler Skill
