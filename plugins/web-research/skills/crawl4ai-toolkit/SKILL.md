@@ -1,16 +1,16 @@
 ---
-name: crawl4ai
-description: Complete toolkit for web crawling and data extraction using Crawl4AI. This skill should be used when users need to scrape websites, extract structured data, handle JavaScript-heavy pages, crawl multiple URLs, or build automated web data pipelines. Includes optimized extraction patterns with schema generation for efficient, LLM-free extraction.
+name: crawl4ai-toolkit
+description: Complete Crawl4AI SDK reference and implementation guide. Use when users need to scrape websites, extract structured data, handle JavaScript-heavy pages, crawl multiple URLs, or build automated web data pipelines. Includes optimized extraction patterns, error handling, and comprehensive code examples.
 version: 0.7.4
 crawl4ai_version: ">=0.7.4"
-last_updated: 2025-01-19
+last_updated: 2025-01-26
 ---
 
-# Crawl4AI
+# Crawl4AI Toolkit
 
 ## Overview
 
-This skill provides comprehensive support for web crawling and data extraction using the Crawl4AI library, including the complete SDK reference, ready-to-use scripts for common patterns, and optimized workflows for efficient data extraction.
+This skill provides comprehensive support for web crawling and data extraction using Crawl4AI library, including complete SDK reference, ready-to-use scripts, error handling patterns, and optimized workflows for efficient data extraction.
 
 ## Quick Start
 
@@ -52,7 +52,7 @@ python scripts/extraction_pipeline.py --generate-schema https://shop.com "extrac
 
 ### 1. Basic Crawling
 
-Understanding the core components for any crawl:
+Understanding of core components for any crawl:
 
 ```python
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
@@ -88,7 +88,7 @@ async with AsyncWebCrawler(config=browser_config) as crawler:
 
 ### 2. Configuration Deep Dive
 
-**BrowserConfig** - Controls the browser instance:
+**BrowserConfig** - Controls browser instance:
 - `headless`: Run with/without GUI
 - `viewport_width/height`: Browser dimensions
 - `user_agent`: Custom user agent string
@@ -126,9 +126,74 @@ title = result.metadata["title"]
 description = result.metadata["description"]
 ```
 
-## Markdown Generation (Primary Use Case)
+## JavaScript-Heavy Content Handling
 
-### 1. Basic Markdown Extraction
+For sites that rely on JavaScript for content rendering:
+
+```python
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
+
+# Configure for JavaScript-heavy sites
+browser_config = BrowserConfig(
+    headless=True,
+    viewport_width=1920,
+    viewport_height=1080,
+    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+)
+
+crawler_config = CrawlerRunConfig(
+    page_timeout=60000,  # 60 seconds for JS loading
+    wait_for="css:.main-content",  # Wait for specific element
+    js_code="""
+    // Scroll to trigger lazy loading
+    window.scrollTo(0, document.body.scrollHeight);
+    // Wait for any async content
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    """,
+    remove_overlay_elements=True
+)
+
+async def crawl_dynamic_content(url):
+    async with AsyncWebCrawler(config=browser_config) as crawler:
+        result = await crawler.arun(url, config=crawler_config)
+        return result.markdown
+```
+
+## Content Filtering
+
+Focus on relevant content while ignoring navigation and footers:
+
+```python
+from crawl4ai.content_filter_strategy import BM25ContentFilter, PruningContentFilter
+from crawl4ai.markdown_generation_strategy import DefaultMarkdownGenerator
+
+# Option 1: Relevance-based filtering
+bm25_filter = BM25ContentFilter(
+    user_query="product features documentation",
+    bm25_threshold=1.0
+)
+
+# Option 2: Quality-based filtering
+pruning_filter = PruningContentFilter(threshold=0.4, threshold_type="fixed")
+
+md_generator = DefaultMarkdownGenerator(content_filter=bm25_filter)
+config = CrawlerRunConfig(markdown_generator=md_generator)
+
+async def extract_focused_content(url, query):
+    # Update filter with user query
+    bm25_filter.user_query = query
+    async with AsyncWebCrawler() as crawler:
+        result = await crawler.arun(url, config=config)
+        return {
+            "raw_content": str(result.markdown.raw_markdown),
+            "focused_content": str(result.markdown.fit_markdown),
+            "metadata": result.metadata
+        }
+```
+
+## Markdown Generation
+
+### Basic Markdown Extraction
 
 Crawl4AI excels at generating clean, well-formatted markdown:
 
@@ -142,7 +207,7 @@ async with AsyncWebCrawler() as crawler:
         f.write(result.markdown)
 ```
 
-### 2. Fit Markdown (Content Filtering)
+### Fit Markdown (Content Filtering)
 
 Use content filters to get only relevant content:
 
@@ -166,7 +231,7 @@ print(result.markdown.fit_markdown)  # Filtered markdown
 print(result.markdown.raw_markdown)  # Original markdown
 ```
 
-### 3. Markdown Customization
+### Markdown Customization
 
 Control markdown generation with options:
 
@@ -201,7 +266,7 @@ generator = DefaultMarkdownGenerator(
 
 ## Data Extraction
 
-### 1. Schema-Based Extraction (Most Efficient)
+### Schema-Based Extraction (Most Efficient)
 
 For repetitive patterns, generate schema once and reuse:
 
@@ -213,7 +278,7 @@ python scripts/extraction_pipeline.py --generate-schema https://shop.com "extrac
 python scripts/extraction_pipeline.py --use-schema https://shop.com generated_schema.json
 ```
 
-### 2. Manual CSS/JSON Extraction
+### Manual CSS/JSON Extraction
 
 When you know the structure:
 
@@ -232,7 +297,7 @@ extraction_strategy = JsonCssExtractionStrategy(schema=schema)
 config = CrawlerRunConfig(extraction_strategy=extraction_strategy)
 ```
 
-### 3. LLM-Based Extraction
+### LLM-Based Extraction
 
 For complex or irregular content:
 
@@ -245,7 +310,7 @@ extraction_strategy = LLMExtractionStrategy(
 
 ## Advanced Patterns
 
-### 1. Deep Crawling
+### Deep Crawling
 
 Discover and crawl links from a page:
 
@@ -268,7 +333,7 @@ async with AsyncWebCrawler() as crawler:
     # or custom crawl strategies (see complete-sdk-reference.md)
 ```
 
-### 2. Batch & Multi-URL Processing
+### Batch & Multi-URL Processing
 
 Efficiently crawl multiple URLs:
 
@@ -288,7 +353,7 @@ async with AsyncWebCrawler() as crawler:
             print(f"✅ {result.url}: {len(result.markdown)} chars")
 ```
 
-### 3. Session & Authentication
+### Session & Authentication
 
 Handle login-required content:
 
@@ -311,7 +376,7 @@ config = CrawlerRunConfig(session_id="user_session")
 await crawler.arun("https://site.com/protected-content", config=config)
 ```
 
-### 4. Dynamic Content Handling
+### Dynamic Content Handling
 
 For JavaScript-heavy sites:
 
@@ -337,7 +402,7 @@ config = CrawlerRunConfig(
 )
 ```
 
-### 5. Anti-Detection & Proxies
+### Anti-Detection & Proxies
 
 Avoid bot detection:
 
@@ -362,6 +427,65 @@ import asyncio
 for url in urls:
     result = await crawler.arun(url)
     await asyncio.sleep(2)  # Delay between requests
+```
+
+## Robust Crawling Template
+
+```python
+import asyncio
+import random
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig
+from crawl4ai.content_filter_strategy import BM25ContentFilter
+from crawl4ai.markdown_generation_strategy import DefaultMarkdownGenerator
+
+async def robust_crawl(url, query=None, max_retries=3):
+    """Robust crawling with retries and error handling"""
+
+    for attempt in range(max_retries):
+        try:
+            # Randomize configuration for each attempt
+            browser_config = BrowserConfig(
+                headless=True,
+                viewport_width=random.choice([1920, 1366, 1440]),
+                viewport_height=random.choice([1080, 768, 900]),
+                user_agent=random.choice([
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+                ])
+            )
+
+            # Add content filtering if query provided
+            config = CrawlerRunConfig(
+                page_timeout=45000,
+                remove_overlay_elements=True
+            )
+
+            if query:
+                bm25_filter = BM25ContentFilter(user_query=query, bm25_threshold=1.0)
+                md_generator = DefaultMarkdownGenerator(content_filter=bm25_filter)
+                config.markdown_generator = md_generator
+
+            async with AsyncWebCrawler(config=browser_config) as crawler:
+                result = await crawler.arun(url, config=config)
+
+                if result.success and len(str(result.markdown)) > 100:
+                    return {
+                        "content": str(result.markdown),
+                        "metadata": result.metadata,
+                        "links": result.links,
+                        "attempt": attempt + 1
+                    }
+                else:
+                    print(f"Attempt {attempt + 1}: Insufficient content extracted")
+
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {e}")
+
+        # Exponential backoff
+        if attempt < max_retries - 1:
+            await asyncio.sleep(2 ** attempt)
+
+    raise Exception(f"Failed to extract content after {max_retries} attempts")
 ```
 
 ## Common Use Cases
@@ -411,74 +535,90 @@ config = CrawlerRunConfig(
 )
 ```
 
-## Resources
+## Performance Optimization
 
-### scripts/
-- **extraction_pipeline.py** - Three extraction approaches with schema generation
-- **basic_crawler.py** - Simple markdown extraction with screenshots
-- **batch_crawler.py** - Multi-URL concurrent processing
+### Concurrent Crawling
+For multiple URLs:
 
-### references/
-- **complete-sdk-reference.md** - Complete SDK documentation (23K words) with all parameters, methods, and advanced features
-
-### Example Code Repository
-
-The Crawl4AI repository includes extensive examples in `docs/examples/`:
-
-#### Core Examples
-- **quickstart.py** - Comprehensive starter with all basic patterns:
-  - Simple crawling, JavaScript execution, CSS selectors
-  - Content filtering, link analysis, media handling
-  - LLM extraction, CSS extraction, dynamic content
-  - Browser comparison, SSL certificates
-
-#### Specialized Examples
-- **amazon_product_extraction_*.py** - Three approaches for e-commerce scraping
-- **extraction_strategies_examples.py** - All extraction strategies demonstrated
-- **deepcrawl_example.py** - Advanced deep crawling patterns
-- **crypto_analysis_example.py** - Complex data extraction with analysis
-- **parallel_execution_example.py** - High-performance concurrent crawling
-- **session_management_example.py** - Authentication and session handling
-- **markdown_generation_example.py** - Advanced markdown customization
-- **hooks_example.py** - Custom hooks for crawl lifecycle events
-- **proxy_rotation_example.py** - Proxy management and rotation
-- **router_example.py** - Request routing and URL patterns
-
-#### Advanced Patterns
-- **adaptive_crawling/** - Intelligent crawling strategies
-- **c4a_script/** - C4A script examples
-- **docker_*.py** - Docker deployment patterns
-
-To explore examples:
 ```python
-# The examples are located in your Crawl4AI installation:
-# Look in: docs/examples/ directory
+urls = ["https://site1.com", "https://site2.com", "https://site3.com"]
 
-# Start with quickstart.py for comprehensive patterns
-# It includes: simple crawl, JS execution, CSS selectors,
-# content filtering, LLM extraction, dynamic pages, and more
+async def crawl_multiple(urls, max_concurrent=3):
+    async with AsyncWebCrawler() as crawler:
+        results = await crawler.arun_many(
+            urls=urls,
+            config=CrawlerRunConfig(page_timeout=30000),
+            max_concurrent=max_concurrent
+        )
 
-# For specific use cases:
-# - E-commerce: amazon_product_extraction_*.py
-# - High performance: parallel_execution_example.py
-# - Authentication: session_management_example.py
-# - Deep crawling: deepcrawl_example.py
+        return [
+            {"url": r.url, "content": str(r.markdown), "success": r.success}
+            for r in results if r.success
+        ]
 
-# Run any example directly:
-# python docs/examples/quickstart.py
+results = asyncio.run(crawl_multiple(urls))
 ```
 
-## Best Practices
+### Caching Strategy
+Enable caching during development:
 
-1. **Start with basic crawling** - Understand BrowserConfig, CrawlerRunConfig, and arun() before moving to advanced features
-2. **Use markdown generation** for documentation and content - Crawl4AI excels at clean markdown extraction
-3. **Try schema generation first** for structured data - 10-100x more efficient than LLM extraction
-4. **Enable caching during development** - `cache_mode=CacheMode.ENABLED` to avoid repeated requests
-5. **Set appropriate timeouts** - 30s for normal sites, 60s+ for JavaScript-heavy sites
-6. **Respect rate limits** - Use delays and `max_concurrent` parameter
-7. **Reuse sessions** for authenticated content instead of re-logging
+```python
+from crawl4ai import CacheMode
 
-## Troubleshooting
+config = CrawlerRunConfig(
+    cache_mode=CacheMode.ENABLED,  # Cache successful requests
+    excluded_tags=["script", "style"]  # Exclude unnecessary elements
+)
+```
+
+## Error Handling & Troubleshooting
+
+### Common Issues and Solutions
+
+**1. Timeout Errors**
+```python
+# Increase timeout for slow sites
+config = CrawlerRunConfig(
+    page_timeout=90000,  # 90 seconds
+    wait_for="js:document.readyState === 'complete'"
+)
+```
+
+**2. Bot Detection**
+```python
+# Rotate user agents and add delays
+import random
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
+]
+
+browser_config = BrowserConfig(
+    headless=True,
+    user_agent=random.choice(user_agents),
+    viewport_width=f"{random.choice([1920, 1366, 1440])}",
+    viewport_height=f"{random.choice([1080, 768, 900])}"
+)
+
+# Add delay between requests
+await asyncio.sleep(random.uniform(1, 3))
+```
+
+**3. Content Not Loading**
+```python
+# Wait for specific content
+config = CrawlerRunConfig(
+    wait_for=[
+        "css:.article-content",  # Wait for main content
+        "js:window.mainContentLoaded"  # Wait for JS flag
+    ],
+    js_code="""
+    // Trigger any lazy loading
+    window.dispatchEvent(new Event('load'));
+    """
+)
+```
 
 **JavaScript not loading:**
 ```python
@@ -522,5 +662,40 @@ result = await crawler.arun(url, config=config)
 print(f"Session ID: {result.session_id}")
 print(f"Cookies: {result.cookies}")
 ```
+
+## Best Practices
+
+1. **Always check result.success** before processing content
+2. **Start with basic crawling** - Understand BrowserConfig, CrawlerRunConfig, and arun() before moving to advanced features
+3. **Use markdown generation** for documentation and content - Crawl4AI excels at clean markdown extraction
+4. **Try schema generation first** for structured data - 10-100x more efficient than LLM extraction
+5. **Use appropriate timeouts** - 30s for normal sites, 60s+ for JavaScript-heavy sites
+6. **Enable caching during development** - `cache_mode=CacheMode.ENABLED` to avoid repeated requests
+7. **Implement retry logic** with exponential backoff
+8. **Add delays between requests** to respect rate limits
+9. **Filter content aggressively** to focus on relevant information
+10. **Reuse sessions** for authenticated content instead of re-logging
+
+## Resources
+
+### scripts/
+- **extraction_pipeline.py** - Three extraction approaches with schema generation
+- **basic_crawler.py** - Simple markdown extraction with screenshots
+- **batch_crawler.py** - Multi-URL concurrent processing
+
+### examples/
+- **basic-scraping.py** - Core scraping patterns
+- **structured-data-extraction.py** - JSON extraction with CSS selectors
+
+### references/
+- **complete-sdk-reference.md** - Complete SDK documentation (23K words) with all parameters, methods, and advanced features
+
+### tests/
+- **test_basic_crawling.py** - Basic crawling patterns
+- **test_advanced_patterns.py** - Advanced crawling scenarios
+- **test_data_extraction.py** - Data extraction strategies
+- **test_markdown_generation.py** - Markdown generation tests
+
+---
 
 For more details on any topic, refer to `references/complete-sdk-reference.md` which contains comprehensive documentation of all features, parameters, and advanced usage patterns.

@@ -58,67 +58,52 @@ Specialized workflow for extracting structured documentation:
 
 ## Advanced Skills
 
-### Core Crawling Skills
+### Core Skills
 
-#### 1. Web Scraping Fundamentals
-Foundation patterns for web content extraction:
-- Basic page fetching and parsing
-- JavaScript handling strategies
-- Error handling and retry logic
-- Content cleaning and normalization
+#### 1. Web Search
+General web search patterns and techniques:
+- Gemini CLI coordination for advanced searches
+- Built-in WebSearch tool usage guidelines
+- Search query optimization
+- Domain-specific search strategies
 
-**Use when:** You need fundamental scraping patterns or are new to web scraping
+**Use when:** You need to perform web searches, find current information, or research topics online
 
-#### 2. Crawl4AI Toolkit
-Complete web crawling and data extraction SDK:
-- Async crawling for performance
-- Schema generation for structured data
-- Batch processing capabilities
-- Advanced JavaScript support
+#### 2. Web Fetch
+Download web articles with images as clean markdown:
+- Jina AI Reader (primary method)
+- WebFetch tool integration
+- Image download and markdown update
+- Multiple fallback options
 
-**Use when:** You need programmatic access or are building automated workflows
+**Use when:** You need to download articles with images for offline reference
 
-#### 3. Site Crawling & Sitemaps
-Advanced crawling strategies for complex sites:
-- Intelligent crawl depth management
-- Sitemap discovery and parsing
-- Rate limiting and politeness policies
-- Large-scale site mapping
+#### 3. Crawl4AI Toolkit
+Complete Crawl4AI SDK reference and implementation guide:
+- Comprehensive SDK documentation
+- Ready-to-use scripts for common patterns
+- Optimized workflows for efficient data extraction
+- Error handling and best practices
 
-**Use when:** You need to crawl entire sites or handle complex navigation
+**Use when:** You need programmatic access to crawl4ai or are building automated web data pipelines
 
-### Specialized Skills
+#### 4. Site Crawling
+Intelligent website crawling, sitemap generation, and conversion:
+- Advanced crawling strategies with depth control
+- Simple site-to-markdown conversion
+- Sitemap generation and link analysis
+- Concurrent crawling patterns
 
-#### 4. Documentation Extraction
-Specialized patterns for documentation sites:
-- API documentation detection
-- Tutorial and guide extraction
-- Code example preservation
-- Cross-link and reference mapping
+**Use when:** You need to crawl entire sites, generate sitemaps, or systematically explore web content
 
-**Use when:** You're working with technical documentation or knowledge bases
+#### 5. Content Extraction
+Specialized extraction from documentation platforms:
+- Documentation platform detection
+- API docs, tutorials, and reference guides extraction
+- Multi-page documentation processing
+- Structured data extraction patterns
 
-#### 5. Gemini Web Research
-AI-powered content analysis using Google Gemini:
-- Content summarization and synthesis
-- Research question answering
-- Multi-source analysis
-- Headless mode for automation
-
-**Use when:** You need AI-assisted content analysis or research synthesis
-
-#### 6. Web Crawler
-Simple site-to-markdown conversion:
-- Timestamped crawl outputs
-- Markdown formatting for knowledge management
-- Obsidian vault compatibility
-- Offline reference creation
-
-**Use when:** You want to archive sites or build personal knowledge bases
-
-
-#### 7. Web Fetch with images
-Fetch webpage as markdown file with images
+**Use when:** You need to extract structured documentation or knowledge base content
 
 
 ## Common Workflows
@@ -140,10 +125,10 @@ python scripts/extraction_pipeline.py \
 ```bash
 # Interactive approach
 /crawl-site
-# Enter research site, then use gemini for analysis
+# Enter research site, then use web-search for analysis
 
 # Programmatic approach
-skill: gemini-web-research
+skill: web-search
 cat content.txt | gemini -p "Summarize key findings"
 ```
 
@@ -154,7 +139,7 @@ cat content.txt | gemini -p "Summarize key findings"
 # Extract docs directly to your Obsidian vault
 
 # Programmatic approach
-skill: documentation-extraction
+skill: content-extraction
 # Use provided scripts for batch processing
 ```
 
@@ -165,7 +150,7 @@ skill: documentation-extraction
 # Set depth and output directory
 
 # Programmatic approach
-skill: web-crawler
+skill: site-crawling
 uvx crawl4ai crawl \
   --url "https://docs.example.com" \
   --output-dir "./archived-docs" \
@@ -196,9 +181,11 @@ filters:
 
 ### Skill-Specific Configuration
 Each skill can be configured independently:
-- **Crawl4AI**: Install with `pip install crawl4ai>=0.7.4`
-- **Gemini**: Install and configure Google Gemini CLI
-- **Web Crawler**: Configure output formats and directory structures
+- **Web Search**: Install and configure Google Gemini CLI
+- **Web Fetch**: Configure image download options and fallback methods
+- **Crawl4AI Toolkit**: Install with `pip install crawl4ai>=0.7.4`
+- **Site Crawling**: Configure crawl depth, output formats, and directory structures
+- **Content Extraction**: Configure platform-specific selectors and extraction patterns
 
 See individual skill documentation for detailed configuration options.
 
@@ -242,12 +229,11 @@ plugins/web-research/
 │   ├── crawl-site.md
 │   └── get-docs.md
 └── skills/                     # Advanced skill definitions
-    ├── web-scraping-fundamentals/
-    ├── crawl4ai/
-    ├── site-crawling/
-    ├── documentation-extraction/
-    ├── gemini-web-research/
-    └── web-crawler/
+    ├── web-search/             # General web search patterns
+    ├── web-fetch/              # Article download with images
+    ├── crawl4ai-toolkit/      # Complete Crawl4AI SDK
+    ├── site-crawling/          # Site crawling and conversion
+    └── content-extraction/     # Documentation extraction
 ```
 
 ## Best Practices
@@ -291,12 +277,11 @@ See individual skill documentation for detailed troubleshooting guides.
 
 ## Related Documentation
 
-- [Web Scraping Fundamentals SKILL.md](skills/web-scraping-fundamentals/SKILL.md)
-- [Crawl4AI SKILL.md](skills/crawl4ai/SKILL.md)
+- [Web Search SKILL.md](skills/web-search/SKILL.md)
+- [Web Fetch SKILL.md](skills/web-fetch/SKILL.md)
+- [Crawl4AI Toolkit SKILL.md](skills/crawl4ai-toolkit/SKILL.md)
 - [Site Crawling SKILL.md](skills/site-crawling/SKILL.md)
-- [Documentation Extraction SKILL.md](skills/documentation-extraction/SKILL.md)
-- [Gemini Web Research SKILL.md](skills/gemini-web-research/SKILL.md)
-- [Web Crawler SKILL.md](skills/web-crawler/SKILL.md)
+- [Content Extraction SKILL.md](skills/content-extraction/SKILL.md)
 
 ## Support
 

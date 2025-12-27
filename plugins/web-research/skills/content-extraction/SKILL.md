@@ -1,11 +1,11 @@
 ---
-name: documentation-extraction
-description: Specialized patterns for extracting structured documentation from websites. Use when users need to extract API docs, tutorials, reference guides, or knowledge bases. Handles common documentation platforms like Docusaurus, GitBook, ReadTheDocs, and Sphinx sites.
-version: 0.1.0
-last_updated: 2025-01-07
+name: content-extraction
+description: Specialized patterns for extracting structured content from documentation platforms and websites. Use when users need to extract API docs, tutorials, reference guides, or knowledge bases. Handles common documentation platforms like Docusaurus, GitBook, ReadTheDocs, and Sphinx sites.
+version: 0.2.0
+last_updated: 2025-01-26
 ---
 
-# Documentation Extraction
+# Content Extraction
 
 ## Overview
 

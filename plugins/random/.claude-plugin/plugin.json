@@ -5,10 +5,13 @@
   "author": {
     "name": "Nikhil Maddirala"
   },
-  "commands": [],
+  "commands": [
+    "./commands/system-check.md"
+  ],
   "agents": [],
   "skills": [
-    "./backlog-md-skill",
-    "./catppuccin-port-creation"
+    "./skills/backlog-md-skill",
+    "./skills/catppuccin-port-creation",
+    "./skills/system-diagnostics"
   ]
 }

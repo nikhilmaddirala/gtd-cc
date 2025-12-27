@@ -1,15 +1,130 @@
 ---
 name: site-crawling
-description: Advanced crawling strategies for discovering and mapping website structure. Use when users need to crawl entire sites, generate sitemaps, analyze link structures, or systematically explore web content. Includes intelligent depth control, content categorization, and concurrent crawling patterns.
-version: 0.1.0
-last_updated: 2025-01-07
+description: Advanced crawling strategies for discovering and mapping website structure, plus simple site-to-markdown conversion. Use when users need to crawl entire sites, generate sitemaps, analyze link structures, or convert websites to markdown files. Includes intelligent depth control, content categorization, and concurrent crawling patterns.
+version: 0.2.0
+last_updated: 2025-01-26
 ---
 
 # Site Crawling & Sitemap Generation
 
 ## Overview
 
-This skill provides comprehensive patterns for intelligent website crawling, automatic sitemap generation, and content discovery. It handles large-scale crawling with proper depth control, rate limiting, and content organization.
+This skill provides comprehensive patterns for intelligent website crawling, automatic sitemap generation, and content discovery. It handles both advanced crawling strategies and simple site-to-markdown conversion with proper depth control, rate limiting, and content organization.
+
+## Simple Site-to-Markdown Conversion
+
+Quick approach for converting entire websites to markdown files:
+
+### Basic CLI Pattern
+
+Using crawl4ai's built-in crawl command:
+
+```bash
+# Crawl entire site to markdown files
+uvx crawl4ai crawl \
+  --url "https://example.com" \
+  --output-dir "output/example-com-$(date +%Y%m%d-%H%M%S)" \
+  --max-depth 3 \
+  --format markdown
+```
+
+### Recommended Parameters
+
+- `--max-depth 3` - Crawl up to 3 levels deep (sensible default)
+- `--format markdown` - Save content as markdown
+- Timestamped output directories keep multiple crawls organized
+
+### Output Structure
+
+```
+output/
+├── example-com-20250122-143022/
+│   ├── index.md
+│   ├── about.md
+│   ├── products/
+│   │   ├── product-1.md
+│   │   └── product-2.md
+│   └── docs/
+│       ├── getting-started.md
+│       └── api.md
+└── another-site-20250122-150000/
+    ├── index.md
+    └── ...
+```
+
+### Python Implementation
+
+```python
+import asyncio
+import os
+from pathlib import Path
+from datetime import datetime
+from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
+from urllib.parse import urljoin, urlparse
+
+async def crawl_to_markdown(base_url, output_dir, max_depth=3):
+    """Crawl entire website and save as markdown files"""
+
+    base_domain = urlparse(base_url).netloc
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    crawl_dir = Path(output_dir) / f"{base_domain}-{timestamp}"
+    crawl_dir.mkdir(parents=True, exist_ok=True)
+
+    visited = set()
+    queue = [(base_url, 0)]  # (url, depth)
+
+    async with AsyncWebCrawler() as crawler:
+        while queue and len(visited) < 100:  # Limit to 100 pages
+            url, depth = queue.pop(0)
+
+            if url in visited or depth > max_depth:
+                continue
+
+            try:
+                result = await crawler.arun(
+                    url,
+                    config=CrawlerRunConfig(
+                        page_timeout=30000,
+                        remove_overlay_elements=True
+                    )
+                )
+
+                if result.success:
+                    # Determine output path
+                    path = urlparse(url).path
+                    if path.endswith('/') or path == '':
+                        path = path + 'index.md'
+                    else:
+                        path = path + '.md' if not path.endswith('.md') else path
+
+                    output_file = crawl_dir / path.lstrip('/')
+                    output_file.parent.mkdir(parents=True, exist_ok=True)
+
+                    # Write markdown
+                    with open(output_file, 'w', encoding='utf-8') as f:
+                        f.write(f"# {result.metadata.get('title', 'Page')}\n\n")
+                        f.write(str(result.markdown))
+
+                    visited.add(url)
+                    print(f"✅ Saved: {output_file}")
+
+                    # Discover new links
+                    for link_info in result.links.get("internal", []):
+                        href = link_info.get("href", "")
+                        absolute_url = urljoin(base_url, href)
+
+                        # Add to queue if valid
+                        if (absolute_url not in visited and
+                            not absolute_url.startswith('#') and
+                            absolute_url.startswith(base_url)):
+                            queue.append((absolute_url, depth + 1))
+
+            except Exception as e:
+                print(f"❌ Failed to crawl {url}: {e}")
+
+    print(f"\n📁 Crawl complete: {len(visited)} pages saved to {crawl_dir}")
+    return crawl_dir
+```
 
 ## Intelligent Crawling Strategies
 

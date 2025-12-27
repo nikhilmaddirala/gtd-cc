@@ -1,22 +1,21 @@
 {
   "name": "web-research",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Comprehensive web research toolkit with interactive commands and advanced skills for crawling, extraction, and AI-powered analysis",
   "author": {
     "name": "Nikhil Maddirala"
   },
   "commands": [
-    "./commands/fetch-page",
-    "./commands/crawl-site",
-    "./commands/get-docs"
+    "./commands/fetch-page.md",
+    "./commands/crawl-site.md",
+    "./commands/get-docs.md"
   ],
   "agents": [],
   "skills": [
-    "./skills/web-scraping-fundamentals",
-    "./skills/crawl4ai",
+    "./skills/web-search",
+    "./skills/web-fetch",
+    "./skills/crawl4ai-toolkit",
     "./skills/site-crawling",
-    "./skills/documentation-extraction",
-    "./skills/gemini-web-research",
-    "./skills/web-crawler"
+    "./skills/content-extraction"
   ]
 }

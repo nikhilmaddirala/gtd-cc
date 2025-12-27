@@ -1,9 +1,9 @@
 ---
-name: gemini-web-research
-description: Web research coordination using Google Gemini CLI in headless mode. Use this skill when you need to perform web searches as an alternative to built-in web search tools. This skill teaches any calling agent how to craft precise instructions for Gemini CLI to perform web research and return properly formatted results.
+name: web-search
+description: General web search patterns and techniques including Gemini CLI coordination. Use this skill when you need to perform web searches, find current information, or research topics online. Covers both Gemini CLI and built-in WebSearch tool usage with precise instruction crafting.
 ---
 
-# Gemini Web Research CLI Coordination
+# Web Search Techniques & Coordination
 
 ## Agent Coordination Model
 
