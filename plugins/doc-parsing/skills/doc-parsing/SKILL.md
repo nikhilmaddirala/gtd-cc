@@ -1,336 +1,307 @@
 ---
 name: doc-parsing
-description: Guide for parsing proprietary Office and BI file formats (pptx, docx, xlsx, pbix, pdf) into repo-friendly artifacts. Works with any directory structure and mirrors source to output directory.
+description: Parse proprietary Office and BI file formats (pptx, docx, xlsx, pdf, pbix) into repository-friendly artifacts using multi-method extraction. Use when users need to extract content from binary documents, create versionable text artifacts, or batch process document directories.
 ---
 
 # Document Parsing Skill
 
 ## Overview
 
-Extract content from proprietary Office and BI files into structured, versionable artifacts. Each format has 3-4 parsing methods optimized for speed, completeness, or visual fidelity.
+This skill enables extraction of content from proprietary Office and BI file formats into structured, version-controllable artifacts. The skill provides self-contained Python parsing scripts that can be copied to any project directory and adapted for project-specific document processing workflows.
 
-This skill works with any source directory and creates a mirrored output directory with parsed content. It is not tied to any specific project structure.
+Use this skill when you need to:
+- Convert binary Office documents to text-based formats (Markdown, CSV, JSON)
+- Extract content for version control and code review
+- Batch process directories of documents with incremental updates
+- Parse Power BI files for metadata and relationship extraction
+- Create searchable, analyzable content from document archives
+- Supported file types include `.pptx`, `.docx`, `.xlsx`, etc.
 
-**Architecture**: Self-contained Python scripts in `scripts/` directory. Orchestrators copy and adapt these scripts to their project directories.
+## Scripts
 
-## Supported File Types
+The skill provides ready-to-use parsing scripts in the `scripts/` directory:
 
-| Type | Extension | Methods | Notes |
-|------|------------|----------|-------|
-| PowerPoint | `.pptx` | 4 | python-pptx, markitdown, detailed extraction, images |
-| Word | `.docx` | 4 | python-docx, markitdown, detailed with tables, docx2txt |
-| Excel | `.xlsx` | 4 | pandas (basic), openpyxl structure, pandas detailed, openpyxl formulas |
-| PDF | `.pdf` | 4 | pypdf, pdfplumber, markitdown, pdfminer layout |
-| Power BI | `.pbix` | 2 | pbixray metadata, zipfile extraction |
+- **parse_pptx.py** - PowerPoint parser with 4 extraction methods
+- **parse_docx.py** - Word document parser with 4 extraction methods
+- **parse_xlsx.py** - Excel spreadsheet parser with 4 extraction methods
+- **parse_pdf.py** - PDF parser with 4 extraction methods
+- **parse_pbix.py** - Power BI parser with 2 extraction methods
+- **orchestrate_parsing.py** - Main orchestration script for batch processing
 
-## Core Principles
+All scripts are self-contained with inline uv metadata and comprehensive documentation. Each parser script implements multiple extraction methods to provide comprehensive coverage and redundancy.
 
-**Hybrid Artifacts**: Extract text/data (MD/JSON/CSV) + images (PNG/JPG) without duplication
+## Process
 
-**Multi-Method Strategy**: Apply all methods for each file type:
-- Comprehensive → All content + images (complex tools)
-- Fast → Text-only (simple tools)
-- Detailed → Metadata, structure, and analysis
-- Visuals → PDF/HTML (layout fidelity, optional)
+### Step 1: Understand user request
 
-**Mirror Structure**: Output directory mirrors source directory structure exactly
-- Source: `source/decks/Q4/presentation.pptx`
-- Output: `output/decks/Q4/presentation.pptx/`
+When invoked via command, parse the natural language request to extract parameters:
 
-**Incremental Parsing**: Skip unchanged files by comparing SHA256 hashes
+**Required:**
+- **Source directory**: Look for paths after "from", "in", or standalone directory paths (e.g., "./docs", "~/files", "../data")
 
-**Error Handling**: Log errors but never halt orchestration on single file failures
+**Optional:**
+- **Output directory**: Look for paths after "to", "output to", "save to". If not specified, ask using AskUserQuestion with "./parsed_data" as recommended option
+- **File types**: Look for format keywords (pptx, docx, xlsx, pdf, pbix, "all documents"). Default to ["all"] if not specified
+- **Force reparse**: Check for "force", "regenerate", "reparse all" keywords. Default to False
 
-**Documentation First**: Generate metadata files for each parsed file and top-level summary
+**Example parsing:**
+- "Parse files from ./documents to ./parsed" → source=./documents, output=./parsed
+- "Parse PowerPoint files from ~/decks" → source=~/decks, output=(ask), types=[pptx]
+- "Reparse everything from ./docs to ./output, force" → source=./docs, output=./output, force=True
 
-## Orchestration Workflow
+### Step 2: Understand project structure
 
-### Orchestrator Implementation
+Explore the project to understand context:
 
-Orchestrators should follow this pattern:
+- Check if `scripts/` directory exists (create if needed)
+- Verify source directory exists and contains documents
+- Identify project-specific patterns (where docs live, naming conventions)
+- Determine appropriate output location based on project structure
 
-1. **Copy Scripts to Project**: Copy all scripts from `plugins/doc-parsing/skills/doc-parsing/scripts/` to project directory
-2. **Adapt Scripts**: Modify `orchestrate_parsing.py` with project-specific context:
-   - Set `source_dir` to your source documents directory
-   - Set `output_dir` to your target output directory
-   - Adjust file type filters if needed
-   - Configure force reparse flag
-3. **Execute**: Run the adapted `orchestrate_parsing.py` script
+### Step 3: Copy scripts to project
 
-### Orchestration Principles
+Copy parsing scripts to the project: Copy all scripts from skill's scripts/ to project's scripts/ and make scripts executable
 
-**Mirror Structure Preservation**
-- Output directory mirrors source directory structure exactly
-- Preserve subdirectory organization and file relationships
-- Example: `source/decks/Q4/deck.pptx` → `output/decks/Q4/deck.pptx/`
+**Scripts copied:**
+- `orchestrate_parsing.py` - Main batch processor
+- `parse_pptx.py`, `parse_docx.py`, `parse_xlsx.py`, `parse_pdf.py`, `parse_pbix.py` - Individual parsers
 
-**Hash-Based Incremental Parsing**
-- Compare source file SHA256 with existing `parsing_results.json` hash
-- Skip unchanged files unless `--force` specified
-- Re-parse files with hash mismatches
+### Step 4: Adapt orchestrator for project
 
-**Complete Method Execution**
-- For each file, run ALL methods defined in its parser script
-- Methods are independent - failure in one does not stop others
-- Log all errors, continue execution
+Edit `./scripts/orchestrate_parsing.py` to set project-specific defaults based on Step 1 and Step 2:
 
-**Error Handling Philosophy**
-- Log errors in file's `parsing_results.json` with context
-- Continue with next method if one fails
-- Continue with next file if parsing partially succeeds
-- Never halt orchestration due to single file errors
-
-**Documentation Standards**
-- Each parsed file gets `parsing_results.json` with metadata
-- Top-level `orchestration_summary.json` summarizes all operations
-- Include success/failure status for each method
-
-### Common Patterns
-
-**Hash Calculation**
 ```python
-import hashlib
-
-def calculate_hash(file_path):
-    sha256 = hashlib.sha256()
-    with open(file_path, 'rb') as f:
-        for chunk in iter(lambda: f.read(8192), b''):
-            sha256.update(chunk)
-    return sha256.hexdigest()
+DEFAULT_SOURCE_DIR = Path("./documents")    # Where source documents live
+DEFAULT_OUTPUT_DIR = Path("./parsed")       # Where parsed output goes
+DEFAULT_FILE_TYPES = ["all"]                # Or ["pptx", "docx", "xlsx"]
+DEFAULT_FORCE_REPARSE = False               # True to always re-parse
 ```
 
-**Directory Mirroring**
-```python
-from pathlib import Path
+**Adaptation considerations:**
+- Use actual source directory from user request or project exploration
+- Use actual output directory from user request or recommended location
+- Filter file types if user specified specific formats
+- Set force reparse if user requested it
 
-# Calculate relative path from source_dir to file
-source_dir = Path('/home/user/docs')
-source_file = Path('/home/user/docs/decks/Q4/deck.pptx')
-rel_path = source_file.relative_to(source_dir)  # 'decks/Q4/deck.pptx'
+### Step 5: Execute parsing
 
-# Append to output_dir
-output_dir = Path('/home/user/parsed')
-file_output_dir = output_dir / rel_path  # '/home/user/parsed/decks/Q4/deck.pptx'
-file_output_dir.mkdir(parents=True, exist_ok=True)
-```
+Run the orchestrator with configured settings:
 
-**Subprocess Execution with Error Handling**
-```python
-import subprocess
-
-def parse_file(source_file, output_dir, parser_script):
-    try:
-        result = subprocess.run(
-            [str(parser_script), str(source_file), str(output_dir)],
-            capture_output=True,
-            text=True,
-            timeout=600
-        )
-
-        success = result.returncode == 0
-        if success:
-            print(f"✓ Parsing completed")
-        else:
-            print(f"⚠ Parsing failed (exit code: {result.returncode})")
-            if result.stderr:
-                print(f"Error: {result.stderr[:200]}")
-
-        return {
-            'success': success,
-            'returncode': result.returncode,
-            'stderr': result.stderr if not success else '',
-        }
-    except subprocess.TimeoutExpired:
-        print(f"⚠ Parsing timed out")
-        return {'success': False, 'error': 'timeout'}
-    except Exception as e:
-        print(f"⚠ Parsing failed: {str(e)}")
-        return {'success': False, 'error': str(e)}
-```
-
-**C Library Wrapping (when needed)**
 ```bash
-# For tools requiring C++ standard library (markitdown, docling, pandas)
-nix shell nixpkgs#stdenv.cc.cc.lib --command bash -c "
-  export LD_LIBRARY_PATH=\$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:\$LD_LIBRARY_PATH &&
-  uvx --from 'markitdown[pdf]' markitdown '$SOURCE_FILE'
-"
+cd ./scripts/
+./orchestrate_parsing.py
 ```
 
-### Decision Points
+**Execution behavior:**
+- Scans source directory recursively for supported files
+- Skips unchanged files using SHA256 hash comparison
+- Applies all extraction methods for each file type
+- Creates mirrored directory structure in output location
+- Continues on errors (individual file failures don't stop batch)
 
-**Hash Comparison Strategy**
-- Skip unchanged files (default) - saves time
-- Always re-parse (`--force`) - ensures consistency
-- Default: Skip unchanged, use `--force` when methods or file content changed
+**Runtime overrides (if needed):**
+```bash
+# Override directories without editing defaults
+./orchestrate_parsing.py /custom/source /custom/output
 
-**Error Handling Severity**
-- Log and continue (recommended) - maximizes coverage
-- Stop on first error (fail-fast) - limits wasted time
-- Default: Log and continue, use fail-fast if first file errors indicate systemic issues
+# Force reparse all files
+./orchestrate_parsing.py --force
 
-**C Library Detection**
-- Auto-detect from command patterns (recommended)
-- Always wrap (overkill but safe)
-- Default: Auto-detect based on presence of `uvx` or Python execution
+# Process specific file types only
+./orchestrate_parsing.py --types=pptx,docx
+```
 
-## Output Structure
+### Step 6: Verify results
+
+Check parsing output and report to user:
+
+**Directory structure:**
+```
+output_dir/
+├── [mirrored-source-path]/
+│   └── filename.ext/
+│       ├── parsing_results.json
+│       ├── method_1_name/
+│       ├── method_2_name/
+│       └── orchestration_metadata.json
+└── orchestration_summary.json
+```
+
+**Verification checklist:**
+- Review `orchestration_summary.json` for overall statistics
+- Check for failed files in individual `parsing_results.json` files
+- Verify expected files were processed (count matches source)
+- Confirm output structure mirrors source directory layout
+- Report any errors or warnings to user with troubleshooting guidance
+
+**Success indicators:**
+- All expected files appear in output directory
+- `parsing_results.json` shows successful method executions
+- Content files (`.md`, `.csv`, `.json`) contain extracted data
+- No critical errors in orchestration summary
+
+### Alternative workflows
+
+Parse single file for testing:
+```bash
+./scripts/parse_pptx.py /path/to/file.pptx /path/to/output
+```
+
+Override directories at runtime:
+```bash
+./orchestrate_parsing.py /custom/source /custom/output
+```
+
+Force reparse all (use after method updates):
+```bash
+./orchestrate_parsing.py --force
+```
+
+Process specific file types only:
+```bash
+./orchestrate_parsing.py --types=pptx,docx
+```
+
+## Guidelines
+
+### Script adaptation principles
+
+When adapting scripts for a project:
+
+- **Directory structure**: Set source and output directories based on project layout
+- **File type filtering**: Adjust `DEFAULT_FILE_TYPES` to process only needed formats
+- **Incremental parsing**: Use hash-based skip by default, enable force reparse when methods change
+- **Error handling**: Scripts continue on errors - review `parsing_results.json` for failures
+
+### Output structure
+
+The orchestrator creates mirrored directory structure:
 
 ```
-$OUTPUT_DIR/
+output_dir/
 ├── [source-relative-path]/
-│   └── $FILENAME/
-│       ├── parsing_results.json         # File-level metadata and results
-│       ├── [method_dir_1]/           # First method output
-│       │   ├── content.md or out.md
-│       │   ├── images/ or *.csv
-│       │   └── metadata.json (optional)
-│       ├── [method_dir_2]/           # Second method output
+│   └── filename.ext/
+│       ├── parsing_results.json      # File-level metadata
+│       ├── method_1_name/            # First method output
+│       │   ├── content.md or *.csv
+│       │   └── images/ (if applicable)
+│       ├── method_2_name/            # Second method output
 │       │   └── ...
-│       └── orchestration_metadata.json # Orchestration tracking
-└── orchestration_summary.json         # Top-level summary of all files
+│       └── orchestration_metadata.json
+└── orchestration_summary.json         # Top-level summary
 ```
 
-## Parser Script Structure
+### Multi-method strategy
 
-Each parser script (`parse_*.py`) follows this pattern:
+Each file type uses multiple extraction methods:
 
-1. **Module docstring**: Overview of file type, methods, dependencies
-2. **Method functions**: Each method gets a function with:
-   - Docstring explaining purpose, advantages, when to use
-   - Implementation using Python libraries
-   - Comments noting CLI alternatives
-   - Error handling with graceful failure
-3. **Main function**:
-   - Parse command-line arguments (file_path, output_dir)
-   - Execute all methods sequentially
-   - Generate `parsing_results.json` with metadata
-   - Return exit code based on success count
+- **Comprehensive** - Full content + images + metadata (complex tools)
+- **Fast** - Text-only extraction (simple tools)
+- **Detailed** - Structure, formatting, and analysis
+- **Specialized** - Format-specific features (formulas, DAX, layout)
 
-## Tool Installation Patterns
+All methods execute independently - failure in one does not stop others.
 
-| Tool Type | Install | Usage Pattern |
-|-----------|---------|---------------|
-| Python | `uvx --from <package>` or inline dependencies | Self-contained scripts with uv metadata |
-| CLI | `nix run nixpkgs#<tool>` | Direct execution without installation |
-| C libraries | `nix shell nixpkgs#stdenv.cc.cc.lib --command bash` | Required for markitdown/docling/pandas |
+### Hash-based incremental parsing
 
-**System libraries**: `nixpkgs#stdenv.cc.cc.lib` (C++), `nixpkgs#zlib`, `nixpkgs#openssl`
+The orchestrator uses SHA256 hashing to skip unchanged files:
 
-**Inline Script Metadata**:
+- Files with matching hash in `parsing_results.json` are skipped
+- Changed files are automatically re-parsed
+- Use `--force` flag to re-parse all files regardless of hash
+
+### Environment requirements
+
+Scripts use uv for dependency management with inline metadata:
+
 ```python
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#   "python-docx>=1.1.0",
-#   "markitdown>=0.0.1a2",
+#   "python-pptx>=1.0.0",
+#   "pandas>=2.0.0",
 # ]
 # ///
 ```
 
-## Usage Example
-
-### For Orchestrators
+Some methods require C++ standard library. If you encounter library errors, wrap execution with nix:
 
 ```bash
-# 1. Copy scripts to your project
-cp -r /path/to/gtd-cc/plugins/doc-parsing/skills/doc-parsing/scripts/ /your/project/
-
-# 2. Adapt orchestrate_parsing.py
-cd /your/project/scripts/
-# Edit orchestrate_parsing.py to set:
-#   - source_dir = Path('/your/source/docs')
-#   - output_dir = Path('/your/output/parsed')
-
-# 3. Run orchestration
-./orchestrate_parsing.py
-
-# 4. Force reparse all files
-./orchestrate_parsing.py --force
-
-# 5. Parse only specific types
-./orchestrate_parsing.py --types=pptx,docx
+nix shell nixpkgs#stdenv.cc.cc.lib --command bash -c "
+  export LD_LIBRARY_PATH=\$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:\$LD_LIBRARY_PATH &&
+  ./scripts/parse_docx.py /path/to/file.docx /path/to/output
+"
 ```
 
-### For Manual Parsing
+## Parser Methods
+
+Each parser script implements multiple extraction methods for comprehensive coverage:
+
+- **Comprehensive** - Full content + images + metadata
+- **Fast** - Quick text-only extraction
+- **Detailed** - Structure and formatting info
+- **Specialized** - Format-specific features (formulas, DAX, layout)
+
+**For detailed method documentation**: Read the docstrings in each parser script:
+
+- `parse_pptx.py` - 4 PowerPoint extraction methods
+- `parse_docx.py` - 4 Word extraction methods
+- `parse_xlsx.py` - 4 Excel extraction methods
+- `parse_pdf.py` - 4 PDF extraction methods
+- `parse_pbix.py` - 2 Power BI extraction methods
+
+Each method function includes comprehensive docstrings explaining purpose, advantages, disadvantages, and use cases.
+
+## Troubleshooting
+
+### Script won't execute
 
 ```bash
-# Parse a single file
-cd /your/project/scripts/
-./parse_pptx.py /path/to/presentation.pptx /path/to/output
+# Fix permissions
+chmod +x scripts/*.py
 
-# Parse with all methods
-./parse_docx.py /path/to/document.docx /path/to/output
-
-# Parse Excel file
-./parse_xlsx.py /path/to/spreadsheet.xlsx /path/to/output
+# Verify Python version
+python --version  # Must be >=3.11
 ```
 
-## Method Descriptions
+### C library errors
 
-### PPTX Methods
-1. **python-pptx (basic)** - Extract text and images using python-pptx library
-2. **markitdown** - Extract text using markitdown library
-3. **python-pptx (detailed)** - Extract with slide notes and layout info
-4. **python-pptx (images)** - Focus on comprehensive image extraction with metadata
+Some methods (markitdown, pandas with certain features) require system libraries:
 
-### DOCX Methods
-1. **python-docx (basic)** - Extract text and images using python-docx library
-2. **markitdown** - Extract text using markitdown library
-3. **python-docx (detailed)** - Extract with tables, headers, and formatting
-4. **docx2txt** - Simple text extraction with image links
+```bash
+# Wrap execution with nix shell
+nix shell nixpkgs#stdenv.cc.cc.lib --command bash -c "
+  export LD_LIBRARY_PATH=\$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:\$LD_LIBRARY_PATH &&
+  ./scripts/parse_docx.py document.docx output/
+"
+```
 
-### XLSX Methods
-1. **pandas (basic)** - Extract all sheets as CSV files with metadata
-2. **openpyxl (structure)** - Extract sheets with formatting and structure info
-3. **pandas (detailed)** - Extract with data types and statistics
-4. **openpyxl (formulas)** - Extract formulas and calculated values
+### Missing images in output
 
-### PDF Methods
-1. **pypdf** - Extract text using pypdf library
-2. **pdfplumber** - Extract text and tables using pdfplumber
-3. **markitdown** - Extract text using markitdown library
-4. **pdfminer.six** - Layout-aware text extraction
+Not all methods extract images. Check method descriptions in parser script docstrings. For images, use:
+- **PPTX**: python-pptx-images or python-pptx-detailed
+- **DOCX**: python-docx-detailed or python-docx-basic
+- **PDF**: pdfplumber (limited image support)
 
-### PBIX Methods
-1. **pbixray** - Extract model metadata, tables, measures, and relationships
-2. **zipfile** - Extract raw PBIX contents (PBIX files are ZIP archives)
+### Empty CSV files for Excel
 
-## Common Issues
+Verify sheet names exist. Check `metadata.json` in method output directory for sheet information and data statistics.
 
-| Issue | Solution |
-|--------|----------|
-| C library errors | Use `nix shell nixpkgs#stdenv.cc.cc.lib --command bash -c "export LD_LIBRARY_PATH=... && <command>"` |
-| Missing images | Check method - not all extract images (see method descriptions) |
-| Empty CSV | Verify sheet name exists or check metadata.json for sheet info |
-| PBIX fails on Linux | Use pbixray/zipfile methods; Windows tools unavailable |
-| Hash comparison fails | Check parsing_results.json format and hash value |
-| Scripts won't execute | Check execute permissions: `chmod +x scripts/*.py` |
-| Python version | Ensure Python >=3.11 is available |
+### Power BI parsing fails on Linux
 
-## Format Notes
+Windows-specific Power BI tools are unavailable on Linux. Use:
+- **pbixray** method for metadata and measures
+- **zipfile** method for raw contents
 
-**XLSX**: CSV primary output, multiple sheets = multiple CSV files, formulas extracted separately
-**PBIX**: Linux-limited, pbixray extracts tables/measures/metadata, zipfile gets raw contents
-**Images**: Not all methods extract images (check method docstrings)
-**Formulas**: Preserved in openpyxl formulas method, lost in basic pandas methods
+### Hash comparison not working
 
-## Scripts Reference
+Check `parsing_results.json` format. The file should contain a `sha256_hash` field. If corrupted, delete the file and re-run to generate fresh metadata.
 
-All scripts are self-contained with inline metadata. No Python environment setup required.
+## Format-Specific Notes
 
-- `scripts/parse_pptx.py` - PowerPoint parser with 4 methods
-- `scripts/parse_docx.py` - Word document parser with 4 methods
-- `scripts/parse_xlsx.py` - Excel spreadsheet parser with 4 methods
-- `scripts/parse_pdf.py` - PDF parser with 4 methods
-- `scripts/parse_pbix.py` - Power BI parser with 2 methods
-- `scripts/orchestrate_parsing.py` - Main orchestration script
-
-Each script includes comprehensive documentation in docstrings and comments explaining:
-- What each method does
-- When to use it
-- Advantages and disadvantages
-- Tool requirements
-- Output structure
-- CLI alternatives (when applicable)
+- **XLSX**: Multiple sheets output as separate CSV files, formulas in separate JSON
+- **PBIX**: Limited on Linux, pbixray provides best metadata extraction
+- **Images**: Check method documentation - not all methods extract images
+- **Formulas**: Excel formulas preserved in openpyxl-formulas method only
+- **Layout**: PDF layout preservation best with pdfminer-layout method

@@ -4,15 +4,19 @@ Parse proprietary Office and BI file formats into repository-friendly artifacts 
 
 ## Overview
 
-The doc-parsing plugin transforms binary Office documents (PowerPoint, Word, Excel) and BI files (Power BI, PDF) into structured, versionable content. Each file type supports multiple parsing methods optimized for different use cases - comprehensive extraction, speed, or visual fidelity.
+The doc-parsing plugin transforms binary Office documents (PowerPoint, Word, Excel) and BI files (Power BI, PDF) into structured, versionable content. The plugin provides self-contained Python parsing scripts that can be copied to any project and adapted for project-specific document processing workflows.
+
+Each file type supports multiple parsing methods optimized for different use cases - comprehensive extraction, speed, or detailed analysis.
 
 ## Supported File Types
 
-- **PowerPoint (.pptx)** - 4 methods: python-pptx basic, markitdown, python-pptx detailed, python-pptx images
-- **Word (.docx)** - 4 methods: python-docx basic, markitdown, python-docx detailed, docx2txt
-- **Excel (.xlsx)** - 4 methods: pandas basic, openpyxl structure, pandas detailed, openpyxl formulas
-- **PDF (.pdf)** - 4 methods: pypdf, pdfplumber, markitdown, pdfminer layout
-- **Power BI (.pbix)** - 2 methods: pbixray metadata, zipfile extraction
+| Type | Extension | Methods | Primary Outputs |
+|------|-----------|---------|-----------------|
+| PowerPoint | `.pptx` | 4 | Markdown text, images, slide notes |
+| Word | `.docx` | 4 | Markdown text, images, tables |
+| Excel | `.xlsx` | 4 | CSV files, JSON metadata, formulas |
+| PDF | `.pdf` | 4 | Markdown text, tables, layout info |
+| Power BI | `.pbix` | 2 | JSON metadata, DAX measures, model structure |
 
 ## Installation
 
@@ -27,116 +31,114 @@ Install from gtd-cc marketplace:
 
 ### /parse-docs
 
-Parse office documents from a source directory to a mirrored output directory.
+Parse office documents using natural language requests.
 
-**Required arguments:**
-- `source_dir` - Directory containing files to parse
-- `output_dir` - Directory where parsed content will be created
+**Usage:**
 
-**Optional arguments:**
-- `force` - Re-parse all files regardless of hash match (default: false)
-- `types` - Specific file types to process (default: all supported types)
-- `dry_run` - Preview what would be parsed without executing (default: false)
+```bash
+/parse-docs Parse files from [source-dir] to [output-dir]
+```
 
 **Examples:**
 
 ```bash
 # Parse all supported files
-/parse-docs source_dir:/home/user/documents output_dir:/home/user/parsed
+/parse-docs Parse files from ./documents to ./parsed
 
-# Re-parse all files (force)
-/parse-docs source_dir:./docs output_dir:./parsed force:true
+# Parse specific file types
+/parse-docs Parse PowerPoint and Word files from ~/presentations to ~/parsed
 
-# Parse only PowerPoint and Word files
-/parse-docs source_dir:./docs output_dir:./parsed types:pptx,docx
+# Force reparse everything
+/parse-docs Reparse everything from ./docs to ./output, force regenerate
 
-# Preview parsing without executing
-/parse-docs source_dir:./docs output_dir:./parsed dry_run:true
+# Parse specific subdirectory
+/parse-docs Parse all Excel files in ./data/reports to ./parsed/reports
+```
+
+The command intelligently extracts parameters from natural language and:
+1. Copies parsing scripts to your project
+2. Adapts the orchestrator with your directories
+3. Executes the parsing workflow
+4. Creates mirrored output structure
+
+## Architecture
+
+```
+plugins/doc-parsing/
+├── .claude-plugin/
+│   └── plugin.json              # Plugin manifest
+├── commands/
+│   └── parse-docs.md            # Natural language command entrypoint
+├── skills/
+│   └── doc-parsing/
+│       ├── SKILL.md             # Comprehensive usage guide
+│       └── scripts/             # Self-contained Python scripts
+│           ├── parse_pptx.py    # PowerPoint parser (4 methods)
+│           ├── parse_docx.py    # Word parser (4 methods)
+│           ├── parse_xlsx.py    # Excel parser (4 methods)
+│           ├── parse_pdf.py     # PDF parser (4 methods)
+│           ├── parse_pbix.py    # Power BI parser (2 methods)
+│           └── orchestrate_parsing.py  # Batch orchestrator
+└── README.md                    # This file
 ```
 
 ## How It Works
 
-### Script Architecture
+### Multi-Method Extraction
 
-The plugin provides self-contained Python scripts in the `scripts/` directory. Orchestrators should:
+Each file type is processed using all available methods for comprehensive coverage:
 
-1. **Copy all scripts to project directory:**
-   ```bash
-   cp -r /path/to/doc-parsing/scripts/* /your/project/
-   ```
+- **Comprehensive** - Full content + images + metadata (complex tools)
+- **Fast** - Text-only extraction (simple tools)
+- **Detailed** - Structure, formatting, and analysis
+- **Specialized** - Format-specific features (formulas, DAX, layout)
 
-2. **Adapt orchestrate_parsing.py with project-specific context:**
-   - Set `DEFAULT_SOURCE_DIR` to your source documents directory
-   - Set `DEFAULT_OUTPUT_DIR` to your target output directory
-   - Adjust `DEFAULT_FILE_TYPES` if you only need specific types
-   - Set `DEFAULT_FORCE_REPARSE` to True if you want to always re-parse files
-
-3. **Run the orchestrator:**
-   ```bash
-   cd /your/project/scripts/
-   ./orchestrate_parsing.py
-   ```
-
-   Or with command-line arguments:
-   ```bash
-   ./orchestrate_parsing.py /custom/source /custom/output --force --types=pptx,docx
-   ```
-
-### Multi-Method Strategy
-
-Each file type is processed using all available methods:
-- **Comprehensive** - Extract all content including text, data, and images
-- **Fast** - Quick text-only extraction using simple tools
-- **Detailed** - Metadata, structure, and analysis
-- **Visuals** - Preserve layout fidelity via PDF/HTML conversion (where applicable)
+All methods execute independently - failure in one does not stop others.
 
 ### Mirrored Directory Structure
 
 The output directory mirrors source directory structure exactly:
 
 ```
-output/
-├── parsed_data/
-│   └── [source-relative-path]/
-│       └── filename.ext/
-│           ├── parsing_results.json     # File-level metadata
-│           ├── method1_name/         # First method output
-│           │   ├── content.md or *.csv
-│           │   ├── images/ or data/
-│           │   └── metadata.json
-│           ├── method2_name/         # Second method output
-│           │   └── ...
-│           └── orchestration_metadata.json # Orchestration tracking
-└── orchestration_summary.json       # Top-level summary
+output-dir/
+├── [source-relative-path]/
+│   └── filename.ext/
+│       ├── parsing_results.json      # File-level metadata
+│       ├── method-1-name/            # First method output
+│       │   ├── content.md or *.csv
+│       │   └── images/ (if applicable)
+│       ├── method-2-name/            # Second method output
+│       │   └── ...
+│       └── orchestration_metadata.json
+└── orchestration_summary.json         # Top-level summary
 ```
 
 ### Incremental Parsing
 
-The plugin uses SHA256 hashing to skip unchanged files on subsequent runs. Each parsed file includes a hash in its `parsing_results.json`, enabling efficient incremental updates.
+The plugin uses SHA256 hashing to skip unchanged files:
+- Files with matching hash in `parsing_results.json` are skipped
+- Only changed files are re-parsed automatically
+- Use "force" keyword to re-parse everything
 
-### Documentation
+### Self-Contained Scripts
 
-Each parsing script includes comprehensive documentation:
+All scripts use uv inline metadata for dependency management:
 
-- **Module docstrings**: Overview of file type, methods, dependencies, CLI alternatives
-- **Method docstrings**: Detailed information for each method (purpose, advantages, when to use)
-- **Inline comments**: Implementation details, C library requirements, CLI alternatives
+```python
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "python-pptx>=1.0.0",
+#   "pandas>=2.0.0",
+# ]
+# ///
+```
 
-See individual parser scripts for detailed documentation about each method.
-
-## Core Principles
-
-**Hybrid Artifacts**: Extract text/data (MD/JSON/CSV) + images (PNG/JPG) without duplication
-
-**Mirror Structure**: Output directory mirrors source directory structure exactly for easy navigation
-
-**Incremental Parsing**: Skip unchanged files by comparing SHA256 hashes for efficiency
-
-**Multi-Method**: Apply all methods for comprehensive coverage and redundancy
-
-**Error Handling**: Log errors but never halt orchestration on single file failures
-
-**Documentation First**: Generate metadata files for each parsed file and top-level summary
+Scripts include comprehensive documentation:
+- Module docstrings: Overview, methods, dependencies
+- Method docstrings: Purpose, advantages, when to use
+- Inline comments: Implementation details, CLI alternatives
 
 ## Common Use Cases
 
@@ -158,161 +160,72 @@ Process entire directories of Office documents with automatic incremental update
 
 ### CI/CD Integration
 
-Use scripts in automated pipelines - execute `orchestrate_parsing.py` independently of agent.
+Run orchestrator in automated pipelines for continuous document parsing.
 
 ## Environment Requirements
 
 The plugin uses:
 - **uv** for Python package management (inline script metadata)
-- **nix** for CLI tools (no installation required)
-- **System libraries** (C++ standard library) for some Python packages
+- **Python 3.11+** for script execution
+- **nix** (optional) for CLI tools and system libraries
 
-Some parsing methods require C library support. Individual scripts document these requirements in their comments and docstrings.
-
-Scripts use uv inline metadata for self-contained execution - no Python environment setup required:
-
-```python
-#!/usr/bin/env -S uv run --script
-# /// script
-# requires-python = ">=3.11"
-# dependencies = [
-#   "python-docx>=1.1.0",
-#   "markitdown>=0.0.1a2",
-# ]
-# ///
-```
-
-## Orchestration Patterns
-
-### For Orchestrators
-
-The `orchestrate_parsing.py` script implements:
-
-- **Mirror Structure Preservation**: Output mirrors source directory structure
-- **Hash-Based Incremental Parsing**: Skip unchanged files unless `--force` specified
-- **Complete Method Execution**: Run all methods for each file, log errors, continue
-- **Error Handling**: Log errors but never halt orchestration
-- **Documentation First**: Generate metadata files and summary reports
-
-See `SKILL.md` for detailed orchestration patterns and common code snippets.
-
-## Using Individual Parser Scripts
-
-After copying scripts to your project, you can run parsers individually:
+Some parsing methods require C++ standard library. Wrap execution when needed:
 
 ```bash
-# Parse a single PPTX file
-cd /your/project/scripts/
-./parse_pptx.py /path/to/presentation.pptx /path/to/output
-
-# Parse a single DOCX file
-./parse_docx.py /path/to/document.docx /path/to/output
-
-# Parse a single XLSX file
-./parse_xlsx.py /path/to/spreadsheet.xlsx /path/to/output
-
-# Parse a single PDF file
-./parse_pdf.py /path/to/document.pdf /path/to/output
-
-# Parse a single PBIX file
-./parse_pbix.py /path/to/report.pbix /path/to/output
+nix shell nixpkgs#stdenv.cc.cc.lib --command bash -c "
+  export LD_LIBRARY_PATH=\$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:\$LD_LIBRARY_PATH &&
+  ./scripts/parse_docx.py document.docx output/
+"
 ```
-
-Each script includes usage examples and detailed documentation about each method.
 
 ## Troubleshooting
 
 ### Script Execution Errors
 
-**Missing dependencies**:
-- Scripts use inline metadata - uv handles dependency installation automatically
-- Ensure uv is installed and accessible
-- Check Python version meets requirement: `>=3.11`
-
-**Execute permissions**:
 ```bash
+# Fix permissions
 chmod +x scripts/*.py
-```
 
-**Path issues**:
-- Use absolute paths when running scripts directly
-- Ensure source and output directories exist
+# Verify Python version
+python --version  # Must be >=3.11
+```
 
 ### C Library Errors
 
-Some tools require system libraries. Individual scripts document these in comments.
-
-Example for markitdown/docling:
-```bash
-nix shell nixpkgs#stdenv.cc.cc.lib --command bash -c "
-  export LD_LIBRARY_PATH=$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:$LD_LIBRARY_PATH &&
-  uvx --from 'markitdown[pdf]' markitdown '$SOURCE_FILE'
-"
-```
+Some methods (markitdown, pandas with certain features) require system libraries. Use nix shell wrapper as shown above.
 
 ### Missing Images
 
-Not all parsing methods extract images. Check individual script documentation for method capabilities.
+Not all methods extract images. Check method descriptions in parser script docstrings. For images, use:
+- **PPTX**: python-pptx-images or python-pptx-detailed methods
+- **DOCX**: python-docx-detailed or python-docx-basic methods
+- **PDF**: pdfplumber method (limited support)
 
 ### Empty CSV Files
 
-For Excel files, verify sheet names exist or check metadata files for table information.
+For Excel files, verify sheet names exist. Check `metadata.json` in method output directory.
 
 ### PBIX Parsing on Linux
 
-Windows-specific Power BI tools are unavailable on Linux. Use pbixray or zipfile methods instead.
-
-See `scripts/parse_pbix.py` for Linux limitations and recommended approaches.
+Windows-specific Power BI tools are unavailable on Linux. Use:
+- **pbixray** method for metadata and measures
+- **zipfile** method for raw contents
 
 ## Format Notes
 
-**XLSX**: CSV primary output, multiple sheets = multiple CSV files, formulas extracted separately
-**PBIX**: Linux-limited, pbixray extracts tables/measures/metadata, zipfile gets raw contents
-**Images**: Not all methods extract images (check script documentation)
-**Formulas**: Preserved in openpyxl formulas method, evaluated as values in pandas methods
+- **XLSX**: Multiple sheets output as separate CSV files, formulas in separate JSON
+- **PBIX**: Limited on Linux, pbixray provides best metadata extraction
+- **Images**: Check method documentation - not all methods extract images
+- **Formulas**: Excel formulas preserved in openpyxl-formulas method only
+- **Layout**: PDF layout preservation best with pdfminer-layout method
 
-## Script Reference
+## Documentation
 
-All scripts are self-contained with comprehensive documentation:
+For comprehensive documentation on orchestration patterns, method details, and advanced usage:
 
-- `scripts/parse_pptx.py` - PowerPoint parser with 4 methods
-- `scripts/parse_docx.py` - Word document parser with 4 methods
-- `scripts/parse_xlsx.py` - Excel spreadsheet parser with 4 methods
-- `scripts/parse_pdf.py` - PDF parser with 4 methods
-- `scripts/parse_pbix.py` - Power BI parser with 2 methods
-- `scripts/orchestrate_parsing.py` - Main orchestration script
-
-Each script includes:
-- Module-level documentation with overview and usage
-- Method-level docstrings with advantages, disadvantages, when to use
-- Inline comments for implementation details and CLI alternatives
-- C library requirement notes (where applicable)
-
-## Architecture
-
-```
-plugins/doc-parsing/
-├── .claude-plugin/
-│   └── plugin.json
-├── commands/
-│   └── parse-docs.md
-├── skills/
-│   └── doc-parsing/
-│       ├── SKILL.md                 # Comprehensive documentation with orchestration patterns
-│       └── scripts/                # Self-contained Python scripts
-│           ├── parse_pptx.py       # PPTX parser (4 methods)
-│           ├── parse_docx.py       # DOCX parser (4 methods)
-│           ├── parse_xlsx.py       # XLSX parser (4 methods)
-│           ├── parse_pdf.py        # PDF parser (4 methods)
-│           ├── parse_pbix.py       # PBIX parser (2 methods)
-│           └── orchestrate_parsing.py  # Orchestrator
-└── README.md
-```
-
-**Removed in refactoring**:
-- `workflows/` directory - Information now embedded in scripts
-- `resources/templates/` directory - No longer using Jinja2 templates
-- Script generation workflow - Scripts are self-contained, no generation needed
+- **SKILL.md**: Complete usage guide with workflows and patterns
+- **Parser scripts**: Detailed method documentation in script docstrings
+- **Command documentation**: See `/parse-docs` command for natural language usage
 
 ## License
 

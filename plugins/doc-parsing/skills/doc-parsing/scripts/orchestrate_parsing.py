@@ -4,155 +4,23 @@
 # dependencies = []
 # ///
 """
-Orchestrate document parsing across all file types.
+Orchestrate document parsing across all file types with incremental hash-based processing.
 
-This is the main orchestration script for batch processing, incremental parsing,
-and state management of office documents. Orchestrators should copy this script to
-their project directory and adapt the configuration at the top of the file.
-
-**ORCHESTRATOR USAGE:**
-
-To use this orchestrator for your project:
-
-1. Copy this script and all parse_*.py scripts to your project directory:
-   cp -r /path/to/doc-parsing/scripts/* /your/project/scripts/
-
-2. Adapt this script with project-specific context:
-   - Set `DEFAULT_SOURCE_DIR` to your source documents directory
-   - Set `DEFAULT_OUTPUT_DIR` to your target output directory
-   - Adjust `DEFAULT_FILE_TYPES` if you only need specific types
-   - Set `DEFAULT_FORCE_REPARSE` to True if you want to re-parse all files
-
-3. Run the orchestrator:
-   ./orchestrate_parsing.py
-
-   Or with command-line arguments:
-   ./orchestrate_parsing.py /custom/source /custom/output --force --types=pptx,docx
-
-Supported file types: pptx, docx, xlsx, pdf, pbix
-
-**CORE ORCHESTRATION PRINCIPLES:**
-
-Mirror Structure Preservation:
-- Output directory mirrors source directory structure exactly
-- Preserve subdirectory organization and file relationships
-- Example: source/decks/Q4/deck.pptx → output/decks/Q4/deck.pptx/
-
-Hash-Based Incremental Parsing:
-- Compare source file SHA256 with existing parsing_results.json hash
-- Skip unchanged files unless --force specified
-- Re-parse files with hash mismatches
-
-Complete Method Execution:
-- For each file, run ALL methods defined in its parser script
-- Methods are independent - failure in one does not stop others
-- Log all errors, continue execution
-
-Error Handling:
-- Log errors in file's parsing_results.json with context
-- Continue with next method if one fails
-- Continue with next file if parsing partially succeeds
-- Never halt orchestration due to single file errors
-
-Documentation First:
-- Generate parsing_results.json for every parsed file (even partial failures)
-- Create top-level orchestration_summary.json summarizing all operations
-
-**PATTERNS AND COMMON CODE:**
-
-Hash Calculation:
-```python
-import hashlib
-
-def calculate_hash(file_path: Path) -> str:
-    sha256 = hashlib.sha256()
-    with open(file_path, 'rb') as f:
-        for chunk in iter(lambda: f.read(8192), b''):
-            sha256.update(chunk)
-    return sha256.hexdigest()
-```
-
-Directory Mirroring:
-```python
-from pathlib import Path
-
-source_dir = Path('/home/user/docs')
-source_file = Path('/home/user/docs/decks/Q4/deck.pptx')
-rel_path = source_file.relative_to(source_dir)
-output_dir = Path('/home/user/parsed')
-file_output_dir = output_dir / rel_path
-file_output_dir.mkdir(parents=True, exist_ok=True)
-```
-
-Subprocess Execution with Error Handling:
-```python
-import subprocess
-
-def parse_file(source_file, output_dir, parser_script):
-    try:
-        result = subprocess.run(
-            [str(parser_script), str(source_file), str(output_dir)],
-            capture_output=True,
-            text=True,
-            timeout=600
-        )
-        return {'success': result.returncode == 0, 'returncode': result.returncode}
-    except subprocess.TimeoutExpired:
-        return {'success': False, 'error': 'timeout'}
-    except Exception as e:
-        return {'success': False, 'error': str(e)}
-```
-
-C Library Wrapping (when needed):
-```bash
-# For tools requiring C++ standard library (markitdown, docling, pandas)
-nix shell nixpkgs#stdenv.cc.cc.lib --command bash -c "
-  export LD_LIBRARY_PATH=\$(nix eval --raw nixpkgs#stdenv.cc.cc.lib)/lib:\$LD_LIBRARY_PATH &&
-  uvx --from 'markitdown[pdf]' markitdown '$SOURCE_FILE'
-"
-```
-
-**DECISION POINTS:**
-
-Hash Comparison Strategy:
-- Skip unchanged files (default) - saves time
-- Always re-parse (--force) - ensures consistency
-- Default: Skip unchanged, use --force when methods or file content changed
-
-Error Handling Severity:
-- Log and continue (recommended) - maximizes coverage
-- Stop on first error (fail-fast) - limits wasted time
-- Default: Log and continue, use fail-fast if first file errors indicate systemic issues
-
-**COMMAND LINE ARGUMENTS:**
+Adapt this script by setting DEFAULT_SOURCE_DIR and DEFAULT_OUTPUT_DIR below.
 
 Usage:
     ./orchestrate_parsing.py [source_dir] [output_dir] [options]
 
-Arguments:
-    source_dir  - Source directory containing files to parse (optional if DEFAULT_SOURCE_DIR set)
-    output_dir  - Output directory for parsed content (optional if DEFAULT_OUTPUT_DIR set)
-
 Options:
     --force        - Re-parse all files regardless of hash match
-    --types=TYPE   - Specific file types to process (comma-separated, default: all)
-    --help         - Show this help message
+    --types=TYPE   - Specific file types (comma-separated, default: all)
+    --help         - Show this help
 
 Examples:
-    # Use default directories configured below
     ./orchestrate_parsing.py
+    ./orchestrate_parsing.py /data/docs /data/parsed --force --types=pptx,docx
 
-    # Specify directories on command line
-    ./orchestrate_parsing.py /home/user/docs /home/user/parsed
-
-    # Force reparse all files
-    ./orchestrate_parsing.py --force
-
-    # Parse only specific file types
-    ./orchestrate_parsing.py --types=pptx,docx
-
-    # Combine options
-    ./orchestrate_parsing.py /data/docs /data/parsed --force --types=pdf
+Supported file types: pptx, docx, xlsx, pdf, pbix
 """
 
 import sys
@@ -163,21 +31,11 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Set
 
-# ========================================
-# ORCHESTRATOR CONFIGURATION
-# Adapt these for your project
-# ========================================
+DEFAULT_SOURCE_DIR = None
+DEFAULT_OUTPUT_DIR = None
+DEFAULT_FILE_TYPES = None
+DEFAULT_FORCE_REPARSE = False
 
-DEFAULT_SOURCE_DIR = None  # Set to your source directory, e.g., Path("/home/user/docs")
-DEFAULT_OUTPUT_DIR = (
-    None  # Set to your output directory, e.g., Path("/home/user/parsed")
-)
-DEFAULT_FILE_TYPES = (
-    None  # Set to None for all types, or specific types like ["pptx", "docx"]
-)
-DEFAULT_FORCE_REPARSE = False  # Set to True to always re-parse all files
-
-# File type to parser mapping
 PARSERS = {
     "pptx": "parse_pptx.py",
     "docx": "parse_docx.py",
@@ -210,11 +68,10 @@ def discover_files(source_dir: Path, file_types: Set[str]) -> Dict[str, List[Pat
 
 
 def should_parse_file(source_file: Path, output_dir: Path, force: bool) -> bool:
-    """Determine if file should be parsed based on hash comparison."""
+    """Check if file needs reparsing based on hash comparison."""
     if force:
         return True
 
-    # Check if results file exists
     results_file = output_dir / "parsing_results.json"
     if not results_file.exists():
         return True
@@ -222,25 +79,20 @@ def should_parse_file(source_file: Path, output_dir: Path, force: bool) -> bool:
     try:
         with open(results_file, "r") as f:
             results = json.load(f)
-
-        # Compare hashes
         current_hash = calculate_hash(source_file)
         previous_hash = results.get("file_hash")
-
         return current_hash != previous_hash
     except:
         return True
 
 
 def parse_file(source_file: Path, output_dir: Path, parser_script: Path) -> Dict:
-    """Parse a single file using the appropriate parser."""
+    """Execute parser script for a single file."""
     print(f"\n  Parsing: {source_file.name}")
     print(f"  Output: {output_dir}")
 
-    # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Run parser
     try:
         result = subprocess.run(
             [str(parser_script), str(source_file), str(output_dir)],
@@ -273,7 +125,6 @@ def parse_file(source_file: Path, output_dir: Path, parser_script: Path) -> Dict
 
 
 def main():
-    # Parse command-line arguments
     source_dir = DEFAULT_SOURCE_DIR
     output_dir = DEFAULT_OUTPUT_DIR
     file_types = (
@@ -281,7 +132,6 @@ def main():
     )
     force = DEFAULT_FORCE_REPARSE
 
-    # Parse optional arguments
     args = sys.argv[1:]
     positional_args = []
 
@@ -289,7 +139,6 @@ def main():
         arg = args.pop(0)
 
         if arg.startswith("--"):
-            # Handle flags
             if arg == "--force":
                 force = True
             elif arg.startswith("--types="):
@@ -308,10 +157,8 @@ def main():
                 print("Use --help for usage information")
                 sys.exit(1)
         else:
-            # Positional arguments
             positional_args.append(arg)
 
-    # Set source/output from positional args
     if len(positional_args) >= 1:
         source_dir = Path(positional_args[0])
     if len(positional_args) >= 2:
@@ -321,7 +168,6 @@ def main():
         print("Use --help for usage information")
         sys.exit(1)
 
-    # Validate directories
     if source_dir is None:
         print("Error: Source directory not specified")
         print("Use --help for usage information")
@@ -340,10 +186,7 @@ def main():
         print(f"Error: Source path is not a directory: {source_dir}")
     sys.exit(1)
 
-    # Get script directory
     script_dir = Path(__file__).parent
-
-    # Start processing
     start_time = datetime.now()
 
     print("=" * 80)
@@ -356,7 +199,6 @@ def main():
     print(f"File types: {', '.join(sorted(file_types))}")
     print()
 
-    # Discover files
     print("Discovering files...")
     files_by_type = discover_files(source_dir, file_types)
 
@@ -370,10 +212,8 @@ def main():
         print("No files found to parse.")
         return 0
 
-    # Create output base directory
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Process each file
     results = {}
     processed_count = 0
     skipped_count = 0
@@ -393,25 +233,17 @@ def main():
         print(f"{'=' * 80}")
 
         for source_file in files:
-            # Calculate relative path from source_dir
             rel_path = source_file.relative_to(source_dir)
-
-            # Create mirrored output directory
             file_output_dir = output_dir / rel_path
 
-            # Check if we should parse
             if not force and not should_parse_file(source_file, file_output_dir, force):
                 print(f"\n  Skipping: {source_file.name} (unchanged)")
                 skipped_count += 1
                 continue
 
-            # Parse file
             parse_result = parse_file(source_file, file_output_dir, parser_script)
-
-            # Store file hash in results
             file_hash = calculate_hash(source_file)
 
-            # Update results file
             results_data = {
                 "timestamp": datetime.now().isoformat(),
                 "source_file": str(source_file),
@@ -426,7 +258,6 @@ def main():
             with open(results_file, "w") as f:
                 json.dump(results_data, f, indent=2)
 
-            # Track results
             results[str(rel_path)] = parse_result
 
             if parse_result["success"]:
@@ -434,7 +265,6 @@ def main():
             else:
                 error_count += 1
 
-    # Generate summary
     end_time = datetime.now()
     duration = (end_time - start_time).total_seconds()
 
@@ -448,7 +278,6 @@ def main():
     print(f"Duration: {duration:.2f} seconds")
     print()
 
-    # Save orchestration summary
     summary = {
         "start_time": start_time.isoformat(),
         "end_time": end_time.isoformat(),
