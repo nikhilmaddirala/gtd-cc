@@ -1,0 +1,20 @@
+{
+  "name": "docs-management",
+  "version": "0.1.0",
+  "description": "GitHub project documentation using layered system with literate code awareness",
+  "author": {
+    "name": "Nikhil Maddirala"
+  },
+  "commands": [
+    "./commands/doc-init.md",
+    "./commands/doc-maintain.md",
+    "./commands/doc-compress.md"
+  ],
+  "agents": [
+    "./agents/doc-init-agent.md",
+    "./agents/doc-maintain-agent.md"
+  ],
+  "skills": [
+    "./skills/docs-management"
+  ]
+}

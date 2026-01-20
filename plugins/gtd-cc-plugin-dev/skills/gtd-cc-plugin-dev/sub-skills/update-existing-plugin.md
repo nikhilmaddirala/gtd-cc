@@ -36,6 +36,7 @@ User wants to add new components to an existing plugin. They specify what compon
 
 4. Update plugin manifest
    - Add new component to plugin.json
+   - Bump minor version number (e.g., 1.0.0 → 1.1.0) - required for plugin cache to refresh
 
 5. Re-validate
    - Use the official plugin-dev skill to confirm updates are correct

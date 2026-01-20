@@ -24,9 +24,9 @@
       "source": "./plugins/web-research"
     },
     {
-      "name": "documentation",
-      "description": "GitHub project documentation generation and maintenance using three-layer model with initialization, structure, maintenance, and audit workflows",
-      "source": "./plugins/documentation"
+      "name": "docs-management",
+      "description": "GitHub project documentation using layered system with literate code awareness",
+      "source": "./plugins/docs-management"
     },
     {
       "name": "doc-parsing",

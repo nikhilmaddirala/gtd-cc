@@ -3,7 +3,7 @@
 ## Overview
 
 - Applies gtd-cc architectural patterns to Claude Code plugin development
-- Wraps the official plugin-dev skill, adding thin wrapper philosophy and centralization
+- Wraps the official plugin-dev plugin, adding thin wrapper philosophy and centralization
 - Provides templates for skills, commands, agents, and READMEs
 
 
@@ -21,7 +21,7 @@
 
 ### Configuration
 
-Requires the official plugin-dev skill to be installed. This plugin wraps plugin-dev for mechanics and adds gtd-cc patterns on top.
+Requires the official plugin-dev plugin to be installed. This plugin wraps plugin-dev for mechanics and adds gtd-cc patterns on top.
 
 ### Usage
 
@@ -55,9 +55,9 @@ gtd-cc-plugin-dev/
 │   └── gtd-cc-plugin-dev/
 │       ├── SKILL.md              # Main skill (routes to sub-skills)
 │       ├── sub-skills/           # Thin wrappers around plugin-dev
-│       └── templates/            # gtd-cc templates
-├── references/
-│   └── plugin-dev -> [symlink]   # Official plugin-dev for reference
+│       ├── templates/            # gtd-cc templates
+│       └── references/
+│           └── plugin-dev -> [symlink]  # Official plugin-dev (local dev only)
 └── README.md
 ```
 
@@ -76,21 +76,22 @@ gtd-cc-plugin-dev/
 - [x] Rewrite sub-skills as thin wrappers
 - [x] Update main plugin README (this file)
 - [x] Rename to gtd-cc-plugin-dev to avoid confusion with official plugin-dev
-- [ ] Add prerequisite check for plugin-dev availability
+- [x] Add prerequisite check for plugin-dev availability
 - [ ] Migrate to official plugin dependencies when [Issue #9444](https://github.com/anthropics/claude-code/issues/9444) is implemented
 
 
 ## References
 
-- [Official plugin-dev skill](references/plugin-dev/) - symlinked for reference
+- [Official plugin-dev plugin](skills/gtd-cc-plugin-dev/references/plugin-dev/) - symlinked for local development reference (not portable)
 - [Claude Code plugins documentation](https://docs.anthropic.com/en/docs/claude-code)
+- [Plugin dependencies feature request](https://github.com/anthropics/claude-code/issues/9444) - tracking official dependency support
 
 
 ## Appendix
 
 ### gtd-cc philosophy
 
-This plugin follows its own philosophy: be a thin wrapper. All plugin development mechanics are handled by the official plugin-dev skill. This plugin adds:
+This plugin follows its own philosophy: be a thin wrapper. All plugin development mechanics are handled by the official plugin-dev plugin. This plugin adds:
 
 - **Thin wrapper pattern**: Commands and agents reference skills, no inline logic
 - **Centralization**: All domain logic lives in skills

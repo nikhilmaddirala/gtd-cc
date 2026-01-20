@@ -7,9 +7,9 @@ description: Apply gtd-cc architectural patterns when developing Claude Code plu
 
 ## Overview
 
-This skill applies gtd-cc architectural patterns to Claude Code plugin development. It wraps the official plugin-dev toolkit, which handles mechanics (creating files, manifests, validation). This skill adds the gtd-cc layer: thin wrappers, centralization, and marketplace conventions.
+This skill applies gtd-cc architectural patterns to Claude Code plugin development. It wraps the official plugin-dev plugin, which handles mechanics (creating files, manifests, validation). This skill adds the gtd-cc layer: thin wrappers, centralization, and marketplace conventions.
 
-CRITICAL: You MUST use the official plugin-dev toolkit for plugin mechanics. This skill provides patterns and templates on top of plugin-dev.
+CRITICAL: You MUST use the official plugin-dev plugin for plugin mechanics. This skill provides patterns and templates on top of plugin-dev.
 
 
 ## Context
@@ -19,9 +19,9 @@ User wants to create or update a plugin for the gtd-cc marketplace. They may hav
 
 ## Prerequisites
 
-This skill requires the official plugin-dev skill to be installed. Before proceeding with any sub-skill:
+This skill requires the official plugin-dev plugin to be installed. Before proceeding with any sub-skill:
 
-1. Check if the plugin-dev skill is available (look for `plugin-dev:` prefixed skills in your available tools)
+1. Check if the plugin-dev plugin is available by looking for its skills (e.g., `plugin-dev:plugin-structure`, `plugin-dev:skill-development`) or agents (e.g., `plugin-dev:agent-creator`)
 2. If plugin-dev is NOT available, stop and tell the user:
    ```
    This skill requires the official plugin-dev toolkit. Please install it first:
@@ -30,6 +30,8 @@ This skill requires the official plugin-dev skill to be installed. Before procee
    Then retry your command.
    ```
 3. Only proceed when plugin-dev is confirmed available
+
+Note: For development reference, plugin-dev content is symlinked at `references/plugin-dev/` (local development only, not portable).
 
 
 ## Sub-skills
@@ -58,6 +60,7 @@ CRITICAL: Load the appropriate sub-skill from `sub-skills/` when routing is need
 ## Guidelines
 
 - Use plugin-dev for mechanics, this skill for patterns
+- ALWAYS run plugin-dev:plugin-validator after creating or editing plugins
 - Commands and agents are thin wrappers - all logic lives in skills
 - Apply templates from `templates/` directory
 - Follow gtd-cc naming: plugin prefix pattern (gh-*, doc-*, ob-*)
