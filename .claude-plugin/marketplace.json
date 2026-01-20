@@ -34,9 +34,9 @@
       "source": "./plugins/doc-parsing"
     },
     {
-      "name": "developing-for-claude-code",
+      "name": "gtd-cc-plugin-dev",
       "description": "Guide for developing Claude Code plugins using gtd-cc architectural patterns - central skills with workflows, thin wrapper commands and agents",
-      "source": "./plugins/developing-for-claude-code"
+      "source": "./plugins/gtd-cc-plugin-dev"
     },
      {
        "name": "random",
