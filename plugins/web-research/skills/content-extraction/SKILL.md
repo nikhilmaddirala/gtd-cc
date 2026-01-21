@@ -11,6 +11,26 @@ last_updated: 2025-01-26
 
 This skill provides specialized patterns for extracting documentation from various platforms and formats. It automatically detects documentation structures, preserves code examples, and organizes content for optimal readability.
 
+
+## Context
+
+User provides a documentation URL to extract. This skill is appropriate when:
+- Extracting API documentation, tutorials, or reference guides
+- Processing knowledge bases from platforms like Docusaurus, GitBook, ReadTheDocs, or Sphinx
+- Creating structured documentation archives with table of contents
+- Converting multi-page documentation to organized markdown
+
+
+## Process
+
+1. Analyze URL to detect documentation platform (Docusaurus, GitBook, ReadTheDocs, Sphinx)
+2. Apply platform-specific CSS selectors and exclusion patterns
+3. Extract content while preserving structure, code blocks, and links
+4. For multi-page docs: discover navigation structure and batch extract
+5. Generate table of contents and organize sections
+6. Verification: Confirm code examples are intact and links are functional
+
+
 ## Documentation Platform Detection
 
 ### Platform-Specific Selectors
@@ -515,15 +535,15 @@ def generate_summary(extracted_docs):
     }
 ```
 
-## Best Practices
+## Guidelines
 
-1. **Platform Detection**: Always attempt to detect the documentation platform for optimal extraction
-2. **Content Filtering**: Use BM25 filtering to focus on relevant documentation sections
-3. **Structure Preservation**: Maintain heading hierarchy and code block formatting
-4. **Link Handling**: Preserve internal navigation links for context
-5. **Batch Processing**: Use `arun_many()` for multi-page documentation with appropriate concurrency limits
-6. **Rate Limiting**: Add delays between requests when extracting large documentation sites
-7. **Error Recovery**: Implement retry logic for individual page failures
+- Always attempt to detect the documentation platform for optimal extraction
+- Use BM25 filtering to focus on relevant documentation sections
+- Maintain heading hierarchy and code block formatting
+- Preserve internal navigation links for context
+- Use `arun_many()` for multi-page documentation with appropriate concurrency limits
+- Add delays between requests when extracting large documentation sites
+- Implement retry logic for individual page failures
 
 ---
 

@@ -38,10 +38,15 @@
       "description": "Guide for developing Claude Code plugins using gtd-cc architectural patterns - central skills with workflows, thin wrapper commands and agents",
       "source": "./plugins/gtd-cc-plugin-dev"
     },
-     {
-       "name": "random",
-       "description": "Miscellaneous productivity and development skills including GTD task management and theme port creation",
-       "source": "./plugins/random"
-     }
-   ]
+    {
+      "name": "random",
+      "description": "Miscellaneous productivity and development skills including GTD task management and theme port creation",
+      "source": "./plugins/random"
+    },
+    {
+      "name": "monorepo-git",
+      "description": "Git operations for monorepos with subtree management. Daily development (commit/push) separate from curated subtree publishing.",
+      "source": "./plugins/monorepo-git"
+    }
+  ]
  }

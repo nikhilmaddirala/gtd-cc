@@ -84,10 +84,10 @@ Brief description of this module's purpose.
 
 1. Create root README.md (high-level only, under 300 lines)
 2. Create module READMEs (as in phase 2)
-3. Create docs files as needed:
-   - `docs/getting-started.md` - User tutorials
-   - `docs/api-reference.md` - API documentation
-   - `docs/architecture.md` - Technical deep dives
+3. Create docs/ for cross-cutting topics:
+   - `docs/getting-started.md` - Tutorials touching multiple modules
+   - `docs/api-reference.md` - API documentation (reference material)
+   - `docs/architecture.md` - How modules interact (cross-cutting)
 
 #### scope=path: Module README
 

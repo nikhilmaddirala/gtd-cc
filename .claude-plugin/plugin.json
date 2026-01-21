@@ -4,7 +4,11 @@
   "description": "Getting Things Done system for Claude Code",
   "author": "Nikhil Maddirala",
   "plugins": [
+    "plugins/docs-management",
     "plugins/github",
-    "plugins/obsidian"
+    "plugins/gtd-cc-plugin-dev",
+    "plugins/obsidian",
+    "plugins/random",
+    "plugins/web-research"
   ]
 }

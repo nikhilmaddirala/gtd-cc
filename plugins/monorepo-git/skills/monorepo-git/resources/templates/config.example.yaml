@@ -1,0 +1,30 @@
+# Monorepo Git Configuration
+# ===========================
+# Copy this file to .monorepo-git.yaml in your repo root and customize.
+# All settings are optional - the plugin uses sensible defaults.
+
+# Subtree detection
+# -----------------
+# Pattern for identifying subtree remotes in `git remote -v`
+# Default: "remote-" (matches remote-project-a, remote-my-config, etc.)
+subtree_remote_prefix: "remote-"
+
+# Default branch for all git operations
+# Default: "main"
+default_branch: "main"
+
+# Directory structure for graduate workflow
+# -----------------------------------------
+# These paths are used by /mg-graduate to suggest source and target directories.
+# If not set, graduate will prompt the user for paths explicitly.
+#
+# directories:
+#   lab: "path/to/lab"           # Development/experimental projects
+#   public: "path/to/public"     # Public production projects
+#   private: "path/to/private"   # Private production projects
+#
+# Example for a typical monorepo structure:
+# directories:
+#   lab: "projects/lab"
+#   public: "projects/public"
+#   private: "projects/private"

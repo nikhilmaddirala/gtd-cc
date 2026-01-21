@@ -1,9 +1,35 @@
 ---
 name: web-search
 description: General web search patterns and techniques including Gemini CLI coordination. Use this skill when you need to perform web searches, find current information, or research topics online. Covers both Gemini CLI and built-in WebSearch tool usage with precise instruction crafting.
+version: 0.1.0
+last_updated: 2025-01-26
 ---
 
 # Web Search Techniques & Coordination
+
+## Overview
+
+This skill provides patterns for web searching using Gemini CLI coordination or Claude's built-in WebSearch tool. It enables finding current information beyond knowledge cutoffs through precise instruction crafting.
+
+
+## Context
+
+User needs to find current information, verify facts, or research topics online. This skill is appropriate when:
+- Searching for recent developments or current events
+- Verifying claims or checking facts
+- Researching technical topics with up-to-date information
+- Finding domain-specific information from particular websites
+
+
+## Process
+
+1. Analyze user's web search requirements
+2. Craft precise instructions for Gemini CLI or WebSearch tool
+3. Execute the search with appropriate constraints
+4. Process and validate the returned results
+5. Present information with proper source attribution
+6. Verification: Confirm sources are current and reliable
+
 
 ## Agent Coordination Model
 
@@ -256,6 +282,16 @@ README.md | gemini -p "Review this documentation and do web search for current p
 
 IMPORTANT: You are restricted to web research ONLY. Do not edit files, write code, execute commands, or perform any actions other than web searching and information gathering. Return only research findings with proper citations."
 ```
+
+## Guidelines
+
+- Always include the "web research ONLY" constraint when using Gemini CLI to prevent unintended actions
+- Validate source currency - check publication dates before presenting information
+- Use domain constraints (site:) for authoritative sources in specific fields
+- For technical searches, always request sources from 2024-2025
+- Process JSON output when structured data is needed
+- Refine instructions if initial results are inadequate
+
 
 ## Resources
 

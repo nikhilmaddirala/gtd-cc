@@ -54,6 +54,8 @@ CRITICAL: Load the appropriate sub-skill from `sub-skills/` based on user intent
 
 ## Guidelines
 
+- CRITICAL: You MUST use the templates provided by this skill
+
 ### Core Principles
 
 **One fact, one place.** Never duplicate information across layers. If something is documented in literate code comments, don't repeat it in the directory README. If it's in a directory README, don't repeat it in the root README. Link instead.
@@ -88,10 +90,34 @@ A README adds value when:
 |-------|---------|----------|
 | Root README | Project overview, quick start, entry point | Everyone |
 | Directory README | How files in this directory relate, local context | Developers working in this area |
-| /docs folder | Deep dives, tutorials, architecture | Those needing comprehensive understanding |
+| /docs folder | Cross-cutting topics that span multiple parts of the codebase | Those needing comprehensive understanding |
 | Literate comments | Why this code exists, decision rationale | Future maintainers |
 
 Each layer answers different questions. If you're repeating yourself, you're in the wrong layer.
+
+### READMEs vs docs/ folder
+
+READMEs and docs/ serve fundamentally different purposes:
+
+- **READMEs are vertical** - They document a specific location (root project, a module, a directory). Each README belongs to exactly one place in the filesystem.
+
+- **docs/ is horizontal** - It documents topics that span multiple parts of the codebase. Architecture, authentication flows, data pipelines - these have no natural home in any single directory because they cross boundaries.
+
+**When to use each:**
+
+| Content | Location | Why |
+|---------|----------|-----|
+| "How this module works" | Directory README | Specific to one location |
+| "How auth, API, and DB interact" | docs/architecture.md | Spans multiple modules |
+| "Quick start for users" | Root README | Entry point for everyone |
+| "Complete API reference" | docs/api-reference.md | Reference material, not entry point |
+| "Tutorial: building a feature" | docs/tutorials/ | Step-by-step guide touching many areas |
+
+**Cross-references:**
+
+- READMEs link to docs/ for cross-cutting topics: "See [Architecture](docs/architecture.md) for how this module fits into the system"
+- docs/ links to READMEs for module-specific details: "For implementation details, see [src/auth/README.md](../src/auth/README.md)"
+- docs/index.md serves as navigation hub, linking to both other docs/ files and relevant READMEs
 
 
 ## Appendix
@@ -109,7 +135,7 @@ Each layer answers different questions. If you're repeating yourself, you're in 
 | Document | Target | Max |
 |----------|--------|-----|
 | Root README | 200-300 lines | 500 lines |
-| Directory README | 100-300 lines | 500 lines |
+| Directory README | 200-300 lines | 500 lines |
 | /docs files | As needed | Keep focused |
 
 If a document exceeds these limits, it's probably:
@@ -122,5 +148,6 @@ If a document exceeds these limits, it's probably:
 - No information duplicated across layers
 - Each document serves a clear, distinct purpose
 - READMEs are concise entry points, not exhaustive references
+- READMEs follow templates provided
 - Small directories rely on literate comments when appropriate
 - All links work, no orphaned references

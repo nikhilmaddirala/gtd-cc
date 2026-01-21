@@ -12,6 +12,26 @@ last_updated: 2025-01-26
 
 This skill provides comprehensive support for web crawling and data extraction using Crawl4AI library, including complete SDK reference, ready-to-use scripts, error handling patterns, and optimized workflows for efficient data extraction.
 
+
+## Context
+
+User needs programmatic web crawling capabilities. This skill is appropriate when:
+- Scraping websites with JavaScript rendering requirements
+- Extracting structured data using CSS selectors or LLM extraction
+- Building automated web data pipelines
+- Handling login-protected or dynamic content
+
+
+## Process
+
+1. Verify crawl4ai installation with `crawl4ai-doctor`
+2. Configure browser and crawler settings based on target site
+3. Execute crawl using appropriate method (basic, batch, or advanced)
+4. Process results (markdown, extracted data, links)
+5. Handle errors with retry logic and exponential backoff
+6. Verification: Confirm extracted content meets quality requirements
+
+
 ## Quick Start
 
 ### Installation Check
@@ -663,18 +683,18 @@ print(f"Session ID: {result.session_id}")
 print(f"Cookies: {result.cookies}")
 ```
 
-## Best Practices
+## Guidelines
 
-1. **Always check result.success** before processing content
-2. **Start with basic crawling** - Understand BrowserConfig, CrawlerRunConfig, and arun() before moving to advanced features
-3. **Use markdown generation** for documentation and content - Crawl4AI excels at clean markdown extraction
-4. **Try schema generation first** for structured data - 10-100x more efficient than LLM extraction
-5. **Use appropriate timeouts** - 30s for normal sites, 60s+ for JavaScript-heavy sites
-6. **Enable caching during development** - `cache_mode=CacheMode.ENABLED` to avoid repeated requests
-7. **Implement retry logic** with exponential backoff
-8. **Add delays between requests** to respect rate limits
-9. **Filter content aggressively** to focus on relevant information
-10. **Reuse sessions** for authenticated content instead of re-logging
+- Always check `result.success` before processing content
+- Start with basic crawling - understand BrowserConfig, CrawlerRunConfig, and arun() before moving to advanced features
+- Use markdown generation for documentation and content - Crawl4AI excels at clean markdown extraction
+- Try schema generation first for structured data - 10-100x more efficient than LLM extraction
+- Use appropriate timeouts - 30s for normal sites, 60s+ for JavaScript-heavy sites
+- Enable caching during development with `cache_mode=CacheMode.ENABLED` to avoid repeated requests
+- Implement retry logic with exponential backoff
+- Add delays between requests to respect rate limits
+- Filter content aggressively to focus on relevant information
+- Reuse sessions for authenticated content instead of re-logging
 
 ## Resources
 

@@ -37,6 +37,9 @@ Use the gtd-pl-* commands to create plugins with gtd-cc patterns:
 # Validate plugins follow gtd-cc patterns
 /gtd-pl-validate
 
+# Refactor existing plugin to follow gtd-cc patterns
+/gtd-pl-refactor
+
 # Create a new skill
 /gtd-pl-skill
 

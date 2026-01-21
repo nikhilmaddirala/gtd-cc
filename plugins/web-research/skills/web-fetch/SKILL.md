@@ -11,13 +11,26 @@ last_updated: 2025-01-26
 
 This skill provides comprehensive patterns for downloading web articles with images and converting them to clean markdown for offline reference. It covers multiple extraction methods with Jina AI Reader as the primary approach.
 
-## Core Process
 
-1. Fetch article content as markdown
-2. Download all images locally
-3. Update markdown with local image paths
+## Context
 
-## Step-by-Step Workflow
+User provides a URL to extract as markdown with images. This skill is appropriate when:
+- Downloading blog posts, news articles, or documentation for offline reference
+- Preserving articles with their images in a local directory structure
+- Converting web content to markdown for knowledge management
+
+
+## Process
+
+1. Fetch article content using Jina AI Reader (preferred) or fallback methods
+2. Create directory structure for article and images
+3. Download all images locally with parallel requests
+4. Update markdown paths to reference local images
+5. Add source metadata to the markdown file
+6. Verification: Confirm all files exist and markdown renders correctly
+
+
+## Detailed Steps
 
 ### 1. Fetch Article Content
 
@@ -361,6 +374,15 @@ curl -s -o "images/01.png" "IMAGE_URL" &
 # 5. Verify
 ls -lh references/ARTICLE_NAME/
 ```
+
+## Guidelines
+
+- Always try Jina AI Reader first - it's the most reliable and requires no installation
+- Use sequential numbering (01-, 02-, 03-) for images to maintain order
+- Always include `-L` flag with curl to follow redirects
+- Add source metadata (URL, date, author) at the top of markdown files
+- Verify downloads by checking file sizes - 0-byte files indicate failures
+- For JavaScript-heavy sites, fall back to headless browser tools or manual copy-paste
 
 ---
 

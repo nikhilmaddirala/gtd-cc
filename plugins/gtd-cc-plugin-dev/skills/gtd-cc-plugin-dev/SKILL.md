@@ -42,6 +42,7 @@ CRITICAL: Load the appropriate sub-skill from `sub-skills/` when routing is need
 - **create-new-skill.md**: Create skill with gtd-cc patterns
 - **update-existing-plugin.md**: Add components to existing plugin
 - **validate-existing-plugins.md**: Validate gtd-cc patterns
+- **refactor-existing-plugin.md**: Refactor plugin to follow gtd-cc patterns while preserving functionality
 - **create-repo-plugin.md**: Create repository-specific `.claude/` automation
 
 

@@ -1,0 +1,22 @@
+{
+  "name": "pm",
+  "version": "0.1.0",
+  "description": "Local-first project management using git worktrees, markdown task files, and AI agent integration",
+  "author": {
+    "name": "Nikhil Maddirala"
+  },
+  "commands": [
+    "./commands/pm-task.md",
+    "./commands/pm-list.md",
+    "./commands/pm-start.md",
+    "./commands/pm-plan.md",
+    "./commands/pm-execute.md",
+    "./commands/pm-merge.md",
+    "./commands/pm-cleanup.md"
+  ],
+  "agents": [],
+  "skills": [
+    "./skills/pm-main",
+    "./skills/pm-worktree"
+  ]
+}

@@ -11,6 +11,26 @@ last_updated: 2025-01-26
 
 This skill provides comprehensive patterns for intelligent website crawling, automatic sitemap generation, and content discovery. It handles both advanced crawling strategies and simple site-to-markdown conversion with proper depth control, rate limiting, and content organization.
 
+
+## Context
+
+User provides a base URL to crawl. This skill is appropriate when:
+- Crawling entire websites to markdown for offline reference
+- Generating sitemaps to understand site structure
+- Analyzing link structures and content organization
+- Archiving websites for documentation or research
+
+
+## Process
+
+1. Determine crawl parameters (depth, concurrency, output format)
+2. Execute crawl using CLI or Python implementation
+3. Organize output by URL structure with timestamped directories
+4. Generate sitemap for navigation
+5. Analyze content types and link structure
+6. Verification: Confirm all pages were crawled and organized correctly
+
+
 ## Simple Site-to-Markdown Conversion
 
 Quick approach for converting entire websites to markdown files:
@@ -671,16 +691,16 @@ def analyze_site_structure(crawled_data):
     }
 ```
 
-## Best Practices
+## Guidelines
 
-1. **Start with small concurrency** and increase gradually to test server limits
-2. **Always implement rate limiting** with adaptive delays based on content complexity
-3. **Monitor memory usage** when crawling large sites
-4. **Use intelligent depth control** based on content quality rather than fixed depth
-5. **Implement quality filtering** to focus on valuable content
-6. **Generate multiple sitemap formats** for different use cases (XML for search engines, markdown for humans)
-7. **Handle errors gracefully** and continue crawling other pages when individual requests fail
-8. **Respect robots.txt** and implement proper crawling etiquette
+- Start with small concurrency and increase gradually to test server limits
+- Always implement rate limiting with adaptive delays based on content complexity
+- Monitor memory usage when crawling large sites
+- Use intelligent depth control based on content quality rather than fixed depth
+- Implement quality filtering to focus on valuable content
+- Generate multiple sitemap formats for different use cases (XML for search engines, markdown for humans)
+- Handle errors gracefully and continue crawling other pages when individual requests fail
+- Respect robots.txt and implement proper crawling etiquette
 
 ---
 

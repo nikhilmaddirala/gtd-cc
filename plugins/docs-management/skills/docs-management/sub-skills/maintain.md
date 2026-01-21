@@ -65,7 +65,7 @@ If trigger is a code change:
 ### Step 4: Execute Fixes
 
 - Update in authoritative location only (don't duplicate)
-- Keep READMEs concise, move details to /docs
+- Keep READMEs concise; move cross-cutting topics to /docs, compress module-specific content in place
 - Update cross-references after moving content
 
 **Verify links:**

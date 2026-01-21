@@ -13,8 +13,11 @@ Documentation should grow naturally with your project using three layers:
 ```
 README.md          → Entry point (quick facts)
 Directory READMEs  → Local context (module explanations)
-/docs/             → Deep dives (detailed content)
+/docs/             → Cross-cutting topics (spans multiple modules)
 ```
+
+- **READMEs are vertical** - Each documents a specific location in the filesystem
+- **docs/ is horizontal** - Documents topics that span multiple parts of the codebase (architecture, flows, tutorials)
 
 This prevents README bloat, eliminates scattered documentation, and scales from tiny projects to large organizations.
 
@@ -26,7 +29,7 @@ Determine which documentation phase fits your project:
 
 - **Phase 1 (Small):** Solo developer, simple scripts, MVP — README.md only
 - **Phase 2 (Medium):** 2-3 modules, established project — README.md + directory READMEs
-- **Phase 3 (Growing):** Complex architecture, multiple teams — README.md + directory READMEs + /docs
+- **Phase 3 (Growing):** Cross-cutting concerns, multiple teams — README.md + directory READMEs + /docs
 
 ### Initialize Documentation
 
@@ -122,8 +125,8 @@ README.md              Entry point
 src/README.md
 docs/
   index.md             Navigation hub
-  architecture.md      System design
-  api-reference.md     API docs
+  architecture.md      System design (cross-cutting)
+  api-reference.md     API docs (reference material)
   configuration.md     Configuration
   tutorials/
     getting-started.md
@@ -132,7 +135,7 @@ docs/
 ```
 
 When you have:
-- Complex architecture
+- Cross-cutting concerns (topics spanning multiple modules)
 - 4+ major components
 - Multiple tutorials
 - Multiple teams/audiences
