@@ -11,7 +11,9 @@
   "agents": [],
   "skills": [
     "./skills/backlog-md-skill",
+    "./skills/browser-automation",
     "./skills/catppuccin-port-creation",
-    "./skills/system-diagnostics"
+    "./skills/system-diagnostics",
+    "./skills/langfuse-cli"
   ]
 }

@@ -8,6 +8,7 @@
     "plugins/github",
     "plugins/gtd-cc-plugin-dev",
     "plugins/obsidian",
+    "plugins/monorepo-git",
     "plugins/random",
     "plugins/web-research"
   ]

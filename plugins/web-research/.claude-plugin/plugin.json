@@ -1,6 +1,6 @@
 {
   "name": "web-research",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Comprehensive web research toolkit with interactive commands and advanced skills for crawling, extraction, and AI-powered analysis",
   "author": {
     "name": "Nikhil Maddirala"
@@ -8,12 +8,14 @@
   "commands": [
     "./commands/web-fetch-page.md",
     "./commands/web-crawl-site.md",
-    "./commands/web-get-docs.md"
+    "./commands/web-get-docs.md",
+    "./commands/web-deep-research.md"
   ],
   "agents": [],
   "skills": [
     "./skills/web-search",
     "./skills/web-fetch",
+    "./skills/deep-research",
     "./skills/crawl4ai-toolkit",
     "./skills/site-crawling",
     "./skills/content-extraction"

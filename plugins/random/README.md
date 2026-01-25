@@ -4,7 +4,7 @@ Miscellaneous productivity and development skills for specialized workflows.
 
 ## Skills
 
-This plugin provides two specialized skills:
+This plugin provides specialized skills:
 
 ### Backlog.md GTD Task Management
 
@@ -31,6 +31,18 @@ Automated Catppuccin theme generation and validation for creating theme ports. H
 
 See `skills/catppuccin-port-creation/SKILL.md` for workflow details and submission guidelines.
 
+### Langfuse CLI
+
+Query and analyze LLM traces, sessions, observations, scores, and metrics from Langfuse via the Python SDK and REST API. Essential for debugging agent runs, tracking costs, and evaluating agent quality.
+
+- Trace querying and inspection (list, filter, drill-down)
+- Session and observation analysis
+- Score retrieval and evaluation workflows
+- Cost and token usage analytics via Metrics API
+- Ready-to-run scripts using uv inline metadata
+
+See `skills/langfuse-cli/SKILL.md` for complete API reference and workflow examples.
+
 ## Installation
 
 Install as part of the gtd-cc marketplace:
@@ -41,4 +53,4 @@ Install as part of the gtd-cc marketplace:
 
 ## Usage
 
-These skills are designed to be used by agents and commands that need specialized domain expertise. The Backlog.md skill provides comprehensive task management patterns, while the Catppuccin skill handles theme creation workflows.
+These skills are designed to be used by agents and commands that need specialized domain expertise. The Backlog.md skill provides task management patterns, the Catppuccin skill handles theme creation, and the Langfuse skill enables LLM observability and evaluation workflows.

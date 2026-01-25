@@ -26,6 +26,7 @@ Whether you need to extract structured data from websites, perform AI-powered co
 /web-fetch-page        # Extract content from a single page
 /web-crawl-site        # Crawl entire websites
 /web-get-docs          # Extract documentation from sites
+/web-deep-research     # Multi-step deep research with cited report
 ```
 
 **For advanced automation and scripting:**
@@ -56,6 +57,13 @@ Specialized workflow for extracting structured documentation:
 - Code example preservation
 - API documentation structuring
 
+### `/web-deep-research` - Deep Research
+Multi-step research workflow for comprehensive topic investigation:
+- Breaks complex topics into 3-5 focused subtopics
+- Iterative Gemini CLI searches with user-approved subtopics
+- Findings compression and deduplication
+- Structured markdown report with inline citations
+
 ## Advanced Skills
 
 ### Core Skills
@@ -69,7 +77,16 @@ General web search patterns and techniques:
 
 **Use when:** You need to perform web searches, find current information, or research topics online
 
-#### 2. Web Fetch
+#### 2. Deep Research
+Multi-step research workflow for comprehensive topic investigation:
+- Breaks complex topics into 3-5 focused subtopics
+- Iterative Gemini CLI searches with result accumulation
+- Findings compression and deduplication
+- Structured report generation with inline citations
+
+**Use when:** A single search isn't enough and you need thorough, multi-angle research with a cited report
+
+#### 4. Web Fetch
 Download web articles with images as clean markdown:
 - Jina AI Reader (primary method)
 - WebFetch tool integration
@@ -78,7 +95,7 @@ Download web articles with images as clean markdown:
 
 **Use when:** You need to download articles with images for offline reference
 
-#### 3. Crawl4AI Toolkit
+#### 5. Crawl4AI Toolkit
 Complete Crawl4AI SDK reference and implementation guide:
 - Comprehensive SDK documentation
 - Ready-to-use scripts for common patterns
@@ -87,7 +104,7 @@ Complete Crawl4AI SDK reference and implementation guide:
 
 **Use when:** You need programmatic access to crawl4ai or are building automated web data pipelines
 
-#### 4. Site Crawling
+#### 6. Site Crawling
 Intelligent website crawling, sitemap generation, and conversion:
 - Advanced crawling strategies with depth control
 - Simple site-to-markdown conversion
@@ -96,7 +113,7 @@ Intelligent website crawling, sitemap generation, and conversion:
 
 **Use when:** You need to crawl entire sites, generate sitemaps, or systematically explore web content
 
-#### 5. Content Extraction
+#### 7. Content Extraction
 Specialized extraction from documentation platforms:
 - Documentation platform detection
 - API docs, tutorials, and reference guides extraction
@@ -230,6 +247,7 @@ plugins/web-research/
 │   └── web-get-docs.md
 └── skills/                     # Advanced skill definitions
     ├── web-search/             # General web search patterns
+    ├── deep-research/          # Multi-step deep research workflow
     ├── web-fetch/              # Article download with images
     ├── crawl4ai-toolkit/      # Complete Crawl4AI SDK
     ├── site-crawling/          # Site crawling and conversion
@@ -278,6 +296,7 @@ See individual skill documentation for detailed troubleshooting guides.
 ## Related Documentation
 
 - [Web Search SKILL.md](skills/web-search/SKILL.md)
+- [Deep Research SKILL.md](skills/deep-research/SKILL.md)
 - [Web Fetch SKILL.md](skills/web-fetch/SKILL.md)
 - [Crawl4AI Toolkit SKILL.md](skills/crawl4ai-toolkit/SKILL.md)
 - [Site Crawling SKILL.md](skills/site-crawling/SKILL.md)
