@@ -6,7 +6,7 @@ description: Analyze changes and create logical commits with conventional format
 
 ## Overview
 
-This sub-skill analyzes repository changes and creates logical commits using conventional commit format. It groups changes by feature/fix/topic rather than just by directory.
+This sub-skill analyzes repository changes and creates logical commits using conventional commit format. It groups changes by git subtree and by feature/fix/topic rather than just by directory.
 
 ## Context
 
@@ -24,20 +24,13 @@ git log -5 --oneline
 
 ### 2. Group changes logically
 
-Group by logical changes, not just by directory. A single directory may have multiple logical commits.
-
 Grouping guidelines:
+- CRITICAL: Subtrees should be in separate commits; e.g. we should not mix dragonix/ changes and gtd-cc/ changes in a single commit.
 - Group related changes together (same feature/fix/topic)
 - Split unrelated changes within the same directory
 - Aim for logical, atomic commits
 
-Example groupings:
-- Root docs + config files -> `docs: update project documentation`
-- Feature addition -> `feat(project-name): add user templates`
-- Bug fix -> `fix(project-name): resolve auth issue`
-- Config changes -> `chore(config): update settings`
-
-CRITICAL: Present plan BEFORE executing:
+Present plan BEFORE executing:
 1. Analyze changes (read files, check diffs)
 2. Show YOUR recommended commit grouping with:
    - Commit message (using conventional format)
