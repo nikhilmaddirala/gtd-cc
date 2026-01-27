@@ -45,7 +45,7 @@
     },
     {
       "name": "monorepo-git",
-      "description": "Git operations for monorepos with subtree management. Daily development (commit/push) separate from curated subtree publishing.",
+      "description": "Task-driven development with worktree isolation, plus subtree publishing. Two skills: mg-main (main worktree) and mg-dev (feature worktree).",
       "source": "./plugins/monorepo-git"
     }
   ]

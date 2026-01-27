@@ -1,11 +1,17 @@
 {
   "name": "monorepo-git",
-  "version": "1.0.0",
-  "description": "Git operations for monorepos with subtree management. Daily development (commit/push) separate from curated subtree publishing.",
+  "version": "2.0.0",
+  "description": "Task-driven development with worktree isolation, plus subtree publishing. Two skills: mg-main (main worktree) and mg-dev (feature worktree).",
   "author": {
     "name": "Nikhil Maddirala"
   },
   "commands": [
+    "./commands/mg-main-task.md",
+    "./commands/mg-main-list.md",
+    "./commands/mg-main-start.md",
+    "./commands/mg-main-merge.md",
+    "./commands/mg-dev-work.md",
+    "./commands/mg-dev-finish.md",
     "./commands/mg-commit.md",
     "./commands/mg-push.md",
     "./commands/mg-status.md",
@@ -18,6 +24,7 @@
     "./agents/mg-publish-agent.md"
   ],
   "skills": [
-    "./skills/monorepo-git"
+    "./skills/mg-main",
+    "./skills/mg-dev"
   ]
 }

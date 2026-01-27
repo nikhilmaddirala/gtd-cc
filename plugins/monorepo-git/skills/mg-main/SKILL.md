@@ -1,27 +1,36 @@
 ---
-name: monorepo-git
-description: This skill should be used when the user asks to "commit my changes", "push changes", "git status", "publish subtrees", "subtree status", or any git operations in a monorepo with subtrees. Handles intelligent commits, monorepo pushes, and curated subtree publishing.
+name: mg-main
+description: Main worktree skill for task management, git operations, and subtree publishing. Use when in main worktree (not .worktrees/*). Triggers on "create task", "list tasks", "start task", "commit", "push", "status", "publish subtrees".
 ---
 
-# Monorepo Git
+# mg-main
 
 ## Overview
 
-This skill manages git operations for monorepos with subtree awareness. It separates daily development (high velocity) from subtree publishing (curated).
-
-The monorepo is always the source of truth. Changes flow outward: commit to monorepo first, publish to subtrees when ready.
+Main worktree skill. Handles task management, git operations, and subtree publishing. For feature worktrees, see `mg-dev` skill.
 
 ## Context
 
-User wants to perform git operations in a monorepo. This may be:
-- Daily operations: commit, push (monorepo only), status
+User is in the main worktree and wants to:
+- Task management: create, list, start working on tasks
+- Daily git: commit, push, status
 - Subtree publishing: check divergence, publish to selected subtrees
-- Subtree management: add, list, pull, move, remove subtrees
 - Project lifecycle: graduate projects from lab to production
 
 ## Sub-skills
 
 CRITICAL: Load the appropriate sub-skill from `sub-skills/` based on user intent.
+
+### Task management
+
+- **task.md**: Create, list, update tasks
+  - Triggers: "create task", "new task", "list tasks", "show tasks"
+
+- **start.md**: Plan task and create worktree
+  - Triggers: "start task", "work on task", "begin task 042"
+
+- **merge.md**: Merge feature branch and cleanup worktree
+  - Triggers: "merge task", "finish task 042", "merge and cleanup"
 
 ### Daily development
 
