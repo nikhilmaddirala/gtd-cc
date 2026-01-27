@@ -1,13 +1,13 @@
 ---
 name: mg-main-task
-description: Create, list, or update tasks in the PARA task directory
+description: Create, list, or update tasks as GitHub Issues
 ---
 
 # Task Management
 
 ## Overview
 
-This command manages tasks stored in `30-para/tasks/`.
+This command manages tasks stored as GitHub Issues with standard labels.
 
 CRITICAL: You MUST use the mg-main skill's `task` sub-skill for this task.
 
@@ -21,7 +21,7 @@ If the user has provided any additional context, pass that into the skill invoca
 
 1. Load the mg-main skill's `task` sub-skill
 2. Determine operation from user input:
-   - No args or "list" → list tasks
-   - Description text → create new task
-   - Task ID → show or update task
+   - No args or "list" → list issues by status
+   - Description text → create new issue
+   - Issue number → show or update issue
 3. Execute the appropriate operation

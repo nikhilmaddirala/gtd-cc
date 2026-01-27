@@ -1,27 +1,27 @@
 ---
 name: mg-main-merge
-description: Merge a feature branch to main and cleanup the worktree
+description: Merge a PR via GitHub and cleanup the worktree
 ---
 
-# Merge Task
+# Merge Issue
 
 ## Overview
 
-This command merges a completed feature branch and cleans up.
+This command merges a completed PR and cleans up the worktree.
 
 CRITICAL: You MUST use the mg-main skill's `merge` sub-skill for this task.
 
 
 ## Context
 
-User provides task ID. Pass to skill invocation: $ARGUMENTS
+User provides issue number. Pass to skill invocation: $ARGUMENTS
 
 
 ## Process
 
 1. Load the mg-main skill's `merge` sub-skill
 2. Execute the merge workflow:
-   - Merge feature branch to main
-   - Remove worktree and branch
-   - Update task status to done
+   - Find and merge PR via `gh pr merge`
+   - Remove worktree and local branch
+   - Issue auto-closes via "Closes #N" in PR
 3. Suggest push and publish

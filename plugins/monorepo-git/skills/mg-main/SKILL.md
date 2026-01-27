@@ -1,18 +1,18 @@
 ---
 name: mg-main
-description: Main worktree skill for task management, git operations, and subtree publishing. Use when in main worktree (not .worktrees/*). Triggers on "create task", "list tasks", "start task", "commit", "push", "status", "publish subtrees".
+description: Main worktree skill for issue management, git operations, and subtree publishing. Use when in main worktree (not .worktrees/*). Triggers on "create task", "list tasks", "start task", "commit", "push", "status", "publish subtrees".
 ---
 
 # mg-main
 
 ## Overview
 
-Main worktree skill. Handles task management, git operations, and subtree publishing. For feature worktrees, see `mg-dev` skill.
+Main worktree skill. Handles issue management via GitHub Issues, git operations, and subtree publishing. For feature worktrees, see `mg-dev` skill.
 
 ## Context
 
 User is in the main worktree and wants to:
-- Task management: create, list, start working on tasks
+- Issue management: create, list, start working on issues
 - Daily git: commit, push, status
 - Subtree publishing: check divergence, publish to selected subtrees
 - Project lifecycle: graduate projects from lab to production
@@ -21,16 +21,19 @@ User is in the main worktree and wants to:
 
 CRITICAL: Load the appropriate sub-skill from `sub-skills/` based on user intent.
 
-### Task management
+### Issue management
 
-- **task.md**: Create, list, update tasks
+- **task.md**: Create, list, update issues via GitHub
   - Triggers: "create task", "new task", "list tasks", "show tasks"
+  - Uses: `gh issue create`, `gh issue list`, `gh issue edit`
 
-- **start.md**: Plan task and create worktree
-  - Triggers: "start task", "work on task", "begin task 042"
+- **start.md**: Plan issue and create worktree
+  - Triggers: "start task", "work on issue", "begin issue 42"
+  - Posts plan as issue comment, creates `.worktrees/issue-{N}`
 
-- **merge.md**: Merge feature branch and cleanup worktree
-  - Triggers: "merge task", "finish task 042", "merge and cleanup"
+- **merge.md**: Merge PR and cleanup worktree
+  - Triggers: "merge task", "finish issue 42", "merge and cleanup"
+  - Uses: `gh pr merge --squash`, auto-closes issue via "Closes #N"
 
 ### Daily development
 
@@ -76,6 +79,7 @@ CRITICAL: Load the appropriate sub-skill from `sub-skills/` based on user intent
 ## Resources
 
 - **sub-skills/**: Individual operation workflows
+- **_common/labels.md**: GitHub label definitions
 - **resources/templates/config.example.yaml**: Configuration template
 
 ## Guidelines
@@ -87,6 +91,15 @@ CRITICAL: Load the appropriate sub-skill from `sub-skills/` based on user intent
 - For "commit and push" requests, run commit then push sequentially
 
 ## Appendix
+
+### Label schema
+
+Issues use standard labels for workflow tracking:
+- Status: `status-todo`, `status-planning`, `status-doing`, `status-review`, `status-done`
+- Priority: `priority-p1` through `priority-p4`
+- Size: `size-xs`, `size-s`, `size-m`, `size-l`, `size-xl` (t-shirt sizing)
+
+Run `/mg-repo-setup` to create labels in a new repository.
 
 ### Configuration
 

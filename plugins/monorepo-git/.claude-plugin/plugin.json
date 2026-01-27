@@ -1,11 +1,12 @@
 {
   "name": "monorepo-git",
-  "version": "2.0.0",
-  "description": "Task-driven development with worktree isolation, plus subtree publishing. Two skills: mg-main (main worktree) and mg-dev (feature worktree).",
+  "version": "3.0.0",
+  "description": "Issue-driven development with worktree isolation. Tasks stored as GitHub Issues with standard labels. Two skills: mg-main (main worktree) and mg-dev (feature worktree).",
   "author": {
     "name": "Nikhil Maddirala"
   },
   "commands": [
+    "./commands/mg-repo-setup.md",
     "./commands/mg-main-task.md",
     "./commands/mg-main-list.md",
     "./commands/mg-main-start.md",

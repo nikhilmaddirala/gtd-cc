@@ -1,13 +1,13 @@
 ---
 name: mg-main-list
-description: List tasks by status, project, or priority
+description: List GitHub Issues by status, project, or priority
 ---
 
 # List Tasks
 
 ## Overview
 
-This command lists tasks from `30-para/tasks/`.
+This command lists tasks from GitHub Issues.
 
 CRITICAL: You MUST use the mg-main skill's `task` sub-skill for this task.
 
@@ -20,5 +20,5 @@ If the user has provided any additional context (filters), pass that into the sk
 ## Process
 
 1. Load the mg-main skill's `task` sub-skill
-2. List tasks, applying any filters from arguments
-3. Display table: ID, title, status, priority
+2. List issues using: `gh issue list --label "status-todo" --json number,title,labels`
+3. Display table: #, title, status, priority
