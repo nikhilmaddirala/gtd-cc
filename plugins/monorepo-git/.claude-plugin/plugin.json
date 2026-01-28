@@ -21,9 +21,6 @@
     "./commands/mg-subtree.md",
     "./commands/mg-graduate.md"
   ],
-  "agents": [
-    "./agents/mg-publish-agent.md"
-  ],
   "skills": [
     "./skills/mg-main",
     "./skills/mg-dev"

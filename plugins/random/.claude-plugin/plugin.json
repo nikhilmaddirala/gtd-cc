@@ -6,14 +6,20 @@
     "name": "Nikhil Maddirala"
   },
   "commands": [
-    "./commands/system-check.md"
+    "./commands/random-backlog.md",
+    "./commands/random-browser.md",
+    "./commands/random-catppuccin.md",
+    "./commands/random-langfuse.md",
+    "./commands/random-secrets.md",
+    "./commands/random-system-check.md"
   ],
   "agents": [],
   "skills": [
     "./skills/backlog-md-skill",
     "./skills/browser-automation",
     "./skills/catppuccin-port-creation",
-    "./skills/system-diagnostics",
-    "./skills/langfuse-cli"
+    "./skills/langfuse-cli",
+    "./skills/secrets-management",
+    "./skills/system-diagnostics"
   ]
 }

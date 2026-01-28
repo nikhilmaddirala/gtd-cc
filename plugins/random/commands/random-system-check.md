@@ -1,5 +1,5 @@
 ---
-name: system-check
+name: random-system-check
 description: Interactive system resource diagnostics for memory, disk, CPU, and performance issues
 ---
 
