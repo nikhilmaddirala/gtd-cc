@@ -1,18 +1,9 @@
 ---
 name: gh-merge
-description: Executes final merge operations and cleanup
+description: Merge PR via GitHub and cleanup the worktree
 ---
 
-# Merge and Cleanup
+# Merge task
 
-## Overview
-
-This command executes final merge operations and cleanup using the gh-manage skill. CRITICAL: You MUST use the gh-manage skill for this task.
-
-## Context
-
-User will provide an issue number via $ARGUMENTS. If not provided, recent issues with "status-implementation-done" label will be shown for selection.
-
-## Process
-
-Load the gh-manage skill first. Follow its `merge` workflow exactly as written to squash-merge the PR to main, close the issue and PR, delete the branch, remove the worktree, and complete cleanup activities.
+- Use the github skill and its merge sub-skill to merge the PR and cleanup. CRITICAL: you MUST invoke the github skill.
+- If the user has provided any additional context, pass that into the skill invocation. Here is the context provided by the user: $ARGUMENTS

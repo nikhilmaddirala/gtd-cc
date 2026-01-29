@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "github",
-      "description": "Autonomous GitHub workflow automation with issue planning, code building, review coordination, and merge management",
+      "description": "Issue-driven development with worktree isolation. 5-stage pipeline: new, plan, work, review, merge.",
       "source": "./plugins/github"
     },
     {
@@ -45,7 +45,7 @@
     },
     {
       "name": "monorepo-git",
-      "description": "Task-driven development with worktree isolation, plus subtree publishing. Two skills: mg-main (main worktree) and mg-dev (feature worktree).",
+      "description": "Git operations for monorepo workflows. Conventional commits, subtree publishing, and project graduation.",
       "source": "./plugins/monorepo-git"
     }
   ]

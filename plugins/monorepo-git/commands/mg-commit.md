@@ -3,24 +3,7 @@ name: mg-commit
 description: Analyze changes and create logical commits with conventional format
 ---
 
-# Commit Changes
+# Commit changes
 
-## Overview
-
-This command guides you through committing changes interactively.
-
-CRITICAL: You MUST use the monorepo-git skill (commit sub-skill) for this task.
-
-## Context
-
-If the user has provided any additional context, pass that into the skill invocation: $ARGUMENTS
-
-## Process
-
-1. Load the monorepo-git skill's `commit` sub-skill
-2. Execute the commit workflow:
-   - Check status and analyze changes
-   - Group changes logically
-   - Present commit plan for approval
-   - Execute commits after approval
-3. Offer to push when done
+- Use the monorepo-git skill and its commit sub-skill to analyze and commit changes. CRITICAL: you MUST invoke the monorepo-git skill.
+- If the user has provided any additional context, pass that into the skill invocation. Here is the context provided by the user: $ARGUMENTS

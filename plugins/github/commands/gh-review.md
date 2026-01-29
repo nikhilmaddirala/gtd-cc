@@ -1,18 +1,9 @@
 ---
 name: gh-review
-description: Performs code reviews focusing on compliance and quality
+description: Review the PR for correctness, identifying merge blockers vs nice-to-haves
 ---
 
-# Code Review
+# Review PR
 
-## Overview
-
-This command guides you through performing code reviews using the gh-manage skill. CRITICAL: You MUST use the gh-manage skill for this task.
-
-## Context
-
-User will provide a PR number or issue number via $ARGUMENTS. If not provided, recent open PRs will be shown for selection.
-
-## Process
-
-Load the gh-manage skill first. Follow its `review` workflow exactly as written to perform a comprehensive code review focusing on compliance with requirements, code quality, security, and architectural alignment.
+- Use the github skill and its review sub-skill to review the PR. CRITICAL: you MUST invoke the github skill.
+- If the user has provided any additional context, pass that into the skill invocation. Here is the context provided by the user: $ARGUMENTS
