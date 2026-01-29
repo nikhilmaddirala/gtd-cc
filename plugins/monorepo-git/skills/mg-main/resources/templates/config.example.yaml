@@ -13,6 +13,26 @@ subtree_remote_prefix: "remote-"
 # Default: "main"
 default_branch: "main"
 
+# Subtree mappings (REQUIRED for publish/status)
+# -----------------------------------------------
+# Explicit remote-to-directory mappings. This is the source of truth for
+# which monorepo directory corresponds to which subtree remote.
+# Without this, the plugin cannot reliably determine which prefix to use
+# for `git subtree push`, risking pushing wrong content to remotes.
+#
+# subtrees:
+#   remote-project-a:
+#     prefix: "path/to/project-a"
+#   remote-project-b:
+#     prefix: "path/to/project-b"
+#
+# Example:
+# subtrees:
+#   remote-gtd-cc:
+#     prefix: "40-code/41-public/gtd-cc"
+#   remote-dragonix:
+#     prefix: "40-code/42-private/dragonix"
+
 # Directory structure for graduate workflow
 # -----------------------------------------
 # These paths are used by /mg-graduate to suggest source and target directories.

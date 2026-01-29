@@ -82,8 +82,11 @@ git remote -v | grep "remote-"
 
 2. Map to directories
 
+Read `.monorepo-git.yaml` from repo root for `subtrees:` mappings (preferred). If no config, fall back to git history:
+
 ```bash
-git log --all --grep="git-subtree-dir:" --pretty=format:"%s"
+# Extract from commit BODY (%B, not %s) — git-subtree-dir is in the body
+git log --all --grep="git-subtree-dir:" --pretty=format:"%B" | grep "git-subtree-dir:" | sort -u
 ```
 
 3. Present as table

@@ -108,6 +108,14 @@ The skill reads `.monorepo-git.yaml` from repo root if present:
 ```yaml
 subtree_remote_prefix: "remote-"  # Default
 default_branch: "main"            # Default
+
+# Explicit remote-to-directory mappings (REQUIRED for safe publishing)
+subtrees:
+  remote-project-a:
+    prefix: "path/to/project-a"
+  remote-project-b:
+    prefix: "path/to/project-b"
+
 directories:                      # For graduate workflow
   lab: "path/to/lab"
   public: "path/to/public"
@@ -120,7 +128,12 @@ Subtree remotes are detected by pattern matching on `git remote -v`:
 - Pattern: `remote-*` (configurable via `subtree_remote_prefix`)
 - Example: `remote-project-a` corresponds to a subtree
 
-Directory mapping is determined from git history by searching for `git-subtree-dir:` patterns in commit messages.
+Directory mapping uses this lookup order:
+- Config file: `subtrees.<remote-name>.prefix` in `.monorepo-git.yaml` (preferred)
+- Git history fallback: search commit bodies (`%B`) for `git-subtree-dir:` patterns
+- If neither resolves: STOP and ask the user. Never guess.
+
+CRITICAL: using the wrong prefix in `git subtree push` can push entire monorepo content to a subtree remote. Always verify the prefix before pushing.
 
 ### Conventional commits
 

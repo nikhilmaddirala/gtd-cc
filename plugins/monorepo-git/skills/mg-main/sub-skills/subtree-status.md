@@ -24,12 +24,20 @@ List all remotes matching the subtree pattern (default: `remote-*`).
 
 ### 2. Map remotes to directories
 
-For each subtree remote, find its directory:
+CRITICAL: You must determine the correct directory prefix for each remote. Use this lookup order:
+
+**Step 1 - Config file (preferred):** Read `.monorepo-git.yaml` from repo root. Look up the remote name under the `subtrees:` key to get its `prefix:` value.
+
+**Step 2 - Git history fallback:** Extract from commit bodies (NOT subjects):
 
 ```bash
-# Search commit history for subtree directory mapping
-git log --all --grep="git-subtree-dir:" --pretty=format:"%s" | grep "remote-name"
+# Extract directory from subtree merge commit BODY (%B, not %s)
+git log --all --grep="git-subtree-dir:" --pretty=format:"%B" | grep "git-subtree-dir:" | sort -u
 ```
+
+Then match `remote-project-a` to the path ending in `project-a/`.
+
+**Step 3 - If neither works:** STOP and ask the user to provide mappings or create `.monorepo-git.yaml`.
 
 ### 3. Check sync status for each subtree
 

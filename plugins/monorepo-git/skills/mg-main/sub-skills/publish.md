@@ -32,19 +32,43 @@ git remote -v | grep "remote-"
 
 Identify all subtree remotes (pattern: `remote-*` or configured prefix).
 
-### 3. Check pending changes per subtree
+### 3. Resolve directory for each subtree remote
 
-For each subtree remote, find its directory and check pending commits:
+CRITICAL: You must determine the correct `--prefix` for each remote. A wrong prefix means pushing wrong content to the remote (potential data leak).
+
+Use this lookup order:
+
+**Step 1 - Config file (preferred):** Read `.monorepo-git.yaml` from repo root. Look up the remote name under the `subtrees:` key to get its `prefix:` value.
+
+```yaml
+# .monorepo-git.yaml
+subtrees:
+  remote-project-a:
+    prefix: "path/to/project-a"
+```
+
+**Step 2 - Git history fallback:** If no config exists, extract the mapping from commit bodies (NOT subjects):
 
 ```bash
-# Find directory from git history
-git log --all --grep="git-subtree-dir:" --pretty=format:"%s" | grep -E "remote-name"
+# Extract directory from subtree merge commit BODY (%B, not %s)
+git log --all --grep="git-subtree-dir:" --pretty=format:"%B" | grep "git-subtree-dir:" | sort -u
+# Output example: git-subtree-dir: 40-code/41-public/project-a
+```
 
+Then match the remote name to a directory by convention: `remote-project-a` corresponds to a path ending in `project-a/`. If the match is ambiguous, STOP and ask the user to confirm the mapping.
+
+**Step 3 - If neither works:** STOP. Do NOT guess. Ask the user to create `.monorepo-git.yaml` with explicit mappings or provide the prefix manually.
+
+NEVER fall back to `git push remote-name main` — that pushes the entire monorepo history to the remote.
+
+### 4. Check pending changes per subtree
+
+```bash
 # Check pending commits for that directory
 git log --oneline remote-name/main..HEAD -- path/to/directory/
 ```
 
-### 4. Present interactive selection
+### 5. Present interactive selection
 
 Display subtrees with pending changes:
 
@@ -70,7 +94,7 @@ Which to publish? (1,2,3,all,none):
 
 Wait for user selection.
 
-### 5. Publish selected subtrees
+### 6. Publish selected subtrees
 
 For each selected subtree:
 
@@ -97,7 +121,7 @@ IMPORTANT: Use ONLY `git subtree push`. Never use `git subtree split` + `git pus
 
 If push fails with "creates a split": No changes for this subtree, skip it.
 
-### 6. Summary
+### 7. Summary
 
 After publishing, show results:
 
@@ -117,3 +141,5 @@ Skipped:
 - Handle conflicts gracefully with pull-first option
 - Use `--squash` on pulls to keep history clean
 - If no subtrees have changes, inform user and exit
+- NEVER use `git push remote-name main` for subtrees — this pushes the entire monorepo history. ALWAYS use `git subtree push --prefix=<directory> remote-name main`
+- If the prefix for a remote cannot be resolved, STOP and ask the user. Do not guess or skip the prefix.
