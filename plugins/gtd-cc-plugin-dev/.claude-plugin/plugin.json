@@ -1,6 +1,6 @@
 {
   "name": "gtd-cc-plugin-dev",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Guide for developing Claude Code plugins using gtd-cc architectural patterns",
   "author": {
     "name": "Nikhil Maddirala"
@@ -9,8 +9,6 @@
     "./commands/gtd-pl-create.md",
     "./commands/gtd-pl-update.md",
     "./commands/gtd-pl-validate.md",
-    "./commands/gtd-pl-skill.md",
-    "./commands/gtd-pl-repo.md",
     "./commands/gtd-pl-refactor.md"
   ],
   "agents": [],

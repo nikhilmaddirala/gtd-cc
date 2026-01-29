@@ -3,13 +3,11 @@ name: gtd-cc-plugin-dev
 description: Apply gtd-cc architectural patterns when developing Claude Code plugins. Use when creating or updating plugins for the gtd-cc marketplace.
 ---
 
-# gtd-cc Plugin Development
+# gtd-cc plugin development
 
 ## Overview
 
 This skill applies gtd-cc architectural patterns to Claude Code plugin development. It wraps the official plugin-dev plugin, which handles mechanics (creating files, manifests, validation). This skill adds the gtd-cc layer: thin wrappers, centralization, and marketplace conventions.
-
-CRITICAL: You MUST use the official plugin-dev plugin for plugin mechanics. This skill provides patterns and templates on top of plugin-dev.
 
 
 ## Context
@@ -21,60 +19,41 @@ User wants to create or update a plugin for the gtd-cc marketplace. They may hav
 
 This skill requires the official plugin-dev plugin to be installed. Before proceeding with any sub-skill:
 
-1. Check if the plugin-dev plugin is enabled:
-```sh
-zsh ❯ claude plugin list
-Installed plugins:
+- Check if plugin-dev is enabled via `claude plugin list`
+- If plugin-dev is NOT available, stop and tell the user:
+  ```
+  This skill requires the official plugin-dev toolkit. Please install it first:
+  claude plugin install plugin-dev@claude-plugins-official
 
-  ❯ gtd-cc-plugin-dev@gtd-cc
-    Version: 1.1.0
-    Scope: user
-    Status: ✔ enabled
+  Then retry your command.
+  ```
+- Only proceed when plugin-dev is confirmed available
 
-  ❯ plugin-dev@claude-plugins-official
-    Version: e30768372b41
-    Scope: project
-    Status: ✔ enabled
-```
-
-2. If plugin-dev is NOT available, stop and tell the user:
-   ```
-   This skill requires the official plugin-dev toolkit. Please install it first:
-   claude plugin install plugin-dev@claude-plugins-official
-
-   Then retry your command.
-   ```
-3. Only proceed when plugin-dev is confirmed available
-
-Note: For development reference, plugin-dev content is symlinked at `references/plugin-dev/` (local development only, not portable).
 
 
 ## Sub-skills
 
-CRITICAL: Load the appropriate sub-skill from `sub-skills/` when routing is needed. Each sub-skill wraps the official plugin-dev skill (let plugin-dev handle its own internal routing).
+Load the appropriate sub-skill from `sub-skills/` when routing is needed.
 
-- **create-new-plugin.md**: Create new gtd-cc marketplace plugin
-- **create-new-skill.md**: Create skill with gtd-cc patterns
-- **update-existing-plugin.md**: Add components to existing plugin
-- **validate-existing-plugins.md**: Validate gtd-cc patterns
-- **refactor-existing-plugin.md**: Refactor plugin to follow gtd-cc patterns while preserving functionality
-- **create-repo-plugin.md**: Create repository-specific `.claude/` automation
+- **create.md**: Create new plugin (marketplace or repo-local)
+- **update.md**: Add components or skills to existing plugin
+- **validate.md**: Validate plugins follow gtd-cc patterns
+- **refactor.md**: Refactor plugin to follow gtd-cc patterns
 
 
 ## Process
 
-1. Determine what the user needs (new plugin, new skill, validation, etc.)
-2. Load the appropriate sub-skill
-3. Follow sub-skill process, which will invoke plugin-dev for mechanics and apply gtd-cc patterns
+- Determine what the user needs (new plugin, new component, validation, refactoring)
+- Load the appropriate sub-skill
+- Follow sub-skill process, which invokes plugin-dev for mechanics and applies gtd-cc patterns
 
 
-## Guidelines
+## CRITICAL Guidelines
 
-- Use plugin-dev for mechanics, this skill for patterns
-- ALWAYS run plugin-dev:plugin-validator after creating or editing plugins
-- Commands and agents are thin wrappers - all logic lives in skills
-- Apply templates from `templates/` directory
-- Follow gtd-cc naming: plugin prefix pattern (gh-*, doc-*, ob-*)
+- Always use the official plugin-dev skill for plugin mechanics (file creation, manifests, validation, directory structure). Let plugin-dev handle its own internal routing. This skill only adds gtd-cc patterns on top.
+- Always run the validate sub-skill after create, update, or refactor operations. Validate can also be invoked standalone.
+- For any plugin changes, bump minor version in plugin.json (e.g., 1.0.0 → 1.1.0) - required for plugin cache to refresh
+- Keep each skill file as short as possible focusing only on what is essential. No boilerplate or common knowledge.
 
 
 ## Resources
@@ -100,17 +79,17 @@ Why this matters:
 - Skills are testable and documentable
 - Codebase is predictable - same pattern everywhere
 
-### gtd-cc naming conventions
+### Applying gtd-cc patterns to components
 
-Plugin prefix pattern - all component names are prefixed with the plugin abbreviation:
-- Plugin: `github` → Components: `gh-*`
-- Plugin: `documentation` → Components: `doc-*`
-- Plugin: `obsidian` → Components: `ob-*`
+After plugin-dev creates the mechanical structure, apply these patterns:
+- Restructure commands as thin wrappers using `templates/command.md`
+- Restructure agents as thin wrappers using `templates/agent.md`
+- Ensure skills follow `templates/SKILL.md` structure
+- Apply naming conventions: plugin prefix pattern (e.g., `github` → `gh-*`, `documentation` → `doc-*`)
 
 ### gtd-cc marketplace registration
 
 ```bash
-# Add plugin to marketplace manifest
 jq --arg name "$PLUGIN_NAME" \
    --arg path "plugins/$PLUGIN_NAME" \
    '.plugins += [{name: $name, path: $path}]' \

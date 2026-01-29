@@ -28,10 +28,10 @@ Requires the official plugin-dev plugin to be installed. This plugin wraps plugi
 Use the gtd-pl-* commands to create plugins with gtd-cc patterns:
 
 ```bash
-# Create a new plugin
+# Create a new plugin (marketplace or repo-local)
 /gtd-pl-create
 
-# Add components to existing plugin
+# Add components (commands, agents, skills) to existing plugin
 /gtd-pl-update
 
 # Validate plugins follow gtd-cc patterns
@@ -39,12 +39,6 @@ Use the gtd-pl-* commands to create plugins with gtd-cc patterns:
 
 # Refactor existing plugin to follow gtd-cc patterns
 /gtd-pl-refactor
-
-# Create a new skill
-/gtd-pl-skill
-
-# Create repository-specific automation
-/gtd-pl-repo
 ```
 
 
@@ -54,13 +48,21 @@ Use the gtd-pl-* commands to create plugins with gtd-cc patterns:
 
 ```
 gtd-cc-plugin-dev/
+├── .claude-plugin/plugin.json
+├── commands/
+│   ├── gtd-pl-create.md
+│   ├── gtd-pl-update.md
+│   ├── gtd-pl-validate.md
+│   └── gtd-pl-refactor.md
 ├── skills/
 │   └── gtd-cc-plugin-dev/
-│       ├── SKILL.md              # Main skill (routes to sub-skills)
-│       ├── sub-skills/           # Thin wrappers around plugin-dev
-│       ├── templates/            # gtd-cc templates
-│       └── references/
-│           └── plugin-dev -> [symlink]  # Official plugin-dev (local dev only)
+│       ├── SKILL.md                # Main skill (common patterns, routes to sub-skills)
+│       ├── sub-skills/
+│       │   ├── create.md           # New plugin (marketplace or repo-local)
+│       │   ├── update.md           # Add components to existing plugin
+│       │   ├── validate.md         # Validate gtd-cc patterns
+│       │   └── refactor.md         # Refactor plugin to gtd-cc patterns
+│       └── templates/              # gtd-cc templates
 └── README.md
 ```
 
@@ -80,12 +82,12 @@ gtd-cc-plugin-dev/
 - [x] Update main plugin README (this file)
 - [x] Rename to gtd-cc-plugin-dev to avoid confusion with official plugin-dev
 - [x] Add prerequisite check for plugin-dev availability
+- [x] Consolidate sub-skills and commands (6 → 4)
 - [ ] Migrate to official plugin dependencies when [Issue #9444](https://github.com/anthropics/claude-code/issues/9444) is implemented
 
 
 ## References
 
-- [Official plugin-dev plugin](skills/gtd-cc-plugin-dev/references/plugin-dev/) - symlinked for local development reference (not portable)
 - [Claude Code plugins documentation](https://docs.anthropic.com/en/docs/claude-code)
 - [Plugin dependencies feature request](https://github.com/anthropics/claude-code/issues/9444) - tracking official dependency support
 
