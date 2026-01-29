@@ -21,11 +21,26 @@ User wants to create or update a plugin for the gtd-cc marketplace. They may hav
 
 This skill requires the official plugin-dev plugin to be installed. Before proceeding with any sub-skill:
 
-1. Check if the plugin-dev plugin is available by looking for its skills (e.g., `plugin-dev:plugin-structure`, `plugin-dev:skill-development`) or agents (e.g., `plugin-dev:agent-creator`)
+1. Check if the plugin-dev plugin is enabled:
+```sh
+zsh ❯ claude plugin list
+Installed plugins:
+
+  ❯ gtd-cc-plugin-dev@gtd-cc
+    Version: 1.1.0
+    Scope: user
+    Status: ✔ enabled
+
+  ❯ plugin-dev@claude-plugins-official
+    Version: e30768372b41
+    Scope: project
+    Status: ✔ enabled
+```
+
 2. If plugin-dev is NOT available, stop and tell the user:
    ```
    This skill requires the official plugin-dev toolkit. Please install it first:
-   /plugin install plugin-dev@claude-code-plugins
+   claude plugin install plugin-dev@claude-plugins-official
 
    Then retry your command.
    ```
@@ -53,11 +68,6 @@ CRITICAL: Load the appropriate sub-skill from `sub-skills/` when routing is need
 3. Follow sub-skill process, which will invoke plugin-dev for mechanics and apply gtd-cc patterns
 
 
-## Resources
-
-- **templates/**: gtd-cc templates for skills, commands, agents, READMEs
-
-
 ## Guidelines
 
 - Use plugin-dev for mechanics, this skill for patterns
@@ -65,6 +75,11 @@ CRITICAL: Load the appropriate sub-skill from `sub-skills/` when routing is need
 - Commands and agents are thin wrappers - all logic lives in skills
 - Apply templates from `templates/` directory
 - Follow gtd-cc naming: plugin prefix pattern (gh-*, doc-*, ob-*)
+
+
+## Resources
+
+- **templates/**: gtd-cc templates for skills, commands, agents, READMEs
 
 
 ## Appendix
