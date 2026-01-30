@@ -10,7 +10,8 @@
     "./commands/gh-plan.md",
     "./commands/gh-work.md",
     "./commands/gh-review.md",
-    "./commands/gh-merge.md"
+    "./commands/gh-merge.md",
+    "./commands/gh-orchestrate.md"
   ],
   "skills": [
     "./skills/github"

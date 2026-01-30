@@ -33,6 +33,7 @@ Each command updates the issue status and suggests the next step.
 | `/gh-work` | Implement + draft PR | `status-implement` → `status-review` |
 | `/gh-review` | Review PR | stays `status-review` |
 | `/gh-merge` | Merge + cleanup | `status-review` → `status-done` |
+| `/gh-orchestrate` | Automated end-to-end pipeline | `status-plan` → `status-review` |
 
 ### Workflow example
 
@@ -80,7 +81,8 @@ github/
 │   ├── gh-plan.md
 │   ├── gh-work.md
 │   ├── gh-review.md
-│   └── gh-merge.md
+│   ├── gh-merge.md
+│   └── gh-orchestrate.md
 ├── skills/
 │   └── github/
 │       ├── SKILL.md
@@ -89,7 +91,8 @@ github/
 │       │   ├── plan.md
 │       │   ├── work.md
 │       │   ├── review.md
-│       │   └── merge.md
+│       │   ├── merge.md
+│       │   └── orchestrate.md
 │       └── templates/
 │           ├── issue.md
 │           ├── plan.md
@@ -100,8 +103,8 @@ github/
 
 ### Architecture
 
-- 1 skill (`github`) with 5 sub-skills mapping to pipeline stages
-- 5 thin wrapper commands that invoke the skill
+- 1 skill (`github`) with 6 sub-skills (5 pipeline stages + orchestrate)
+- 6 thin wrapper commands that invoke the skill
 - Templates consumed by sub-skills for consistent output formatting
 - All domain logic lives in sub-skills; commands are routing only
 

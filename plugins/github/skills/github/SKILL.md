@@ -41,6 +41,11 @@ Load the appropriate sub-skill from `sub-skills/` based on user intent.
   - Triggers: "merge", "merge task", "finish"
   - Status: `status-merge` → `status-done`
 
+- **orchestrate.md**: Automated end-to-end pipeline from main worktree
+  - Triggers: "orchestrate", "automate task", "run pipeline"
+  - Runs new + plan from main, launches subagent in worktree for work
+  - NEVER modifies code in main — all changes via worktree subagent
+
 ## Process
 
 - Determine which pipeline stage the user wants
