@@ -1,109 +1,323 @@
 ---
 name: content-extraction
-description: Specialized patterns for extracting structured content from documentation platforms and websites. Use when users need to extract API docs, tutorials, reference guides, or knowledge bases. Handles common documentation platforms like Docusaurus, GitBook, ReadTheDocs, and Sphinx sites.
-version: 0.2.0
-last_updated: 2025-01-26
+description: Extract documentation and content from websites. Supports Mintlify, Starlight/Astro, Docusaurus, GitBook, ReadTheDocs, Sphinx, and generic sites. Uses a tiered approach - try the simplest method first (direct curl, Jina AI Reader) before falling back to Crawl4AI for JS-heavy sites.
+version: 0.3.0
+last_updated: 2025-02-01
 ---
 
-# Content Extraction
+# Content extraction
 
 ## Overview
 
-This skill provides specialized patterns for extracting documentation from various platforms and formats. It automatically detects documentation structures, preserves code examples, and organizes content for optimal readability.
+This skill extracts documentation and website content as markdown files. It uses a tiered approach: try the simplest method first, fall back to heavier tools only when needed.
 
 
 ## Context
 
-User provides a documentation URL to extract. This skill is appropriate when:
-- Extracting API documentation, tutorials, or reference guides
-- Processing knowledge bases from platforms like Docusaurus, GitBook, ReadTheDocs, or Sphinx
-- Creating structured documentation archives with table of contents
+User provides a URL to extract content from. This skill is appropriate when:
+- Extracting documentation sites (API docs, tutorials, reference guides)
+- Crawling entire websites to markdown for offline reference
+- Archiving websites or generating sitemaps
 - Converting multi-page documentation to organized markdown
 
 
 ## Process
 
-1. Analyze URL to detect documentation platform (Docusaurus, GitBook, ReadTheDocs, Sphinx)
-2. Apply platform-specific CSS selectors and exclusion patterns
-3. Extract content while preserving structure, code blocks, and links
-4. For multi-page docs: discover navigation structure and batch extract
-5. Generate table of contents and organize sections
-6. Verification: Confirm code examples are intact and links are functional
+1. Discover all pages (llms.txt, sitemap XML, nav link extraction, or progressive crawling)
+2. Detect platform to choose extraction method
+3. Batch extract content using the simplest working method
+4. Organize output and verify results
 
 
-## Documentation Platform Detection
+## Page discovery (ordered by preference)
 
-### Platform-Specific Selectors
+Before extracting content, discover all pages on the site. Try these methods in order:
 
-**Docusaurus Sites**
-```python
-# Common Docusaurus patterns
-config = CrawlerRunConfig(
-    css_selector="article, .markdown, .theme-doc-markdown",
-    wait_for="css:article, .theme-doc-markdown",
-    exclude_tags=["nav", "footer", ".pagination", ".table-of-contents"]
-)
+### Method 1: llms.txt
+
+Some documentation platforms (notably Mintlify) serve an `llms.txt` file listing all pages:
+
+```bash
+# Check for llms.txt
+curl -sL "https://example.com/docs/llms.txt" -o /tmp/llms.txt
+head -20 /tmp/llms.txt
+
+# Extract all URLs
+grep -oE 'https://[^\s]+\.md' /tmp/llms.txt
 ```
 
-**GitBook Sites**
-```python
-# GitBook extraction
-config = CrawlerRunConfig(
-    css_selector=".gitbook-root, .page-body, .theme-doc",
-    exclude_tags=["nav", "header", ".sidebar", ".navigation"]
-)
+This is the most reliable method when available. It gives you every page URL immediately.
+
+### Method 2: sitemap XML
+
+Most documentation sites have a sitemap:
+
+```bash
+# Check common sitemap locations
+curl -sL "https://example.com/sitemap.xml" | head -20
+curl -sL "https://example.com/sitemap-index.xml" | head -20
+curl -sL "https://example.com/docs/sitemap-index.xml" | head -20
+curl -sL "https://example.com/docs/sitemap-0.xml" | head -20
+
+# Extract all URLs from sitemap
+curl -sL "https://example.com/sitemap-0.xml" | grep -oE 'https://[^<]+' | sort
 ```
 
-**ReadTheDocs Sites**
-```python
-# ReadTheDocs extraction
-config = CrawlerRunConfig(
-    css_selector=".document, .role-content, .bd-content",
-    exclude_tags=["nav", ".sidebar", ".toctree", ".related-topics"]
-)
+Starlight/Astro sites reliably have sitemaps. Look for `<link rel="sitemap">` in the HTML source.
+
+### Method 3: Jina AI Reader nav extraction
+
+Use Jina to render the page and extract sidebar/nav links:
+
+```bash
+curl -sL "https://r.jina.ai/https://example.com/docs/" -o /tmp/nav.md
+grep -oE '/docs/[a-z0-9/-]+' /tmp/nav.md | sort -u
 ```
 
-**Sphinx Documentation**
-```python
-# Sphinx-based sites
-config = CrawlerRunConfig(
-    css_selector=".document, .body, .section",
-    exclude_tags=["nav", ".related", ".sphinxsidebar", ".toctree-wrapper"]
-)
+### Method 4: progressive crawling (Crawl4AI)
+
+For sites where the above methods fail, use Crawl4AI to discover pages by following links. See the "Advanced: Crawl4AI" section below.
+
+
+## Platform detection and extraction
+
+### Mintlify sites (Anthropic, Stripe, many API docs)
+
+Mintlify serves raw markdown when you append `.md` to any page URL. This is the ideal case: zero dependencies, clean output, no nav/footer noise.
+
+**Detection:**
+- `llms.txt` exists
+- Appending `.md` to a URL returns markdown (not HTML)
+
+**Extraction:**
+```bash
+# Test: does the .md URL return markdown?
+curl -sL "https://example.com/docs/en/overview.md" | head -5
+
+# If it starts with markdown (# heading, etc.), use direct curl for all pages:
+OUT="./output"
+mkdir -p "$OUT"
+
+pages=(overview quickstart setup cli-reference)  # from llms.txt
+
+for page in "${pages[@]}"; do
+  curl -sL "https://example.com/docs/en/${page}.md" -o "${OUT}/${page}.md" &
+done
+wait
+
+# Verify
+ls -1 "$OUT" | wc -l
+find "$OUT" -name "*.md" -size 0  # check for empty files
+du -sh "$OUT"
 ```
 
-## Universal Documentation Extraction
+### Starlight/Astro sites (OpenCode, many OSS projects)
 
-### Auto-Detection Pattern
+Starlight renders HTML server-side. Use Jina AI Reader to convert to markdown.
+
+**Detection:**
+- HTML contains `Starlight` or `astro` in meta tags / generator
+- Has `sitemap-index.xml`
+
+**Extraction:**
+```bash
+# Discover pages via sitemap
+curl -sL "https://example.com/docs/sitemap-0.xml" | grep -oE 'https://[^<]+' > /tmp/urls.txt
+
+OUT="./output"
+mkdir -p "$OUT"
+
+# Batch download via Jina (rate limit: max 5 concurrent)
+while read url; do
+  slug=$(echo "$url" | sed 's|.*/docs/||; s|/$||; s|/|-|g')
+  [ -z "$slug" ] && slug="index"
+  curl -sL "https://r.jina.ai/${url}" -o "${OUT}/${slug}.md" &
+
+  running=$(jobs -r | wc -l)
+  if [ "$running" -ge 5 ]; then
+    wait -n
+  fi
+done < /tmp/urls.txt
+wait
+```
+
+Note: Jina output includes nav/sidebar noise. For reference docs this is acceptable. For cleaner output, use Crawl4AI with CSS selectors.
+
+### Docusaurus, GitBook, ReadTheDocs, Sphinx
+
+These platforms render HTML. Use Jina as the first attempt; fall back to Crawl4AI if Jina output is too noisy.
+
+**Platform-specific CSS selectors (for Crawl4AI fallback):**
+
+| Platform | Content selector | Exclude |
+|----------|-----------------|---------|
+| Docusaurus | `article, .markdown, .theme-doc-markdown` | `nav, footer, .pagination, .table-of-contents` |
+| GitBook | `.gitbook-root, .page-body, .theme-doc` | `nav, header, .sidebar, .navigation` |
+| ReadTheDocs | `.document, .role-content, .bd-content` | `nav, .sidebar, .toctree, .related-topics` |
+| Sphinx | `.document, .body, .section` | `nav, .related, .sphinxsidebar, .toctree-wrapper` |
+
+### Generic sites
+
+Try methods in this order:
+1. Check for `llms.txt` or `.md` URL suffix
+2. Check for sitemap XML
+3. Use Jina AI Reader
+4. Fall back to Crawl4AI
+
+
+## Complete workflow examples
+
+### Example 1: Mintlify docs (simplest case)
+
+```bash
+# 1. Discover pages
+curl -sL "https://code.claude.com/docs/llms.txt" -o /tmp/llms.txt
+grep -oE 'https://[^\s]+\.md' /tmp/llms.txt > /tmp/urls.txt
+
+# 2. Extract page names
+sed 's|.*/en/||; s|\.md||' /tmp/urls.txt > /tmp/pages.txt
+
+# 3. Batch download
+OUT="./claude-code-docs"
+mkdir -p "$OUT"
+
+while read page; do
+  curl -sL "https://code.claude.com/docs/en/${page}.md" -o "${OUT}/${page}.md" &
+done < /tmp/pages.txt
+wait
+
+# 4. Verify
+echo "$(ls -1 "$OUT"/*.md | wc -l) files, $(du -sh "$OUT" | cut -f1)"
+find "$OUT" -name "*.md" -size 0 -exec echo "EMPTY: {}" \;
+```
+
+### Example 2: Starlight/Astro docs (Jina approach)
+
+```bash
+# 1. Discover pages via sitemap
+curl -sL "https://opencode.ai/docs/sitemap-index.xml"  # find sitemap URL
+curl -sL "https://opencode.ai/docs/sitemap-0.xml" | grep -oE 'https://[^<]+' > /tmp/urls.txt
+
+# 2. Batch download via Jina (throttled)
+OUT="./opencode-docs"
+mkdir -p "$OUT"
+
+while read url; do
+  slug=$(echo "$url" | sed 's|.*/docs/||; s|/$||; s|/|-|g')
+  [ -z "$slug" ] && slug="index"
+  curl -sL "https://r.jina.ai/${url}" -o "${OUT}/${slug}.md" &
+  running=$(jobs -r | wc -l)
+  [ "$running" -ge 5 ] && wait -n
+done < /tmp/urls.txt
+wait
+
+# 3. Verify
+echo "$(ls -1 "$OUT"/*.md | wc -l) files, $(du -sh "$OUT" | cut -f1)"
+```
+
+### Example 3: full site crawl to markdown (Crawl4AI)
+
+For sites that need JavaScript rendering or where simpler methods fail:
+
+```bash
+# Quick CLI approach
+uvx crawl4ai crawl \
+  --url "https://example.com" \
+  --output-dir "output/example-com-$(date +%Y%m%d-%H%M%S)" \
+  --max-depth 3 \
+  --format markdown
+```
+
+Python implementation for more control:
+
 ```python
 import asyncio
+import os
+from pathlib import Path
+from datetime import datetime
 from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
-from crawl4ai.content_filter_strategy import BM25ContentFilter
-from crawl4ai.markdown_generation_strategy import DefaultMarkdownGenerator
+from urllib.parse import urljoin, urlparse
+
+async def crawl_to_markdown(base_url, output_dir, max_depth=3):
+    """Crawl entire website and save as markdown files"""
+
+    base_domain = urlparse(base_url).netloc
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    crawl_dir = Path(output_dir) / f"{base_domain}-{timestamp}"
+    crawl_dir.mkdir(parents=True, exist_ok=True)
+
+    visited = set()
+    queue = [(base_url, 0)]
+
+    async with AsyncWebCrawler() as crawler:
+        while queue and len(visited) < 100:
+            url, depth = queue.pop(0)
+
+            if url in visited or depth > max_depth:
+                continue
+
+            try:
+                result = await crawler.arun(
+                    url,
+                    config=CrawlerRunConfig(
+                        page_timeout=30000,
+                        remove_overlay_elements=True
+                    )
+                )
+
+                if result.success:
+                    path = urlparse(url).path
+                    if path.endswith('/') or path == '':
+                        path = path + 'index.md'
+                    else:
+                        path = path + '.md' if not path.endswith('.md') else path
+
+                    output_file = crawl_dir / path.lstrip('/')
+                    output_file.parent.mkdir(parents=True, exist_ok=True)
+
+                    with open(output_file, 'w', encoding='utf-8') as f:
+                        f.write(f"# {result.metadata.get('title', 'Page')}\n\n")
+                        f.write(str(result.markdown))
+
+                    visited.add(url)
+
+                    for link_info in result.links.get("internal", []):
+                        href = link_info.get("href", "")
+                        absolute_url = urljoin(base_url, href)
+                        if (absolute_url not in visited and
+                            not absolute_url.startswith('#') and
+                            absolute_url.startswith(base_url)):
+                            queue.append((absolute_url, depth + 1))
+
+            except Exception as e:
+                print(f"Failed: {url}: {e}")
+
+    print(f"Done: {len(visited)} pages saved to {crawl_dir}")
+    return crawl_dir
+```
+
+
+## Advanced: Crawl4AI patterns
+
+### Universal documentation extraction
+
+For sites where simple methods fail, use Crawl4AI with platform-aware selectors:
+
+```python
+from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 
 async def extract_documentation(url):
     """Universal documentation extractor with platform detection"""
 
-    # Comprehensive selectors for common doc platforms
     content_selectors = [
-        "article",                     # Generic articles
-        ".markdown",                   # Markdown content
-        ".theme-doc-markdown",         # Docusaurus
-        ".gitbook-root",               # GitBook
-        ".document",                   # ReadTheDocs/Sphinx
-        ".bd-content",                 # Bootstrap docs
-        ".page-body",                  # Generic page content
-        ".role-content",               # Sphinx roles
-        ".section",                    # Document sections
-        ".main-content",               # Common main content area
-        "[role='main']"                # ARIA main content
+        "article", ".markdown", ".theme-doc-markdown",
+        ".gitbook-root", ".document", ".bd-content",
+        ".page-body", ".role-content", ".section",
+        ".main-content", "[role='main']"
     ]
 
-    # Combine selectors with fallback
-    css_selector = ", ".join(content_selectors)
-
     config = CrawlerRunConfig(
-        css_selector=css_selector,
+        css_selector=", ".join(content_selectors),
         wait_for="css:article, .markdown, .document, [role='main']",
         remove_overlay_elements=True,
         exclude_tags=[
@@ -111,7 +325,6 @@ async def extract_documentation(url):
             ".sidebar", ".navigation", ".menu",
             ".table-of-contents", ".toc",
             ".pagination", ".breadcrumbs",
-            ".related-topics", ".suggestions",
             "script", "style", "noscript"
         ],
         page_timeout=45000
@@ -119,60 +332,22 @@ async def extract_documentation(url):
 
     async with AsyncWebCrawler() as crawler:
         result = await crawler.arun(url, config=config)
-
         if result.success:
-            return {
-                "content": str(result.markdown),
-                "metadata": result.metadata,
-                "platform": detect_platform(result.html),
-                "structure": analyze_doc_structure(str(result.markdown))
-            }
-        else:
-            raise Exception(f"Failed to extract documentation: {result.error_message}")
-
-def detect_platform(html_content):
-    """Detect documentation platform from HTML patterns"""
-    import re
-
-    if 'docusaurus' in html_content.lower():
-        return "docusaurus"
-    elif 'gitbook' in html_content.lower():
-        return "gitbook"
-    elif 'readthedocs' in html_content.lower() or 'sphinx' in html_content.lower():
-        return "readthedocs"
-    elif 'mkdocs' in html_content.lower():
-        return "mkdocs"
-    else:
-        return "unknown"
-
-def analyze_doc_structure(content):
-    """Analyze documentation structure for better organization"""
-    import re
-
-    structure = {
-        "headings": re.findall(r'^(#{1,6})\s+(.+)$', content, re.MULTILINE),
-        "code_blocks": re.findall(r'```(\w+)?\n(.*?)\n```', content, re.DOTALL),
-        "tables": len(re.findall(r'\|.*\|', content)),
-        "links": len(re.findall(r'\[([^\]]+)\]\(([^)]+)\)', content)),
-        "images": len(re.findall(r'!\[([^\]]*)\]\(([^)]+)\)', content))
-    }
-
-    return structure
+            return str(result.markdown)
 ```
 
-## Content Filtering for Documentation
+### Relevance-based filtering
 
-### Relevance-Based Extraction
 ```python
 from crawl4ai.content_filter_strategy import BM25ContentFilter
+from crawl4ai.markdown_generation_strategy import DefaultMarkdownGenerator
 
 async def extract_relevant_docs(url, focus_area):
     """Extract documentation focused on specific topics"""
 
-    # Create relevance filter
     bm25_filter = BM25ContentFilter(
         user_query=focus_area,
-        bm25_threshold=1.2,  # Higher threshold for focused extraction
+        bm25_threshold=1.2,
         include_tables=True,
         include_code=True
     )
@@ -180,10 +355,9 @@ async def extract_relevant_docs(url, focus_area):
     md_generator = DefaultMarkdownGenerator(
         content_filter=bm25_filter,
         options={
-            "ignore_links": False,  # Keep internal links for navigation
+            "ignore_links": False,
             "ignore_images": False,
-            "image_alt_text": True,
-            "code_block_format": "fenced"  # Ensure proper code formatting
+            "code_block_format": "fenced"
         }
     )
 
@@ -194,197 +368,41 @@ async def extract_relevant_docs(url, focus_area):
 
     async with AsyncWebCrawler() as crawler:
         result = await crawler.arun(url, config=config)
-
-        return {
-            "focused_content": str(result.markdown.fit_markdown),
-            "raw_content": str(result.markdown.raw_markdown),
-            "relevance_score": len(str(result.markdown.fit_markdown)) / len(str(result.markdown.raw_markdown))
-        }
+        return str(result.markdown.fit_markdown)
 ```
 
-### Section-Based Extraction
+### Batch extraction with concurrency
+
 ```python
-def extract_sections(content):
-    """Extract and organize documentation sections"""
-    import re
-
-    # Split by headers
-    sections = []
-    current_section = {"title": "Introduction", "level": 0, "content": []}
-
-    for line in content.split('\n'):
-        header_match = re.match(r'^(#{1,6})\s+(.+)$', line)
-
-        if header_match:
-            # Save current section
-            if current_section["content"]:
-                sections.append(current_section)
-
-            # Start new section
-            level = len(header_match.group(1))
-            title = header_match.group(2)
-            current_section = {
-                "title": title,
-                "level": level,
-                "content": [line]
-            }
-        else:
-            current_section["content"].append(line)
-
-    # Add final section
-    if current_section["content"]:
-        sections.append(current_section)
-
-    return sections
-
-async def extract_structured_docs(url):
-    """Extract documentation with section organization"""
+async def extract_complete_docs(urls, max_concurrent=3):
+    """Extract multiple pages concurrently"""
 
     config = CrawlerRunConfig(
         css_selector="article, .document, .markdown",
-        remove_overlay_elements=True
+        remove_overlay_elements=True,
+        page_timeout=30000
     )
 
-    async with AsyncWebCrawler() as crawler:
-        result = await crawler.arun(url, config=config)
-
-        if result.success:
-            content = str(result.markdown)
-            sections = extract_sections(content)
-
-            return {
-                "sections": sections,
-                "toc": generate_toc(sections),
-                "metadata": result.metadata
-            }
-
-def generate_toc(sections):
-    """Generate table of contents from sections"""
-    toc = []
-    for section in sections:
-        indent = "  " * (section["level"] - 1)
-        toc.append(f"{indent}- [{section['title']}](#{section['title'].lower().replace(' ', '-')})")
-    return "\n".join(toc)
-```
-
-## Multi-Page Documentation
-
-### Table of Contents Discovery
-```python
-async def discover_documentation_structure(base_url):
-    """Discover multi-page documentation structure"""
-
-    config = CrawlerRunConfig(
-        css_selector="nav, .sidebar, .toctree, .table-of-contents",
-        exclude_tags=["script", "style", "footer"]
-    )
-
-    async with AsyncWebCrawler() as crawler:
-        result = await crawler.arun(base_url, config=config)
-
-        if result.success:
-            # Extract navigation links
-            toc_links = []
-            for link_info in result.links.get("internal", []):
-                href = link_info.get("href", "")
-                text = link_info.get("text", "")
-
-                # Focus on documentation links
-                if any(keyword in href.lower() for keyword in ["docs", "guide", "tutorial", "api", "reference"]):
-                    toc_links.append({
-                        "url": href,
-                        "title": text,
-                        "type": categorize_link(href, text)
-                    })
-
-            return organize_links(toc_links)
-        else:
-            return []
-
-def categorize_link(url, text):
-    """Categorize documentation links"""
-    url_lower = url.lower()
-    text_lower = text.lower()
-
-    if any(kw in url_lower or kw in text_lower for kw in ["api", "reference"]):
-        return "api-reference"
-    elif any(kw in url_lower or kw in text_lower for kw in ["tutorial", "guide", "how-to"]):
-        return "tutorial"
-    elif any(kw in url_lower or kw in text_lower for kw in ["intro", "getting-started", "overview"]):
-        return "introduction"
-    else:
-        return "general"
-
-def organize_links(links):
-    """Organize links by category and hierarchy"""
-    organized = {
-        "introduction": [],
-        "tutorials": [],
-        "api-reference": [],
-        "general": []
-    }
-
-    for link in links:
-        category = link.pop("type")
-        if category == "tutorial":
-            organized["tutorials"].append(link)
-        else:
-            organized[category].append(link)
-
-    return organized
-```
-
-### Batch Documentation Extraction
-```python
-async def extract_complete_docs(base_url, max_pages=50):
-    """Extract complete documentation site"""
-
-    # First, discover structure
-    structure = await discover_documentation_structure(base_url)
-
-    # Collect all URLs
-    all_urls = [base_url]
-    for category_links in structure.values():
-        all_urls.extend(link["url"] for link in category_links)
-
-    # Remove duplicates and limit
-    unique_urls = list(dict.fromkeys(all_urls))[:max_pages]
-
-    # Convert to absolute URLs
-    from urllib.parse import urljoin
-    absolute_urls = [urljoin(base_url, url) if url.startswith('/') else url for url in unique_urls]
-
-    # Extract content from all pages
     async with AsyncWebCrawler() as crawler:
         results = await crawler.arun_many(
-            urls=absolute_urls,
-            config=CrawlerRunConfig(
-                css_selector="article, .document, .markdown",
-                remove_overlay_elements=True,
-                page_timeout=30000
-            ),
-            max_concurrent=3
+            urls=urls,
+            config=config,
+            max_concurrent=max_concurrent
         )
 
-        # Organize results
-        extracted_docs = {}
-        for i, result in enumerate(results):
+        extracted = {}
+        for result in results:
             if result.success:
-                url = absolute_urls[i]
-                sections = extract_sections(str(result.markdown))
-                extracted_docs[url] = {
-                    "sections": sections,
-                    "metadata": result.metadata,
-                    "structure": analyze_doc_structure(str(result.markdown))
-                }
+                extracted[result.url] = str(result.markdown)
 
-        return extracted_docs
+        return extracted
 ```
 
-## Specialized Extraction Patterns
+### API documentation extraction
 
-### API Documentation
 ```python
+from crawl4ai.extraction_strategy import JsonCssExtractionStrategy
+
 schema = {
     "name": "api_endpoints",
     "baseSelector": ".api-endpoint, .method, .endpoint",
@@ -409,142 +427,93 @@ async def extract_api_docs(url):
         return result.extracted_content
 ```
 
-### Tutorial Extraction
+
+## Advanced: intelligent crawling
+
+For sites that require link-following discovery (no sitemap, no llms.txt):
+
 ```python
-async def extract_tutorials(url):
-    """Extract tutorial content with step-by-step instructions"""
+class IntelligentCrawler:
+    def __init__(self, base_url, max_depth=5, max_pages=100):
+        self.base_url = base_url
+        self.base_domain = urlparse(base_url).netloc
+        self.max_depth = max_depth
+        self.max_pages = max_pages
+        self.visited = set()
+        self.queue = [(base_url, 0)]
 
-    # Focus on tutorial-specific elements
-    config = CrawlerRunConfig(
-        css_selector=".tutorial, .guide, .how-to, .steps",
-        wait_for="css:.step, .instruction, .tutorial-content",
-        remove_overlay_elements=True
-    )
+    async def crawl(self):
+        """Crawl with intelligent depth control and link prioritization"""
 
-    # Content filter for instructional content
-    bm25_filter = BM25ContentFilter(
-        user_query="tutorial steps instructions how to guide",
-        bm25_threshold=1.0
-    )
+        async with AsyncWebCrawler() as crawler:
+            while self.queue and len(self.visited) < self.max_pages:
+                url, depth = self.queue.pop(0)
 
-    md_generator = DefaultMarkdownGenerator(
-        content_filter=bm25_filter,
-        options={"ignore_links": False, "code_block_format": "fenced"}
-    )
+                if url in self.visited or depth > self.max_depth:
+                    continue
 
-    config.markdown_generator = md_generator
+                config = CrawlerRunConfig(
+                    page_timeout=30000,
+                    remove_overlay_elements=True,
+                    exclude_tags=["script", "style", "nav", "footer"]
+                )
 
-    async with AsyncWebCrawler() as crawler:
-        result = await crawler.arun(url, config=config)
+                try:
+                    result = await crawler.arun(url, config=config)
+                    if result.success:
+                        self.visited.add(url)
+                        yield url, str(result.markdown), result.metadata
 
-        if result.success:
-            content = str(result.markdown.fit_markdown)
-            return {
-                "content": content,
-                "steps": extract_tutorial_steps(content),
-                "code_examples": extract_code_examples(content)
-            }
+                        for link_info in result.links.get("internal", []):
+                            href = link_info.get("href", "")
+                            if self._is_valid(href):
+                                absolute = urljoin(self.base_url, href)
+                                if absolute not in self.visited:
+                                    priority = self._priority(href, link_info)
+                                    self.queue.append((absolute, depth + 1))
 
-def extract_tutorial_steps(content):
-    """Extract numbered steps or instructions"""
-    import re
+                except Exception as e:
+                    print(f"Failed: {url}: {e}")
 
-    step_patterns = [
-        r'^\d+\.\s+(.+)$',           # "1. Step description"
-        r'^\*\s+Step\s+\d+:?\s*(.+)$',  # "* Step 1: description"
-        r'^###\s+Step\s+\d+:?\s*(.+)$'  # "### Step 1: description"
-    ]
+                await asyncio.sleep(1)
 
-    steps = []
-    for line in content.split('\n'):
-        for pattern in step_patterns:
-            match = re.match(pattern, line.strip())
-            if match:
-                steps.append(match.group(1))
-                break
+    def _is_valid(self, href):
+        if href.startswith(('#', 'mailto:', 'tel:', 'javascript:')):
+            return False
+        skip = ['.pdf', '.jpg', '.png', '.gif', '.zip', '.exe']
+        return not any(href.lower().endswith(ext) for ext in skip)
 
-    return steps
-
-def extract_code_examples(content):
-    """Extract code examples from tutorial"""
-    import re
-
-    code_blocks = re.findall(r'```(\w+)?\n(.*?)\n```', content, re.DOTALL)
-
-    return [
-        {
-            "language": lang or "text",
-            "code": code.strip(),
-            "lines": len(code.split('\n'))
-        }
-        for lang, code in code_blocks
-    ]
+    def _priority(self, href, link_info):
+        text = (href + link_info.get("text", "")).lower()
+        if any(kw in text for kw in ["docs", "guide", "tutorial", "api"]):
+            return 10
+        return 5
 ```
 
-## Output Formatting
 
-### Structured Documentation Output
+## Sitemap generation
+
+After crawling, generate a sitemap for navigation:
+
 ```python
-def format_documentation_output(extracted_docs, output_format="markdown"):
-    """Format extracted documentation for different use cases"""
-
-    if output_format == "structured":
-        return {
-            "summary": generate_summary(extracted_docs),
-            "table_of_contents": generate_master_toc(extracted_docs),
-            "content": extracted_docs,
-            "metadata": {
-                "total_pages": len(extracted_docs),
-                "total_sections": sum(len(doc["sections"]) for doc in extracted_docs.values())
-            }
-        }
-
-    elif output_format == "single-file":
-        # Combine all documentation into single markdown file
-        combined_content = []
-        combined_content.append("# Complete Documentation\n")
-        combined_content.append(generate_master_toc(extracted_docs))
-        combined_content.append("---\n")
-
-        for url, doc in extracted_docs.items():
-            combined_content.append(f"## {doc['metadata'].get('title', url)}\n")
-            for section in doc["sections"]:
-                combined_content.extend(section["content"])
-            combined_content.append("\n---\n")
-
-        return "\n".join(combined_content)
-
-    else:  # markdown default
-        return extracted_docs
-
-def generate_summary(extracted_docs):
-    """Generate summary of extracted documentation"""
-
-    total_pages = len(extracted_docs)
-    api_pages = sum(1 for doc in extracted_docs.values()
-                   if "api" in doc["metadata"].get("title", "").lower())
-    tutorial_pages = sum(1 for doc in extracted_docs.values()
-                        if "tutorial" in doc["metadata"].get("title", "").lower() or
-                           "guide" in doc["metadata"].get("title", "").lower())
-
-    return {
-        "pages_extracted": total_pages,
-        "api_documentation": api_pages,
-        "tutorials_guides": tutorial_pages,
-        "other_pages": total_pages - api_pages - tutorial_pages
-    }
+def create_markdown_sitemap(pages, base_url):
+    """Generate markdown sitemap from crawled pages"""
+    lines = [f"# Sitemap for {base_url}\n"]
+    for url, title in sorted(pages.items()):
+        depth = url.replace(base_url, '').count('/')
+        indent = "  " * depth
+        lines.append(f"{indent}- [{title or url}]({url})")
+    return "\n".join(lines)
 ```
+
 
 ## Guidelines
 
-- Always attempt to detect the documentation platform for optimal extraction
-- Use BM25 filtering to focus on relevant documentation sections
+- Always try the simplest extraction method first (direct curl > Jina > Crawl4AI)
+- Check for `llms.txt` and sitemap XML before crawling
+- Use parallel `curl` with `&` + `wait` for batch downloads (no tokens wasted in agent context)
+- Throttle Jina requests to max 5 concurrent
+- For Crawl4AI, use `arun_many()` with `max_concurrent=3` for multi-page docs
+- Add delays between requests when crawling large sites
+- Always verify downloads: check file count, empty files, and total size
 - Maintain heading hierarchy and code block formatting
-- Preserve internal navigation links for context
-- Use `arun_many()` for multi-page documentation with appropriate concurrency limits
-- Add delays between requests when extracting large documentation sites
-- Implement retry logic for individual page failures
-
----
-
-This skill provides comprehensive patterns for extracting documentation from virtually any platform while maintaining structure, readability, and context.

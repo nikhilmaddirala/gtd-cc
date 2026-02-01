@@ -1,6 +1,6 @@
 {
   "name": "web-research",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Comprehensive web research toolkit with interactive commands and advanced skills for crawling, extraction, and AI-powered analysis",
   "author": {
     "name": "Nikhil Maddirala"
@@ -17,7 +17,6 @@
     "./skills/web-fetch",
     "./skills/deep-research",
     "./skills/crawl4ai-toolkit",
-    "./skills/site-crawling",
     "./skills/content-extraction"
   ]
 }

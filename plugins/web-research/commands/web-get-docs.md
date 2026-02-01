@@ -1,6 +1,6 @@
 ---
 name: web-get-docs
-description: Extract structured documentation from websites using content-extraction skill. Handles documentation platforms like Docusaurus, GitBook, ReadTheDocs, and Sphinx.
+description: Extract structured documentation from websites. Supports Mintlify, Starlight/Astro, Docusaurus, GitBook, ReadTheDocs, and Sphinx with tiered extraction methods.
 ---
 
 # Get documentation
@@ -20,4 +20,4 @@ If the user has provided any additional context, pass that into the skill invoca
 - Load content-extraction skill; you MUST do this first.
 - Parse the user input and understand how it relates to the skill.
 - Interactively guide the user through the skill step by step, collecting inputs and executing each step with confirmation.
-- For multi-page documentation crawling, also reference the site-crawling skill.
+- For advanced crawling implementation details, also reference the crawl4ai-toolkit skill.
