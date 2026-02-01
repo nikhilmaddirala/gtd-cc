@@ -7,7 +7,22 @@ description: Orchestrate AI agent CLI tools (Claude Code, Opencode, Gemini CLI) 
 
 ## Overview
 
-Coordinate tasks across AI agent CLI tools headlessly. This skill is for dispatching work from within a Claude Code session to other Claude Code or Opencode instances via CLI or SDK.
+Dispatch tasks from within a Claude Code session to other Claude Code or Opencode instances via CLI or SDK. The primary pattern is: pick a tool and model, load the right skill via `--plugin-dir`, construct the command, run it, verify output.
+
+### Quick start
+
+```bash
+# Claude Code headless — dispatch a skill to a cheap model
+claude -p "Use the web-fetch skill to download https://example.com/article and save to ./article.md" \
+  --model haiku \
+  --plugin-dir /path/to/plugins/web-research \
+  --allowedTools "Bash" "Write" "WebFetch" \
+  --output-format json | jq -r '.result'
+
+# Opencode headless — same task with a free model
+opencode run "Download https://example.com/article and save as ./article.md" \
+  --model opencode/gpt-5-nano
+```
 
 
 ## Context
@@ -17,88 +32,99 @@ User wants to run AI agent CLIs programmatically. They may need to execute a sin
 
 ## Sub-skills
 
-Load the appropriate sub-skill from `sub-skills/` when the user needs a specific workflow pattern.
+Each sub-skill is an atomic operation for dispatching a task via a specific tool. After picking the tool and model (Step 1), load the appropriate sub-skill:
 
-- **piping-and-chaining.md**: pipe output between agent instances
-- **parallel-tasks.md**: run multiple agents concurrently
-- **cost-optimized-routing.md**: route tasks by cost tier across tools
-- **ci-cd-integration.md**: GitHub Actions and CI pipeline patterns
-- **multi-step-pipeline.md**: session continuation pipelines
-- **batch-with-server.md**: opencode serve for batch operations
+- **claude-code-cli.md**: dispatch via `claude -p` — plugin loading, tool permissions, session continuation, structured output
+- **opencode-cli.md**: dispatch via `opencode run` — free models, serve/attach pattern, skill auto-discovery
+- **claude-agent-sdk.md**: dispatch via Claude Agent SDK (Python/TypeScript) — streaming, hooks, programmatic control
+- **opencode-sdk.md**: dispatch via Opencode JS/TS SDK (placeholder)
+- **gemini-cli.md**: dispatch via Gemini CLI for free-quota tasks (placeholder)
 
 
 ## Process
 
-- Understand the user request from the context
-- Determine which AI agent CLI tool and model best fits the task (see "When to use which tool" below)
-- Determine which agent skill/prompt best fits the task
-- If user needs a specific workflow pattern, load the appropriate sub-skill
-- If user needs CLI flag details, read the appropriate reference from `references/`
-- Apply cost strategy: prefer free/cheap models for simple tasks
+### Step 1: pick tool and model
+
+- Pick the tool based on the task needs (see appendix "When to use which tool")
+  - `claude -p` is the default — best toolset, skill loading via `--plugin-dir`, structured JSON output
+  - `opencode run` — when you want free/cheap models or the serve/attach pattern
+  - Claude Agent SDK — when you need programmatic control (Python/TypeScript)
+- Pick the model based on task complexity
+  - Mechanical/simple tasks → `--model haiku` (Claude Code) or `opencode/gpt-5-nano` (Opencode, free)
+  - Tasks needing reasoning → `--model sonnet` or `--model opus`
+  - Read `references/providers-models.md` for available models and cost tiers
+
+### Step 2: determine how to pass the skill
+
+- If a skill/plugin is needed, use `--plugin-dir /path/to/plugin` to make its skills available in `-p` mode
+- Skills and slash commands do NOT work in `-p` mode without `--plugin-dir`
+- For Opencode: skills in `.claude/skills/` are auto-discovered; if elsewhere, symlink into a discovery root
+- If no skill is needed, just write a clear prompt
+
+### Step 3: configure flags
+
+Most flags have good defaults. Only set what you need:
+
+- `--allowedTools` — only list tools that need permission approval (Bash, Write, WebFetch). Read-only tools (Read, Glob, Grep) are auto-allowed
+- `--max-turns` — safety cap to prevent runaway loops (default is usually fine for simple tasks)
+- `--max-budget-usd` — cost cap for expensive tasks
+- `--output-format json` — required when piping output to `jq` or another step
+- Put context (target paths, URLs, specific instructions) in the prompt itself, not in flags
+
+### Step 4: present plan and get approval
+
+- Tell the user: "I will call `claude -p` / `opencode run` with these flags and this prompt"
+- Get approval before running
+
+### Step 5: run, verify, iterate
+
+- Run the command
+- Check output files or JSON result
+- If incomplete, continue with `--continue` (last session) or `--resume <session_id>` (specific session)
+- If the agent ran out of turns, resume with a higher `--max-turns`
+
+
+## Examples
+
+End-to-end walkthroughs of real tasks. Read these to understand the full workflow pattern:
+
+- **execute-content-extraction-skill.md**: dispatch a web-fetch task to headless Claude Code, Agent SDK, and Opencode — covers plugin loading, model selection, tool permissions, and iteration
 
 
 ## Resources
 
-- **references/claude-code-headless.md**: all `claude -p` flags, structured output, tool permissions, sessions, subagents
-- **references/claude-agent-sdk-quick.md**: Python and TypeScript SDK usage
-- **references/opencode-headless.md**: `opencode run` flags, serve/attach pattern, env vars
-- **references/claude-code-docs/**: 52 upstream doc files (last updated 2026-02-01)
-- **references/claude-agent-sdk-docs/**: 16 upstream doc files (last updated 2026-02-01)
-- **references/opencode-docs/**: 34 upstream doc files (last updated 2026-02-01)
+### references/ — condensed reference docs (read on demand)
+
+- **providers-models.md**: available providers, model aliases, and cost optimization strategy
+- **plugins-skills.md**: cross-compatibility analysis between Claude Code and OpenCode plugin/skill systems
+
+### developer-docs/ — upstream documentation snapshots (read when references aren't enough)
+
+- **claude-code-docs/**: 52 files from code.claude.com (last updated 2026-02-01)
+- **claude-agent-sdk-docs/**: 16 files from platform.claude.com (last updated 2026-02-01)
+- **opencode-docs/**: 34 files from opencode.ai (last updated 2026-02-01)
 
 
 ## Guidelines
 
 - Prefer `claude -p` as the default tool; it has the most complete headless feature set
+- Use `--plugin-dir` to load skills in `-p` mode; `--append-system-prompt` is a fallback for injecting raw text
+- Only specify `--allowedTools` for tools that need permission (Bash, Write, WebFetch); read-only tools are auto-allowed
 - Always use `--output-format json` when piping between steps; parse with `jq`
 - Use `--max-turns` and `--max-budget-usd` to prevent runaway costs
-- Claude Code skills and slash commands do NOT work in `-p` mode; use `--append-system-prompt` to inject instructions
-- Opencode reads `.claude/CLAUDE.md` and skills by default; disable with `OPENCODE_DISABLE_CLAUDE_CODE=true` if needed
-- Route cheap tasks to free models (Opencode free tier, Gemini CLI quota), expensive tasks to Claude Opus with budget caps
+- Route cheap tasks to free/haiku models, quality tasks to sonnet/opus with budget caps
+- Opencode reads `.claude/skills` by default; disable with `OPENCODE_DISABLE_CLAUDE_CODE_SKILLS=true` if needed
 
 
 ## Appendix
 
 ### When to use which tool
 
-- `claude -p` - best default; full Claude Code toolset, structured JSON output, session continuation, tool permissions
-- Claude Agent SDK (Python/TypeScript) - when you need programmatic control, streaming callbacks, multi-turn pipelines, or structured outputs via code
-- `opencode run` - when you want free/cheap models (rotating free tier), different provider access, or the attach/serve pattern for persistent servers
-- Gemini CLI - daily free quota for web research tasks (TODO: add reference docs)
-
-### Quick start
-
-```bash
-# Claude Code headless
-claude -p "Summarize the auth module" --output-format json | jq -r '.result'
-
-# Opencode headless
-opencode run "Explain how closures work in JavaScript"
-
-# Claude Agent SDK (Python)
-python -c "
-import asyncio
-from claude_agent_sdk import query, ClaudeAgentOptions
-async def main():
-    async for msg in query(prompt='List all TODO comments', options=ClaudeAgentOptions(allowed_tools=['Read', 'Grep', 'Glob'])):
-        print(msg)
-asyncio.run(main())
-"
-```
-
-### Cost reference
-
-- Claude Code: ~$6/developer/day subscription, ~$100-200/month API
-- Opencode: rotating free models (check `opencode models`)
-- Gemini CLI: daily free quota
-- Use `--max-budget-usd` to cap any single task
-
-### Plugin and skill differences
-
-- Claude Code: reads `CLAUDE.md` + `.claude/` plugins in headless mode; use `--plugin-dir` for custom paths, `--mcp-config` for MCP
-- Opencode: reads `opencode.json` + optionally `.claude/` files; MCP via `opencode.json` or `opencode mcp add`
+- `claude -p` — best default; full Claude Code toolset, skill loading via `--plugin-dir`, structured JSON output, session continuation, tool permissions
+- Claude Agent SDK (Python/TypeScript) — when you need programmatic control, streaming callbacks, multi-turn pipelines, or structured outputs via code
+- `opencode run` — when you want free/cheap models (rotating free tier), different provider access, or the attach/serve pattern for persistent servers
+- Gemini CLI — daily free quota for web research tasks (TODO: add reference docs)
 
 ### TODOs
 
-- Add Gemini CLI docs from https://geminicli.com/docs/
-- Add reference on user's subscriptions, API keys, and preferences
+- [ ] Add Gemini CLI docs from https://geminicli.com/docs/
