@@ -20,6 +20,7 @@
     "./skills/catppuccin-port-creation",
     "./skills/langfuse-cli",
     "./skills/secrets-management",
-    "./skills/system-diagnostics"
+    "./skills/system-diagnostics",
+    "./skills/ai-agent-clis"
   ]
 }

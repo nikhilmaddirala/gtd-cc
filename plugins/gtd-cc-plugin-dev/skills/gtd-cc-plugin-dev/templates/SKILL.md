@@ -35,11 +35,12 @@ CRITICAL: You MUST load the appropriate sub-skill from the `sub-skills/` directo
 
 ## Resources
 
-[Optional - if skill has supporting files]
+[Optional - if skill has supporting files. These are read on demand, not loaded with the skill.]
 
-- **templates/**: [What templates are available]
-- **references/**: [What reference docs are available]
-- **scripts/**: [What scripts are available]
+- **sub-skills/**: [Sub-skill files for specific operations or workflow patterns]
+- **references/**: [Condensed reference docs and/or upstream documentation directories]
+- **templates/**: [Template files for generating output]
+- **scripts/**: [Executable scripts]
 
 
 ## Guidelines
