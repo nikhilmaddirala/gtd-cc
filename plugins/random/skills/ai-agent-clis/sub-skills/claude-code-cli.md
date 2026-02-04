@@ -84,6 +84,65 @@ claude -p "Create a commit for staged changes" \
 claude -p "Fix the lint errors" --dangerously-skip-permissions
 ```
 
+### Sandboxed autonomous agents (recommended for code-writing tasks)
+
+When dispatching an agent to write code in a specific directory (e.g., a git worktree), combine `--dangerously-skip-permissions` with sandbox to get full autonomy within safe boundaries.
+
+```bash
+# 1. Create a .claude/settings.json in the target directory with sandbox enabled
+TARGET="/path/to/worktree"
+mkdir -p "$TARGET/.claude"
+cat > "$TARGET/.claude/settings.json" << 'EOF'
+{
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false
+  }
+}
+EOF
+
+# 2. Run with skip-permissions — sandbox restricts Bash to cwd
+claude -p "Make the changes described below. Use absolute paths starting with $TARGET for all edits. ..." \
+  -d "$TARGET" \
+  --dangerously-skip-permissions \
+  --model haiku \
+  --verbose \
+  --max-turns 15
+```
+
+How this works:
+- `--dangerously-skip-permissions` — no permission prompts, agent acts immediately
+- Sandbox `enabled: true` — OS-level restriction (macOS Seatbelt / Linux bubblewrap) confines Bash to the cwd and subdirectories
+- `allowUnsandboxedCommands: false` — prevents the agent from escaping the sandbox via `dangerouslyDisableSandbox` on Bash calls
+- `-d $TARGET` — sets cwd so the sandbox boundary is the target directory
+
+Limitations:
+- The sandbox only restricts **Bash** at the OS level. `Edit` and `Write` tools are not sandboxed — they can write anywhere when `--dangerously-skip-permissions` is active
+- To restrict `Edit`/`Write`, you must give explicit absolute paths in the prompt. The agent will follow your instructions but there's no OS-level enforcement
+- If strict `Edit`/`Write` isolation is needed, use path-scoped `--allowedTools` (see below) but note the compatibility issues with headless mode
+
+### Path-scoped tool permissions (alternative approach)
+
+Use path specifiers on `Edit` and `Write` in `--allowedTools` for tool-level write restrictions. This restricts both Bash-based and native tool writes.
+
+```bash
+WORKTREE="/path/to/worktree"
+claude -p "Make changes to the project" \
+  -d "$WORKTREE" \
+  --allowedTools \
+    "Edit($WORKTREE/**)" \
+    "Write($WORKTREE/**)" \
+    "Read" "Glob" "Grep" \
+  --max-turns 15
+```
+
+Known issues:
+- **Headless compatibility**: in testing, path-scoped `--allowedTools` with `Edit($PATH/**)` caused agents to ask for confirmation rather than auto-allowing — which stalls headless mode since there's no user to approve. This may be model-dependent (observed with haiku)
+- **Cannot combine with `--dangerously-skip-permissions`**: skip-permissions overrides allowedTools, so the path restriction is ignored
+- `-d` sets the working directory but does not restrict file access — the agent can still read and write anywhere via absolute paths
+- When spawning agents in worktrees or subdirectories, the agent may follow CLAUDE.md references or relative paths that resolve outside the intended directory
+
 ### Custom subagents via CLI
 
 ```bash
@@ -146,6 +205,35 @@ claude -p "Write a poem" --output-format stream-json --verbose --include-partial
 - `--system-prompt` — replaces everything; use when you need full control
 - `--system-prompt-file` / `--append-system-prompt-file` — load from files (print mode only)
 - The append flags can be combined with replacement flags
+
+## Headless vs Task tool agents
+
+When dispatching work from within a Claude Code session, there are two approaches:
+
+- **Task tool (subagent)**: runs inside the parent session. Cannot prompt for permissions — only tools pre-allowed in `.claude/settings.json` `permissions.allow` work. Edit/Write/Bash are typically not in the allow list, so background Task agents can only do read-only research. Foreground Task agents share the interactive prompt but block the parent.
+- **`claude -p` (headless CLI)**: runs as a separate process with its own permissions. Full write access via `--dangerously-skip-permissions` or `--allowedTools`. Use this when the agent needs to write code.
+
+Prefer `claude -p` over the Task tool for any agent that needs to modify files.
+
+## Observability and debugging
+
+- Always use `--verbose` when developing/debugging agent dispatch — it shows full turn-by-turn tool calls and results
+- `--output-format text` (default) only shows the final message — you can't see what the agent did or why it failed
+- `--output-format stream-json` with `--verbose` gives full structured logs for background tasks
+- When an agent "completes" but didn't actually make changes, check the verbose output — common causes:
+  - Agent asked for confirmation it couldn't get (headless mode + insufficient permissions)
+  - Agent hallucinated success without calling tools
+  - Agent hit max turns retrying permission errors
+
+## Prompting for reliable headless execution
+
+Headless agents can't ask clarifying questions, so the prompt must be unambiguous:
+
+- Give **explicit absolute paths** to every file that needs editing — don't rely on the agent discovering them
+- Give **exact code blocks** to insert/replace — don't make the agent figure out the content
+- Include a **verification step** in the prompt (e.g., "after editing, run grep -n to verify")
+- Say "do not ask for confirmation" if the agent tends to be overly cautious
+- Avoid vague instructions like "model after X" — instead, show exactly what the result should look like
 
 ## Full reference
 
