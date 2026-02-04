@@ -7,11 +7,11 @@ description: Git operations for monorepo workflows. Conventional commits, subtre
 
 ## Overview
 
-Git operations for monorepo workflows. Three sub-skills for daily git, subtree management, and project lifecycle.
+Git operations for monorepo workflows. Four sub-skills for daily git, subtree management, project lifecycle, and release workflow.
 
 ## Context
 
-User wants to perform git operations in a monorepo: commit changes, manage subtree remotes, check sync status, publish to subtrees, or graduate projects from lab to production.
+User wants to perform git operations in a monorepo: commit changes, manage subtree remotes, check sync status, publish to subtrees, graduate projects from lab to production, or merge dev to main.
 
 ## Sub-skills
 
@@ -25,6 +25,9 @@ Load the appropriate sub-skill from `sub-skills/` based on user intent.
 
 - **graduate.md**: Move project from lab to production with GitHub repo and subtree setup
   - Triggers: "graduate project", "move to production"
+
+- **merge-to-main.md**: Merge dev to main with clean subtree-separated commits and publish
+  - Triggers: "merge to main", "release to main", "merge dev to main", "sync to main"
 
 ## Process
 
