@@ -1,0 +1,1019 @@
+{
+  "schema_version": 3,
+  "manifest_type": "skills-discovery-and-activation",
+  "repo_root": "/Users/nikhilmaddirala/repos/monorepo",
+  "summary": {
+    "discovered_total": 50,
+    "installed_total": 24,
+    "installed_local_symlink_total": 20,
+    "installed_npx_total": 4
+  },
+  "skills": [
+    {
+      "name": "ai-chats",
+      "description": "Start or join an inter-agent chat session. Two Claude Code sessions communicate via a shared markdown file in tmp/. Use when the user says \"ai-chat\", \"start a chat\", \"agent chat\", or provides a chat slug to join.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/ai-chats",
+          "ownership": "public",
+          "sub_skills": [
+            "join",
+            "start"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/ai-chats",
+      "agents_path": ".agents/skills/ai-chats",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "ai-cli-helper",
+      "description": "View and manage configurations and skills for AI agent CLI tools (Claude Code, Opencode). Use when checking config files, listing or managing skills, viewing model settings, comparing configs across tools, or performing common config operations.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/ai-cli-helper",
+          "ownership": "public",
+          "sub_skills": [
+            "manage-configs",
+            "manage-skills"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/ai-cli-helper",
+      "agents_path": ".agents/skills/ai-cli-helper",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "ai-elements",
+      "description": "Create new AI chat interface components for the ai-elements library following established composable patterns, shadcn/ui integration, and Vercel AI SDK conventions. Use when creating new components in packages/elements/src or when the user asks to add a new component to ai-elements.",
+      "discovered": false,
+      "sources": [],
+      "installed": true,
+      "manager": "npx",
+      "source": null,
+      "agents_path": ".agents/skills/ai-elements",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "ai-orchestrator",
+      "description": "Orchestrate external AI agent instances (Claude Code, Opencode, Gemini CLI) via SDK or CLI. This skill NEVER does work itself \u2014 it always delegates to an external agent.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/ai-orchestrator",
+          "ownership": "public",
+          "sub_skills": [
+            "claude-sdk",
+            "gemini-cli",
+            "opencode-sdk"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/ai-orchestrator",
+      "agents_path": ".agents/skills/ai-orchestrator",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "ai-sdk",
+      "description": "Answer questions about the AI SDK and help build AI-powered features. Use when developers: (1) Ask about AI SDK functions like generateText, streamText, ToolLoopAgent, embed, or tools, (2) Want to build AI agents, chatbots, RAG systems, or text generation features, (3) Have questions about AI providers (OpenAI, Anthropic, Google, etc.), streaming, tool calling, structured output, or embeddings, (4) Use React hooks like useChat or useCompletion. Triggers on: \"AI SDK\", \"Vercel AI SDK\", \"generateText\", \"streamText\", \"add AI to my app\", \"build an agent\", \"tool calling\", \"structured output\", \"useChat\".",
+      "discovered": false,
+      "sources": [],
+      "installed": true,
+      "manager": "npx",
+      "source": null,
+      "agents_path": ".agents/skills/ai-sdk",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "assistant-ui",
+      "description": "Guide for assistant-ui library - AI chat UI components. Use when asking about architecture, debugging, or understanding the codebase.",
+      "discovered": false,
+      "sources": [],
+      "installed": true,
+      "manager": "npx",
+      "source": null,
+      "agents_path": ".agents/skills/assistant-ui",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "catppuccin-port-creation",
+      "description": "Agent skill for creating and validating Catppuccin theme ports",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/42-lab/marp/references/catppuccin-port-creation",
+          "ownership": "project-specific"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/catppuccin-port-creation",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "docs-docx",
+      "description": "Parse Word documents (.docx) into repository-friendly markdown artifacts. Use when users need to extract content from Word files, convert to markdown, or batch process document directories.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/docs-docx",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/docs-docx",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "docs-pbix",
+      "description": "Parse Power BI files (.pbix) into repository-friendly JSON and CSV artifacts. Use when users need to extract metadata, measures, or data model structure from Power BI files.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/docs-pbix",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/docs-pbix",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "docs-pdf",
+      "description": "Parse PDF documents into repository-friendly markdown and text artifacts. Use when users need to extract text, tables, or structure from PDF files.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/docs-pdf",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/docs-pdf",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "docs-pptx",
+      "description": "This skill should be used when the user asks to \"convert pptx to markdown\", \"parse powerpoint presentation\", \"extract slides to markdown\", \"convert presentation to markdown with images\", \"make powerpoint accessible\", or needs to transform PowerPoint files into markdown format with inline images and alt-text descriptions.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/docs-pptx",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/docs-pptx",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "docs-xlsx",
+      "description": "Parse Excel spreadsheets (.xlsx) into repository-friendly CSV and JSON artifacts. Use when users need to extract data, formulas, or structure from Excel files.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/docs-xlsx",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/docs-xlsx",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "documentation",
+      "description": "Implement and maintain GitHub project documentation using a layered system. Use when creating, updating, or auditing documentation.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/documentation",
+          "ownership": "public",
+          "sub_skills": [
+            "compress",
+            "initialize",
+            "maintain"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/documentation",
+      "agents_path": ".agents/skills/documentation",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "dragonix-service",
+      "description": "Create, update, and troubleshoot NixOS services in the dragonix configuration system. Use when working with services in modules/services/ or hosts/seasmoke/services/.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/dragonix/skills/dragonix-service",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/dragonix/skills/dragonix-service",
+      "agents_path": ".agents/skills/dragonix-service",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "evaluate-presentation",
+      "description": "This skill should be used when the user asks to \"evaluate presentation\", \"validate presentation quality\", \"extract requirements from presentation\", \"test presentation generation\", or mentions quality assurance for presentations. Validates presentation outlines against source CSV data and optionally against ground truth presentations.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/petaluma-ai/projects/cogitaas/csf-agent/ai-agent-skills/evaluate-presentation",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/evaluate-presentation",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "generate-presentation",
+      "description": "This skill should be used when the user asks to \"create presentation\", \"interpret CSF results\", \"generate presentation outline\", or mentions creating presentations from CSF Results CSV files. Generates concise CSF presentation outlines from Result CSV files at Brand, Variant, and PPG granularity levels.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/petaluma-ai/projects/cogitaas/csf-agent/ai-agent-skills/generate-presentation",
+          "ownership": "unknown",
+          "sub_skills": [
+            "eda-analysis",
+            "results-analysis"
+          ]
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/generate-presentation",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "gh-subrepo",
+      "description": "Stateful bidirectional sync for subtree directories using git-subrepo. Sync monorepo subdirs with standalone GitHub repos and graduate projects from lab to production.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/gh-subrepo",
+          "ownership": "public",
+          "sub_skills": [
+            "graduate",
+            "subrepo-status",
+            "sync"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/gh-subrepo",
+      "agents_path": ".agents/skills/gh-subrepo",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "gh-subtrees",
+      "description": "Subtree publishing and project graduation. Publish monorepo changes to standalone GitHub repos, graduate projects from lab to production.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/gh-subtrees",
+          "ownership": "public",
+          "sub_skills": [
+            "graduate",
+            "subtrees-status",
+            "sync"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/gh-subtrees",
+      "agents_path": ".agents/skills/gh-subtrees",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "gh-tasks",
+      "description": "Issue-driven development with worktree isolation. Create issues, plan implementations, work in worktrees, review PRs, and merge with clean squash history.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/gh-tasks",
+          "ownership": "public",
+          "sub_skills": [
+            "merge",
+            "new",
+            "orchestrate",
+            "plan",
+            "rebase",
+            "review",
+            "setup",
+            "tasks-status",
+            "work",
+            "worktree-sync"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/gh-tasks",
+      "agents_path": ".agents/skills/gh-tasks",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "github",
+      "description": "Issue-driven development with worktree isolation. 5-stage pipeline (new, plan, work, review, merge) with human gates between stages. Use when creating tasks, planning, implementing, reviewing, or merging.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/archive/github-plugin/skills/github",
+          "ownership": "public",
+          "sub_skills": [
+            "merge",
+            "new",
+            "orchestrate",
+            "plan",
+            "review",
+            "work"
+          ]
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/github",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "gtd-skills-dev",
+      "description": "Apply gtd-cc architectural patterns when developing Claude Code plugins or project-local skills. Use when creating or updating plugins for the gtd-cc marketplace, or creating skills in a repo's .claude/skills/ directory.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/gtd-skills-dev",
+          "ownership": "public",
+          "sub_skills": [
+            "create",
+            "refactor",
+            "update",
+            "validate"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/gtd-skills-dev",
+      "agents_path": ".agents/skills/gtd-skills-dev",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "import-examples",
+      "description": "This skill should be used when the user asks to \"import example\", \"create example project\", \"copy example from OneDrive\", \"prepare example data\", or needs to create a self-contained example project from the OneDrive source data. Copies CSV files and converts the PPTX to a compressed PDF.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/petaluma-ai/projects/cogitaas/csf-agent/ai-agent-skills/import-examples",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/import-examples",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "manage-patient-data",
+      "description": "Build and refresh the Sparsh patient data SQLite cache from PWENS xlsx exports. Use when the developer asks to \"rebuild the cache\", \"refresh patient data\", \"load new data\", \"process the xlsx\", or \"update the SQLite database\". This is a developer tool, not for end users.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/petaluma-ai/projects/sparsh/patient-records-ai/skills/manage-patient-data",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/manage-patient-data",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "nix-search",
+      "description": "Search NixOS packages, look up Home Manager and nix-darwin options, query package version history. Use when the user asks about Nix packages, configuration options, or package versions.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/dragonix/skills/nix-search",
+          "ownership": "unknown",
+          "sub_skills": [
+            "options",
+            "packages",
+            "versions"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/dragonix/skills/nix-search",
+      "agents_path": ".agents/skills/nix-search",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "obsidian-gtd",
+      "description": "Obsidian vault management and GTD workflows. Use when integrating with Obsidian vaults, managing notes, organizing knowledge, or supporting Getting Things Done methodology through note-based workflows.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/obsidian-gtd",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/obsidian-gtd",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "obsidian-options",
+      "description": "Conduct comprehensive research comparing multiple options, alternatives, or approaches. Use when the user needs to evaluate product comparisons, technology evaluations, vendor selections, strategic alternatives, or any scenario requiring systematic analysis of multiple choices (e.g., baby formulas, project management tools, cloud providers, equipment purchases).",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/obsidian-options",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/obsidian-options",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "obsidian-vault-automation",
+      "description": "Expertise for automating Obsidian vault operations following PARA and Zettelkasten methodologies",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/obsidian-2025-07/.claude/skills/obsidian-vault-automation",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/obsidian-vault-automation",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "openclaw-config",
+      "description": "Manage OpenClaw bot configuration - channels, agents, security, and autopilot settings",
+      "discovered": false,
+      "sources": [],
+      "installed": true,
+      "manager": "npx",
+      "source": null,
+      "agents_path": ".agents/skills/openclaw-config",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "opencode-teammates",
+      "description": "Team-based OpenCode orchestration via local skill scripts. Create teams, spawn teammates, assign tasks, exchange inbox messages, and run shutdown plus health checks.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/opencode-teammates",
+          "ownership": "public",
+          "sub_skills": [
+            "assign-task",
+            "create-team",
+            "message",
+            "shutdown",
+            "spawn-teammate",
+            "status"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/opencode-teammates",
+      "agents_path": ".agents/skills/opencode-teammates",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "plugin-development-gtd",
+      "description": "Guide for developing Claude Code plugins following gtd-cc architectural patterns with skills, workflows, commands, and agents.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/obsidian-2025-07/04-misc/cogitaas-ai-poc/.opencode/skills/plugin-development-gtd",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/plugin-development-gtd",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "PPTX to Markdown Conversion",
+      "description": "This skill should be used when the user asks to \"convert pptx to markdown\", \"parse powerpoint presentation\", \"extract slides to markdown\", \"convert presentation to markdown with images\", \"make powerpoint accessible\", or needs to transform PowerPoint files into markdown format with inline images and alt-text descriptions.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/petaluma-ai/projects/cogitaas/csf-agent/ai-agent-skills/pptx-to-markdown",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/PPTX to Markdown Conversion",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "productivity-life-coach",
+      "description": "Use this skill when the user asks to \"plan my day\", \"plan my week\", \"review my tasks and priorities\", etc.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/43-private/ai-skills/skills/productivity-life-coach",
+          "ownership": "private",
+          "sub_skills": [
+            "calendar",
+            "focus-reminder",
+            "planning",
+            "project-planning"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/43-private/ai-skills/skills/productivity-life-coach",
+      "agents_path": ".agents/skills/productivity-life-coach",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "productivity-todoist",
+      "description": "Fetch and manage Todoist tasks. Use when the user asks about \"todoist tasks\", \"show my tasks\", \"what's due\", \"overdue tasks\", \"triage tasks\", or when another skill needs Todoist task context.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/productivity-todoist",
+          "ownership": "public"
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/productivity-todoist",
+      "agents_path": ".agents/skills/productivity-todoist",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "query-patient-data",
+      "description": "Query Sparsh Hospice patient records from a SQLite cache using SQL or pandas. Use when the user asks about patients, diagnoses, admissions, prescriptions, medications, nursing notes, demographics, or any clinical data from Sparsh Hospice or PWENS. Triggers include \"how many patients\", \"top diagnoses\", \"breast cancer\", \"medication adherence\", \"admission types\", \"age distribution\", \"which patients\", \"prescriptions for\", or any data exploration of Sparsh patient records.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/petaluma-ai/projects/sparsh/patient-records-ai/skills/query-patient-data",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/query-patient-data",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "record_creation",
+      "description": "",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/asai-youtube/01-gsd-first-impressions/project/cc-00/.claude/skills/record_creation",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/record_creation",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "report_generation",
+      "description": "",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/asai-youtube/01-gsd-first-impressions/project/cc-00/.claude/skills/report_generation",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/report_generation",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "skill-template",
+      "description": "Template for creating domain-specific skills with expertise and reusable resources",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/obsidian-2025-07/04-misc/cogitaas-ai-poc/.opencode/skills/plugin-development-gtd/templates",
+          "ownership": "unknown"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/skill-template",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "tools-arr",
+      "description": "Working with Sonarr, Radarr, and Prowlarr APIs programmatically. Use when debugging media quality, managing downloads, configuring quality profiles, or automating Arr stack operations.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/43-private/ai-skills/skills/tools-arr",
+          "ownership": "private"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/tools-arr",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "tools-backlog",
+      "description": "Comprehensive GTD task management using Backlog.md CLI",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/tools-backlog",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/tools-backlog",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "tools-catppuccin",
+      "description": "Agent skill for creating and validating Catppuccin theme ports",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/tools-catppuccin",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/tools-catppuccin",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "tools-claude-code-teams-mcp",
+      "description": "Use for creating and managing Claude Teams MCP teams/teammates, testing opencode backend teammates, troubleshooting spawn/shutdown behavior, and validating inbox/task flows.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/tools-claude-code-teams-mcp",
+          "ownership": "public",
+          "sub_skills": [
+            "experimental-background-monitor"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/tools-claude-code-teams-mcp",
+      "agents_path": ".agents/skills/tools-claude-code-teams-mcp",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "tools-diagnostics",
+      "description": "Interactive system resource analysis and troubleshooting for memory, disk, CPU, and performance issues",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/tools-diagnostics",
+          "ownership": "public"
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/tools-diagnostics",
+      "agents_path": ".agents/skills/tools-diagnostics",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "tools-langfuse",
+      "description": "Query and analyze Langfuse traces, sessions, observations, scores, and metrics via CLI using the Python SDK and REST API",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/43-private/ai-skills/skills/tools-langfuse",
+          "ownership": "private"
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/43-private/ai-skills/skills/tools-langfuse",
+      "agents_path": ".agents/skills/tools-langfuse",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "tools-mdbase",
+      "description": "This skill should be used when the user asks to \"validate my collection\", \"query markdown files\", \"create mdbase type\", \"mdbase schema\", \"init mdbase\", \"mdbase validate\", \"mdbase query\", or mentions mdbase, typed markdown collections, or frontmatter schemas.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/tools-mdbase",
+          "ownership": "public"
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/tools-mdbase",
+      "agents_path": ".agents/skills/tools-mdbase",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "tools-secrets",
+      "description": "Manage secrets with 1Password CLI and Infisical for development, scripting, and automation workflows",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/43-private/ai-skills/skills/tools-secrets",
+          "ownership": "private",
+          "sub_skills": [
+            "1password-cli",
+            "infisical-cli",
+            "infisical-to-1password-sync"
+          ]
+        },
+        {
+          "path": "40-code/41-subtrees/dragonix/skills/tools-secrets",
+          "ownership": "unknown",
+          "sub_skills": [
+            "1password-cli",
+            "infisical-cli",
+            "infisical-to-1password-sync"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/dragonix/skills/tools-secrets",
+      "agents_path": ".agents/skills/tools-secrets",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "unnamed-mcp-server",
+      "description": "Dynamic access to unnamed-mcp-server MCP server (1 tools)",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/42-lab/cc-nix-skill/nix-skill",
+          "ownership": "project-specific"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/unnamed-mcp-server",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "web-browser",
+      "description": "Browser automation for AI agents. Use when the user needs to interact with websites, navigate pages, fill forms, click buttons, take screenshots, extract data, test web apps, or automate any browser task. Triggers include \"open a website\", \"fill out a form\", \"click a button\", \"take a screenshot\", \"scrape data\", \"test this web app\", \"login to a site\", or any task requiring programmatic web interaction.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/web-browser",
+          "ownership": "public",
+          "sub_skills": [
+            "agent-browser",
+            "playwright"
+          ]
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/web-browser",
+      "agents_path": ".agents/skills/web-browser",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "web-content-extraction",
+      "description": "Extract documentation and content from websites. Supports Mintlify, Starlight/Astro, Docusaurus, GitBook, ReadTheDocs, Sphinx, and generic sites. Uses a tiered approach - try the simplest method first (direct curl, Jina AI Reader) before falling back to Crawl4AI for JS-heavy sites.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/web-content-extraction",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/web-content-extraction",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "web-crawl4ai",
+      "description": "Complete Crawl4AI SDK reference and implementation guide. Use when users need to scrape websites, extract structured data, handle JavaScript-heavy pages, crawl multiple URLs, or build automated web data pipelines. Includes optimized extraction patterns, error handling, and comprehensive code examples.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/web-crawl4ai",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/web-crawl4ai",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "web-deep-research",
+      "description": "Multi-step deep research workflow that breaks complex topics into subtopics, performs iterative web searches, synthesizes findings, and produces comprehensive cited reports. Use when a simple search isn't enough and the user needs thorough, multi-angle research.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/web-deep-research",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/web-deep-research",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "web-fetch",
+      "description": "Download web articles with images and save as clean markdown for offline reference. Covers Jina AI Reader, WebFetch tool, and multiple fallback methods for article extraction with image handling.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/web-fetch",
+          "ownership": "public"
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/web-fetch",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "web-search",
+      "description": "General web search patterns and techniques including Gemini CLI coordination. Use this skill when you need to perform web searches, find current information, or research topics online. Covers both Gemini CLI and built-in WebSearch tool usage with precise instruction crafting.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/41-subtrees/gtd-cc/skills/web-search",
+          "ownership": "public"
+        }
+      ],
+      "installed": true,
+      "manager": "local-skills",
+      "source": "40-code/41-subtrees/gtd-cc/skills/web-search",
+      "agents_path": ".agents/skills/web-search",
+      "claude_enabled": true,
+      "opencode_enabled": true
+    },
+    {
+      "name": "yt-edit",
+      "description": "YouTube video editing pipeline orchestration. Use when users need to transcribe, AI-review, edit video, or run the full post-production pipeline.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/42-lab/asai-2025/youtube/ai-plugin/skills/yt-edit",
+          "ownership": "project-specific",
+          "sub_skills": [
+            "edit",
+            "editorial",
+            "gemini",
+            "transcribe"
+          ]
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/yt-edit",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    },
+    {
+      "name": "yt-produce",
+      "description": "YouTube video production workflow covering pre-production planning and post-publish promotion. Use for video planning, research, outlines, metadata, and promotion.",
+      "discovered": true,
+      "sources": [
+        {
+          "path": "40-code/42-lab/asai-2025/youtube/ai-plugin/skills/yt-produce",
+          "ownership": "project-specific",
+          "sub_skills": [
+            "planning",
+            "promotion"
+          ]
+        }
+      ],
+      "installed": false,
+      "manager": null,
+      "source": null,
+      "agents_path": ".agents/skills/yt-produce",
+      "claude_enabled": false,
+      "opencode_enabled": false
+    }
+  ]
+}
